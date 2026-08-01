@@ -798,12 +798,14 @@ html, body {
   .header-logo { font-size: 16px; gap: 8px; }
   .header-logo-icon { width: 28px; height: 28px; font-size: 16px; }
 
-  /* Library: stack vertically */
-  .lib-layout { flex-direction: column; min-height: auto; }
-  .lib-list-col { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--border); }
-  .lib-detail-col { min-height: 400px; }
-  .lib-list-col .cat-tabs { padding: 12px 12px 8px; }
-  .lib-list-col .cat-tab { font-size: 11px; padding: 4px 8px; }
+  /* Library: list and detail are separate mobile screens */
+  .lib-layout { display: block; min-height: calc(100vh - 60px); }
+  .lib-list-col { width: 100%; min-width: 0; border: 0; }
+  .lib-detail-col { width: 100%; min-height: calc(100vh - 60px); }
+  .lib-layout.no-focus .lib-detail-col { display: none; }
+  .lib-layout.has-focus .lib-list-col { display: none; }
+  .lib-list-col .cat-tabs { padding: 12px; }
+  .lib-list-col .cat-tab { font-size: 12px; padding: 7px 11px; }
   .lib-count-row { flex-wrap: wrap; padding: 8px 12px; gap: 6px; }
   .lib-search { max-width: 100%; flex: 1; }
 

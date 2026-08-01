@@ -676,7 +676,7 @@ function LibraryPage({ onSelect, customGames, onAddGame, onDeleteGame, onUpdateG
   const [level, setLevel] = useState('all')
   const [type, setType] = useState('all')
   const [skillFilter, setSkillFilter] = useState<string>('all')
-  const [focused, setFocused] = useState<string | null>(() => GAMES[0]?.id ?? null)
+  const [focused, setFocused] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [editGameData, setEditGameData] = useState<Game | null>(null)
   const customIds = new Set(customGames.map(g => g.id))
@@ -702,7 +702,12 @@ function LibraryPage({ onSelect, customGames, onAddGame, onDeleteGame, onUpdateG
       setFocused(null)
       return
     }
-    if (!focused || !filtered.some(g => g.id === focused)) setFocused(filtered[0].id)
+    const isDesktop = window.matchMedia('(min-width: 769px)').matches
+    if (focused && !filtered.some(g => g.id === focused)) {
+      setFocused(isDesktop ? filtered[0].id : null)
+    } else if (!focused && isDesktop) {
+      setFocused(filtered[0].id)
+    }
   }, [filtered, focused])
 
   const focusedGame = useMemo(() => {
@@ -711,7 +716,7 @@ function LibraryPage({ onSelect, customGames, onAddGame, onDeleteGame, onUpdateG
   }, [allGames, focused])
 
   return (<>
-    <div className="lib-layout">
+    <div className={`lib-layout ${focusedGame ? 'has-focus' : 'no-focus'}`}>
       <div className="lib-list-col">
         <div className="cat-tabs">
           <button className={`cat-tab ${activeTab === 'all' ? 'active' : ''}`} onClick={() => setActiveTab('all')}>All games</button>
