@@ -826,7 +826,7 @@ html, body {
 
 @media (max-width: 768px) {
   /* Hamburger menu */
-  .hamburger { display: block; }
+  .hamburger { display: block; margin-left: auto; }
   .header-nav {
     position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
     background: var(--bg-secondary); flex-direction: column;
