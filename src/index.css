@@ -1442,7 +1442,7 @@ html, body, #root {
   }
   .theory-sidebar {
     position: sticky;
-    top: 60px;
+    bottom: 0;
     z-index: 10;
     display: flex;
     flex: 0 0 auto;
@@ -1452,10 +1452,11 @@ html, body, #root {
     box-sizing: border-box;
     gap: 6px;
     overflow-x: auto;
-    margin: 0 -16px 20px;
+    margin: 0 -16px 0;
     padding: 10px 16px;
     background: rgba(0, 0, 0, 0.96);
-    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: none;
     scrollbar-width: none;
   }
   .theory-sidebar::-webkit-scrollbar { display: none; }
