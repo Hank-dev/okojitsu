@@ -1086,8 +1086,8 @@ function SessionsPage({ sessions, setSessions, onCopyEdit }: { sessions: Session
   const getGame = (id: string) => GAMES.find(g => g.id === id)
 
   return (
-    <div style={{ padding: '32px 28px', maxWidth: 1400, margin: '0 auto' }}>
-      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>My Sessions</h2>
+    <div className="sessions-page">
+      <h2 className="sessions-page-title">My Sessions</h2>
       <div className="saved-sessions">
         {sessions.map(s => (
           <div key={s.id} className="card saved-session-card" onClick={() => setExpandedId(expandedId === s.id ? null : s.id)}>
