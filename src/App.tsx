@@ -1071,8 +1071,14 @@ function BuilderPage({ sessions, setSessions, onSelect, editSession, onEditDone 
 
 // ============ SESSIONS ============
 function SessionsPage({ sessions, setSessions, onCopyEdit }: { sessions: SessionPlan[]; setSessions: (s: SessionPlan[]) => void; onCopyEdit: (s: SessionPlan) => void }) {
-  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<string>(sessions[0]?.id || '')
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!sessions.some(s => s.id === activeId)) {
+      setActiveId(sessions[0]?.id || '')
+    }
+  }, [sessions, activeId])
 
   useEffect(() => {
     if (!menuOpenId) return
@@ -1085,59 +1091,84 @@ function SessionsPage({ sessions, setSessions, onCopyEdit }: { sessions: Session
 
   const getGame = (id: string) => GAMES.find(g => g.id === id)
 
+  const active = sessions.find(s => s.id === activeId) || sessions[0]
+
+  if (sessions.length === 0) {
+    return (
+      <div className="sessions-page">
+        <h2 className="sessions-page-title">My Sessions</h2>
+        <div className="empty-state">
+          <div className="empty-state-icon">📋</div>
+          <h3>No sessions yet</h3>
+          <p>Build a class to get started.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="sessions-page">
       <h2 className="sessions-page-title">My Sessions</h2>
-      <div className="saved-sessions">
+      <div className="session-tabs">
         {sessions.map(s => (
-          <div key={s.id} className="card saved-session-card" onClick={() => setExpandedId(expandedId === s.id ? null : s.id)}>
-            <div className="card-header">
-              <div>
-                <div className="card-title">{s.title} <span className="expand-icon">{expandedId === s.id ? '▾' : '▸'}</span></div>
-                <div className="saved-session-meta"><span>{s.level}</span><span>·</span><span>{s.duration} min</span><span>·</span><span>{s.games.length} games</span></div>
-              </div>
-              <div className="session-menu-wrap">
-                <button className="session-menu-btn" onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === s.id ? null : s.id) }}>⋮</button>
-                {menuOpenId === s.id && <div className="session-menu-dropdown" onClick={e => e.stopPropagation()}>
-                  <button onClick={() => { onCopyEdit(s); setMenuOpenId(null) }}>Copy & Edit</button>
-                  <button className="danger" onClick={() => { deleteSession(s.id); setMenuOpenId(null) }}>Delete</button>
-                </div>}
-              </div>
+          <button key={s.id} className={`session-tab ${activeId === s.id ? 'active' : ''}`} onClick={() => setActiveId(s.id)}>
+            {s.title}
+          </button>
+        ))}
+      </div>
+      {active && (
+        <div key={active.id} className="card saved-session-card active-session">
+          <div className="card-header">
+            <div>
+              <div className="card-title">{active.title}</div>
+              <div className="saved-session-meta"><span>{active.level}</span><span>·</span><span>{active.duration} min</span><span>·</span><span>{active.games.length} games</span></div>
             </div>
-            {s.focus && <div className="session-focus">{s.focus}</div>}
-            <div className="session-games-list">
-              {s.games.map((sg, i) => {
-                const g = getGame(sg.gameId)
-                const cat = g ? CATEGORY_META[g.category] : null
-                return (
-                  <div key={i} className="sg-row">
-                    <span className="sg-dur">{sg.duration}m</span>
-                    {cat?.emoji && <span>{cat.emoji}</span>}
-                    <span>{g?.title || sg.gameId}</span>
-                    {sg.notes && <span className="sg-note">— {sg.notes}</span>}
-                  </div>
-                )
-              })}
+            <div className="session-menu-wrap">
+              <button className="session-menu-btn" onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === active.id ? null : active.id) }}>⋮</button>
+              {menuOpenId === active.id && <div className="session-menu-dropdown" onClick={e => e.stopPropagation()}>
+                <button onClick={() => { onCopyEdit(active); setMenuOpenId(null) }}>Copy & Edit</button>
+                <button className="danger" onClick={() => { deleteSession(active.id); setMenuOpenId(null) }}>Delete</button>
+              </div>}
             </div>
-            {expandedId === s.id && s.games.map((sg, i) => {
+          </div>
+          {active.focus && <div className="session-focus">{active.focus}</div>}
+          <div className="session-games-list">
+            {active.games.map((sg, i) => {
               const g = getGame(sg.gameId)
-              if (!g) return null
+              const cat = g ? CATEGORY_META[g.category] : null
               return (
-                <div key={i} className="session-game-detail">
-                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{g.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6 }}>{g.startingPosition}</div>
-                  {g.players?.map((p: any, pi: number) => (
-                    <div key={pi} style={{ fontSize: 11, marginBottom: 3, paddingLeft: 8, borderLeft: `2px solid ${pi === 0 ? 'var(--accent)' : 'var(--orange)'}` }}>
-                      <strong>{p.role}</strong>: {p.objective}{p.winCondition && ` 🎯 ${p.winCondition}`}
-                    </div>
-                  ))}
+                <div key={i} className="sg-row">
+                  <span className="sg-dur">{sg.duration}m</span>
+                  {cat?.emoji && <span>{cat.emoji}</span>}
+                  <span>{g?.title || sg.gameId}</span>
+                  {sg.notes && <span className="sg-note">— {sg.notes}</span>}
                 </div>
               )
             })}
-            {s.notes && <div className="session-notes-box">{s.notes}</div>}
           </div>
-        ))}
-      </div>
+          {active.games.map((sg, i) => {
+            const g = getGame(sg.gameId)
+            if (!g) return null
+            return (
+              <div key={i} className="session-game-detail">
+                <div className="sgd-title">{g.title}</div>
+                <div className="sgd-start">{g.startingPosition}</div>
+                {g.players?.map((p: any, pi: number) => (
+                  <div key={pi} className={`sgd-player ${pi === 0 ? 'sgd-p1' : 'sgd-p2'}`}>
+                    <div className="sgd-role">{p.role}</div>
+                    <div className="sgd-obj">{p.objective}</div>
+                    {p.winCondition && <div className="sgd-win">Win: {p.winCondition}</div>}
+                    {p.constraints?.length > 0 && (
+                      <div className="sgd-constraints">{p.constraints.map((c: string, ci: number) => <span key={ci} className="sgd-constraint">{c}</span>)}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )
+          })}
+          {active.notes && <div className="session-notes-box">{active.notes}</div>}
+        </div>
+      )}
     </div>
   )
 }
