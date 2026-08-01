@@ -1,0 +1,21 @@
+{
+  "totalGames": 161,
+  "categories": {
+    "guard-passing": 15,
+    "pinning": 19,
+    "standing": 23,
+    "guard": 10,
+    "half-guard": 7,
+    "seated-guard": 10,
+    "k-guard-dlr": 3,
+    "back-control": 9,
+    "armbar": 9,
+    "front-headlock": 5,
+    "kimura": 3,
+    "leg-locks": 33,
+    "triangle": 2,
+    "whole-space": 3,
+    "stand-up": 8,
+    "submissions": 2
+  }
+}

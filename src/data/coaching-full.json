@@ -1,0 +1,1169 @@
+[
+  {
+    "id": "design-games",
+    "title": "How to Design CLA Games for Jiu-Jitsu",
+    "emoji": "🦧",
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/img/design-games.jpg"
+      },
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🦧How to Design CLA Games for Jiu-Jitsu"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "The Core Idea"
+      },
+      {
+        "type": "paragraph",
+        "text": "CLA (Constraints-Led Approach) games are not drills. They are live, resisted situations where both players have a task — and skill emerges from the struggle, not from memorizing steps."
+      },
+      {
+        "type": "paragraph",
+        "text": "The coach's job is to design the environment. The athlete's job is to solve the problem."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"It's never enough to regurgitate and memorize a bunch of facts or show a bunch of moves. We have to use our knowledge to design good practices so athletes can turn that knowledge into skill.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 1: Identify the Invariant"
+      },
+      {
+        "type": "paragraph",
+        "text": "Before you design anything, ask:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**What never changes, no matter how this position plays out?**"
+      },
+      {
+        "type": "paragraph",
+        "text": "This is called the *invariant* — the physical constant that underlies all variations of a technique or position. Every effective game is built around one."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Examples of invariants:"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "How to find the invariant:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Ask yourself: *\"Is there any version of this technique where this thing did NOT happen?\"*"
+      },
+      {
+        "type": "paragraph",
+        "text": "If the answer is no — that's your invariant. Build your game around it."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 2: Define the Problem (Exposure)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Once you know the invariant, you need to expose your student to the problem that invariant solves."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Do not explain the solution first. Put them in the problem.**"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Imagine if I told you all the things you'd have to worry about in a round you've never done before. How would you know what a problem actually is?\""
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Ask yourself:"
+      },
+      {
+        "type": "paragraph",
+        "text": "What is the defending player trying to do that makes this hard?"
+      },
+      {
+        "type": "paragraph",
+        "text": "What are the four or five things that go wrong when trying to achieve this outcome?"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Example — Pinning:"
+      },
+      {
+        "type": "paragraph",
+        "text": "The four problems a pinner always faces:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Limb extension** — partner pushes you away"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Limb retraction** — partner pulls arms back in"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Rotation** — partner turns to get off their back"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Basing** — partner gets points of contact on the floor to push up"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design a game that forces the student to encounter these problems — don't list them out first."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 3: Create the Win Condition (Opportunity)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Every game needs a clear win condition. This gives the student something to aim for and makes feedback immediate."
+      },
+      {
+        "type": "paragraph",
+        "text": "The win condition should:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Be achievable through multiple paths (not one specific technique)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Be directly connected to the invariant you identified"
+      },
+      {
+        "type": "paragraph",
+        "text": "Be simple enough to explain in one or two sentences"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Exposure and opportunity. You want to expose yourself to the problem. And whatever game you create needs to give you an opportunity to solve it.\""
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Win condition examples:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Top player: connect both hands under partner's elbows → you win"
+      },
+      {
+        "type": "paragraph",
+        "text": "Bottom player: get both elbows back to touch your body → you win"
+      },
+      {
+        "type": "paragraph",
+        "text": "Attacking player: entangle the hip, lock hands around hips, OR put partner's back on the mat → you win"
+      },
+      {
+        "type": "paragraph",
+        "text": "Defending player: get to your feet and break connections → you win"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 4: Set the Constraints"
+      },
+      {
+        "type": "paragraph",
+        "text": "Constraints are anything that limits options and directs attention. They shape behavior without telling the student *how* to move."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Types of constraints:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Task constraints** — rules of the game"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Top player: you cannot put your hooks in\""
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Bottom player: keep both feet to the inside at all times\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**Starting position** — where the round begins"
+      },
+      {
+        "type": "paragraph",
+        "text": "Chest to chest, hips covered, double underhooks in"
+      },
+      {
+        "type": "paragraph",
+        "text": "Double seated, one foot in between partner's knees"
+      },
+      {
+        "type": "paragraph",
+        "text": "Standing, one player with ankle grip"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Partner constraint** — who they play with and how"
+      },
+      {
+        "type": "paragraph",
+        "text": "Resistant vs. cooperative"
+      },
+      {
+        "type": "paragraph",
+        "text": "Larger vs. smaller partner"
+      },
+      {
+        "type": "paragraph",
+        "text": "Experienced vs. inexperienced"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Remove a win condition** — if a player is too successful in one area, take away that option and force them to find another"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"If somebody is too successful and we need them to explore more, we constrain it and don't let them do it.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 5: Keep It Live"
+      },
+      {
+        "type": "paragraph",
+        "text": "All games should be:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Live** — both players are resisting, not cooperating"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Unscripted** — no predetermined sequences"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Uncooperative** — the defending player is actually trying to win"
+      },
+      {
+        "type": "paragraph",
+        "text": "Static drilling and cooperative technique practice are not the main event. They may have a place, but skill is acquired through live interaction with a resisting partner."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"All I'm saying is that when we train, it should be all live. It should be unscripted. It should be uncooperative.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 6: Progress the Game (Complexity)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Start simple. Add complexity by giving players more conditions to fulfil — not more techniques to remember."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Example progression (pinning):"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 1 — One focus:** Stay chest-to-chest or chest-to-back, and stay under both partner's elbows. Continuous for top player. Bottom player wins if they free both elbows."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 2 — Add a second condition:** Same as above, but now top player must also keep hips covered. Bottom player can also win by pushing top player over."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 3 — Add a third condition:** Same, but top player starts without elbow position and must earn it. Bottom player can now also wrestle up to standing."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 4 — The whole pin:** Start with one hand around partner's waist, partner on their side. Top player must achieve chest contact + elbow connection + hip coverage in any order. Bottom player can stand up, roll top player, or recover guard."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"We start simply first. Then as each game progresses, we make it more complex — meaning you had more to face.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Step 7: Coach in Real Time"
+      },
+      {
+        "type": "paragraph",
+        "text": "Your job during the game is not to stop and explain — it's to observe, then adjust."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "What to look for:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Is the student encountering the problem you designed for?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Are they finding solutions, or are they stuck?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Is the task too easy (not enough resistance) or too constrained (no room to solve)?"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "When to intervene:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Give a minimal cue connected to the invariant: *\"What's stopping you from covering the hip?\"*"
+      },
+      {
+        "type": "paragraph",
+        "text": "Change the starting position to put them closer to the problem"
+      },
+      {
+        "type": "paragraph",
+        "text": "Change the win condition to redirect attention"
+      },
+      {
+        "type": "paragraph",
+        "text": "Change the partner"
+      },
+      {
+        "type": "paragraph",
+        "text": "\"There is no curriculum. There is no template. There's only a way to look at what's happening and filter things through it.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Quick Reference: Game Design Checklist"
+      },
+      {
+        "type": "paragraph",
+        "text": "Before running any game, confirm:"
+      },
+      {
+        "type": "paragraph",
+        "text": "I know the invariant (the thing that never changes)"
+      },
+      {
+        "type": "paragraph",
+        "text": "The game exposes the student to the real problem"
+      },
+      {
+        "type": "paragraph",
+        "text": "There is a clear win condition for both players"
+      },
+      {
+        "type": "paragraph",
+        "text": "The game is live and resisted"
+      },
+      {
+        "type": "paragraph",
+        "text": "The starting position makes sense relative to the skill I'm developing"
+      },
+      {
+        "type": "paragraph",
+        "text": "I can progress this game by adding conditions (not techniques)"
+      },
+      {
+        "type": "paragraph",
+        "text": "I'm not explaining the solution before they've felt the problem"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Framework: The Five Skills (Souders' Model)"
+      },
+      {
+        "type": "paragraph",
+        "text": "All of jiu-jitsu can be understood through this framework. Every game you design should connect to one of these:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Make and maintain connection** — connecting to a body to do something to it"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Manage distance** — gap closing or denying gap closure"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Destabilize** — making the partner fall, break structure, lose base"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Segmentation** — moving limbs out of the way to access the body"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Isolation** — separating a limb from everything else to make it vulnerable"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Immobilization** — holding a body or body part still"
+      },
+      {
+        "type": "paragraph",
+        "text": "Games can target one skill or chain multiple together as the student develops."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Example: Full Game Design — Guard Passing (Beginner)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Invariant:** The top player cannot pass while the bottom player's feet are on them."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Problem:** Bottom player will always try to reconnect their feet. Top player doesn't know how to manage this."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Exposure:** Start the top player in front of a seated bottom player. Let the bottom player immediately try to hook."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Win conditions:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Bottom player: get both feet connected inside the knees and use hands to put top player on their butt"
+      },
+      {
+        "type": "paragraph",
+        "text": "Top player: keep feet off, step inside or outside the knees — continuous, no win required yet"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Constraint:** Top player must keep at least one leg in between partner's knees at all times (or outside)."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Progression:** Add a win condition for the top player — connect hands around the hips or shoulders."
+      },
+      {
+        "type": "paragraph",
+        "text": "*Based on the work of Greg Souders, Standard Jiu-Jitsu. Instagram: @GD_STS*"
+      }
+    ]
+  },
+  {
+    "id": "session-structure",
+    "title": "Session Plan",
+    "emoji": "🐇",
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/img/create-session.jpg"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "🐇Session Plan"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Core Philosophy"
+      },
+      {
+        "type": "paragraph",
+        "text": "Everything is live resistance. No static drilling. The foundation of every session is: **expose the student to the problem, then give them the opportunity to solve it.**"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Session Structure"
+      },
+      {
+        "type": "list",
+        "items": [
+          "**1. Warm-Up — Low Variability** Start with a simple, live task. Not jogging or shrimping up and down the mat. Something like hand fighting standing up. Intensity is controlled through task design, time intervals, and partner selection — not by telling people to \"go at 50%.\"",
+          "**2. Define the Concept** Briefly show or explain what you're working on. Not step-by-step technique, but *what are we trying to achieve and why?* Give students just enough context so the games mean something. Example: \"Today we're working on pinning. To hold someone down you must cover hips and shoulders simultaneously.\"",
+          "**3. Games — Simple to Complex** Build games in layers through the session. Each game adds one more problem to solve:"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 1** — One task, low chaos. Example: top player stays under both elbows, bottom player tries to get elbows back to body. That's it."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 2** — Add a win condition. Now top player must also cover hips. Bottom player can push, rotate, base."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Game 3** — Full integration. Multiple ways to win, all connected to the same concept. Closer to the full game."
+      },
+      {
+        "type": "paragraph",
+        "text": "The key principle: each game builds on the last, but students are never given more information than they need to engage with the current problem."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**4. Coach's Role During Games** You are a facilitator, not a lecturer. You're reading the room, adjusting tasks on the fly, answering questions that arise from what students are actually experiencing. If a problem keeps coming up, you design the next game around it. There is no fixed curriculum — only a framework and real-time adjustment.",
+          "**5. Q&A / Debrief** After games, open the floor. Students now have shared experience, so concepts actually land. This is when language and explanation become useful — not before."
+        ]
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "What to Avoid"
+      },
+      {
+        "type": "paragraph",
+        "text": "Showing a technique and then drilling it cooperatively"
+      },
+      {
+        "type": "paragraph",
+        "text": "Spending more time talking than playing"
+      },
+      {
+        "type": "paragraph",
+        "text": "Giving students more information than they can act on right now"
+      },
+      {
+        "type": "paragraph",
+        "text": "Solving problems students haven't experienced yet"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "The Underlying Framework"
+      },
+      {
+        "type": "paragraph",
+        "text": "Every game should connect to one of these fundamental skills:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Making and maintaining connection**"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Managing distance**"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Destabilizing** the partner"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Segmentation** (moving limbs out of the way)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Isolation** (making a limb vulnerable)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Immobilization** (holding the body or part of it still)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Focus games around **invariant features** — the things that never change regardless of who's doing the technique or how. For guard passing, feet always have to come off the top player. For arm locks, the elbow always has to move. Build your tasks around those constants, not around specific step-by-step sequences."
+      }
+    ]
+  },
+  {
+    "id": "beginner-guide",
+    "title": "Beginner Session Guide",
+    "emoji": "🐒",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🐒 Beginner Session Guide"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Core Philosophy Before You Start"
+      },
+      {
+        "type": "paragraph",
+        "text": "Every game needs three things:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Definition** – where are we, what is this?"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Objective** – what are we trying to accomplish here?"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Task** – what specifically will they do in the game?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Keep talking to under 90 seconds. Get them working fast."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Session Structure (60 minutes)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Warm-up game: 6 min** Low variability, low intensity. Both players moving, but nothing explosive or dangerous."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Guard games: ~24 min** (2–3 games × 6 min each)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Pinning games: ~24 min** (2–3 games × 6 min each)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Buffer time for transitions/brief explanations: ~6 min**"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Game Design Rules"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Continuous vs. Terminal games**"
+      },
+      {
+        "type": "paragraph",
+        "text": "One player always has a *continuous* job (keep doing X as long as you can)"
+      },
+      {
+        "type": "paragraph",
+        "text": "The other player always has a *terminal* job (reach a specific outcome = win)"
+      },
+      {
+        "type": "paragraph",
+        "text": "This creates natural pauses so beginners don't gas out, and gives them a goal to chase"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Zero-sum design**"
+      },
+      {
+        "type": "paragraph",
+        "text": "If the top player's job is to stay on top and hold their partner down, the bottom player's job must be the opposite: get up or put top player on their butt"
+      },
+      {
+        "type": "paragraph",
+        "text": "What's good for one player must be bad for the other – this prevents \"gaming the game\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**Switch top to bottom every time someone wins.** Don't let one person stay on top for the whole 6 minutes."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Guarded Work – Example Games"
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 1 – Feet Off (Warm-up/opener)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Setup:** Bottom player lies on back, feet pointed at top player. Top player stands in front."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Top player (continuous):** Stay on your feet, keep at least one hand connected to your partner at all times, and keep their feet off of you. No chest-to-chest, no double knees down."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Bottom player (terminal):** Use hands and feet to connect to top player and make them fall on their butt. Butt touches the mat = bottom player wins."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Switch** top to bottom every time bottom player wins."
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 2 – Inside Position"
+      },
+      {
+        "type": "paragraph",
+        "text": "Same rules as Game 1, but now add:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Top player:** Try to get one leg between your partner's knees and keep it there. If it comes out, fight to get it back."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Bottom player:** Try to get *both* feet to the inside of your partner's knees, then use that to make them hit their butt."
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 3 – Cover the Hips (progression)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Same rules, but now:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Top player:** Clear the feet, advance to the knees, then cover/surround your partner's hips with any two parts of your body (hands, knees, elbows – doesn't matter). That's the win."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Bottom player:** Same as before – make top player hit their butt."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Pinning Work – Example Games"
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 1 – Stay on Top, Hold Them Down"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Setup:** Start chest-to-chest, past the legs."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Top player (continuous):** Stay on top and hold your partner down. Move around their body however you like, but don't let them up."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Bottom player (terminal):** Push top player off and get your legs back in front of them."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Switch** when bottom player gets their legs back in front."
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 2 – Get Under the Elbows"
+      },
+      {
+        "type": "paragraph",
+        "text": "Same setup, but now give the top player a win condition:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Top player:** Stay on top, hold them down AND get one arm underneath your partner's elbows with hands connected = win."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Bottom player:** Push on top player's hips and knees to create space and get legs back in front."
+      },
+      {
+        "type": "heading",
+        "level": "4",
+        "text": "Game 3 – Scalable Version (for mixed-level groups)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Tell the room: *\"Choose your difficulty.\"*"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Easy:** Get one arm under your partner's elbows, connect hands = win"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Medium:** Get both arms under your partner's elbows, connect hands = win"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Hard:** Get both arms under elbows, connect hands, AND cover the hips = win"
+      },
+      {
+        "type": "paragraph",
+        "text": "Bottom player's job stays the same across all three: create space, get legs back in front or reverse top player."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Scaling for Mixed Levels"
+      },
+      {
+        "type": "paragraph",
+        "text": "When you have beginners and more experienced players in the same session:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Keep the **win condition the same** for everyone"
+      },
+      {
+        "type": "paragraph",
+        "text": "Change the **starting position** or **constraints** for the more advanced player"
+      },
+      {
+        "type": "paragraph",
+        "text": "Pair people at similar levels where possible – a huge skill gap is bad for both players"
+      },
+      {
+        "type": "paragraph",
+        "text": "If the gap is unavoidable, give the stronger player a harder task focus"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Key Coaching Principles"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Don't solve problems they're not having yet.** Let mistakes happen. Let them get reversed, let them fail. That failure is information."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Demonstrate sloppily on purpose.** If you show a perfect technique, they'll copy it rigidly. Show the position loosely so they understand the *situation*, not a fixed movement."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Ask questions, don't give answers.** If a student is stuck, ask \"what happened when you tried that?\" not \"here's what you should do.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**Words are a tool, use them sparingly.** A simple task focus beats a five-minute explanation every time."
+      },
+      {
+        "type": "paragraph",
+        "text": "**There are no bad reps.** Movement that emerges from live resistance is always more valuable than a perfect-looking drill with no resistance."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "What to Avoid"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "One-Line Summary"
+      },
+      {
+        "type": "paragraph",
+        "text": "Define where you are → give them a task → let them struggle → let the resistance teach them."
+      }
+    ]
+  },
+  {
+    "id": "coaching-cues",
+    "title": "How to Give Effective Cues to Students",
+    "emoji": "🕵️",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🕵️ How to give effective clues to students"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Practice design comes first.** Your first intervention is the task you set up, not your words. Verbal cues come second and used in a limited fashion. Greg is largely quiet in the room and only speaks when he needs to."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Words are a constraint.** Whatever you say has an effect on the student's attention and focus — but not always the effect you wanted. More instruction is not better. Constant talking (\"puppeteering\") makes athletes worse."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Build shared experience before talking.** Let the student struggle first. When they ask for help, ask questions before giving answers: *What was your intention? Did it work? Did it fail? Why?* If they can't tell you why they failed, don't suggest anything — they aren't paying attention to the result of their own actions yet, so any answer is just copying."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Use external focus.** Talk about the effect on the opponent, not how the student's body feels. The opponent is the feedback. External focus enhances performance; internal focus costs performance."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Use condition + effect format.** Greg's actual cues: *Clear the feet. Staple him to the floor. Keep the feet off of you. Make them turn away. Extend the elbow. Get behind the elbow. Hip focus. Build height. Straighten the limb.* Short, concrete, aimed at the opponent."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Anchor cues around invariants** — the things that don't change person to person. Cue around something specific to your own game and it won't survive different body types."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Be repetitive and consistent.** Use the same cues every day, and the same ones in the corner during competition. Don't introduce new language when it matters — it pulls attention off the task."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Different students need different words.** If one cue doesn't land, try another way of saying the same thing. Some athletes also need your voice in the corner more than others — read the individual."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Competition exception:** if one piece of advice will help your athlete win right now, give it. But know that in-the-moment fixes are not the same as teaching that persists."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Talk to students like humans.** The technical vocabulary (invariance, constraints, focus of attention) is for you as a coach. In the room: push, rotate, squeeze, get your chest on theirs."
+      }
+    ]
+  },
+  {
+    "id": "iterative-practice",
+    "title": "Iterative Practice",
+    "emoji": "🧑‍🍼",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🧑‍🍼Iterative Practice"
+      },
+      {
+        "type": "paragraph",
+        "text": "One of the most important principles in applying CLA is that **no game is final**. Every game you give a student is diagnostic — it tells you something about where they currently are. What you do next should come directly from what you observed, not from what you planned."
+      },
+      {
+        "type": "paragraph",
+        "text": "This is what Greg calls iterative practice. The loop is simple:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Give a game → watch what happens → adjust the next game based on what you saw.**"
+      },
+      {
+        "type": "paragraph",
+        "text": "The adjustment might mean narrowing the task if the student looks lost, widening it if things are too easy, changing the starting position, or adding a new constraint that addresses a specific breakdown you noticed. The key is that the game responds to the student, not the other way around."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Example"
+      },
+      {
+        "type": "paragraph",
+        "text": "A student is belly-up trying to keep feet and hands connected to a standing partner. They immediately lose connection — feet go everywhere, no clear focus. Rather than explaining technique, the coach starts the next game with the student already connected, feet inside the partner's knees. Now there's a reference point. Connection time improves. The coach then notices the partner is moving too fast laterally and the student can't track it, so he adds a task of grabbing both ankles to reduce that mobility. Each game builds directly on what the previous one revealed."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Why It Matters"
+      },
+      {
+        "type": "paragraph",
+        "text": "A game that works perfectly for one student may be completely wrong for another. Even the same student needs different games as they develop. This is why pre-written curricula and plug-and-play game libraries have a ceiling — they can give you a starting point, but they can't account for what is actually happening in front of you. The coach's job is to stay present, read what the student is showing them, and design the next constraint from that."
+      }
+    ]
+  },
+  {
+    "id": "beginners-advanced",
+    "title": "Training Beginners vs Advanced Students",
+    "emoji": "⚖️",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "⚖️ Training beginners vs advanced students"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Beginners**"
+      },
+      {
+        "type": "paragraph",
+        "text": "They need direction and clear tasks: \"What's my intention here? Where should I look?\" That's your job to provide."
+      },
+      {
+        "type": "paragraph",
+        "text": "Drills should have a defined endpoint (terminal) rather than being continuous — it gives pauses and concrete goals, which matters because they're tired, nervous, and have no idea where they are."
+      },
+      {
+        "type": "paragraph",
+        "text": "Tasks are kept general and simple — e.g. \"hold the person down\" or \"get under one elbow.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "Tasks are loaded toward one side — one player gets a general goal, the other gets a more specific task that creates the problem you want them to solve."
+      },
+      {
+        "type": "paragraph",
+        "text": "Don't correct mistakes they haven't experienced yet. Let the mistake happen, let the consequence occur (safely), and use that as the basis for the next task."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Advanced students**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Verbal instructions stop working. The environment is everything — you need to put them in the right situations."
+      },
+      {
+        "type": "paragraph",
+        "text": "Drills can be continuous and open, since they can handle the physical and cognitive load."
+      },
+      {
+        "type": "paragraph",
+        "text": "Tasks become more specific and complex — e.g. \"lower the hips by interacting with your partner's feet, from different grips and starting positions.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "Putting advanced students against each other increases complexity on its own."
+      },
+      {
+        "type": "paragraph",
+        "text": "The better the athlete, the more individual the work has to become. What's happening for one athlete isn't happening for anyone else, and you have to figure out exactly which situations create the change you're looking for."
+      },
+      {
+        "type": "paragraph",
+        "text": "This is the genuinely hard part of coaching. Getting a small change in someone who has trained for 10 years is brutal."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Short version:** With beginners you give general opportunities for action to train general behaviors. With advanced students you give specific opportunities to train specific behaviors — and that requires individual work with each person."
+      }
+    ]
+  },
+  {
+    "id": "scaling",
+    "title": "Scaling CLA Practice",
+    "emoji": "🐯",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🐯Scaling CLA Practice"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Why scale"
+      },
+      {
+        "type": "paragraph",
+        "text": "In a mixed room, everyone needs a focus regardless of level. The weakest player needs a clear goal they can pursue even if they never hit it. The strongest player needs somewhere to progress to. Scaling isn't beginner games vs. advanced games — it's setting tasks that create enough stress to produce a change in that specific person."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Two ways to scale"
+      },
+      {
+        "type": "paragraph",
+        "text": "Choose your own difficulty. Give three win conditions of increasing difficulty. Each student picks which one to go after."
+      },
+      {
+        "type": "paragraph",
+        "text": "Win, move on; lose, stay. Each person tracks their own progress. Win and you advance to the harder version. Lose and you repeat the same one."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "How a progression looks"
+      },
+      {
+        "type": "paragraph",
+        "text": "Standing — handfight to closed hands"
+      },
+      {
+        "type": "paragraph",
+        "text": "Close hands anywhere from shoulders to ankles wins."
+      },
+      {
+        "type": "paragraph",
+        "text": "Close hands AND put partner down wins."
+      },
+      {
+        "type": "paragraph",
+        "text": "Close hands → put down → close hands again → put down wins."
+      },
+      {
+        "type": "paragraph",
+        "text": "Pin completion — top vs. side-lying bottom"
+      },
+      {
+        "type": "paragraph",
+        "text": "Chest-to-chest contact AND hands connected under one elbow."
+      },
+      {
+        "type": "paragraph",
+        "text": "Same start, but get to the shoulders AND cover the hips."
+      },
+      {
+        "type": "paragraph",
+        "text": "Start in half guard, open hands. Connect, free the leg, cover the hips."
+      },
+      {
+        "type": "paragraph",
+        "text": "Each step adds a condition or removes a starting advantage."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Defender win conditions"
+      },
+      {
+        "type": "paragraph",
+        "text": "For pin escapes, three ways out: guard recovery (knee must be in front to count), closed guard, or reversal. Without clear escapes, rounds go one-sided."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Practical rules"
+      },
+      {
+        "type": "paragraph",
+        "text": "Class structure: standing, guarded, and pinning work in every all-levels class, each scaled."
+      },
+      {
+        "type": "paragraph",
+        "text": "Time: ~10-minute rounds when there are multiple ways to win in sequence. Gives time to actually work through it."
+      },
+      {
+        "type": "paragraph",
+        "text": "Size: keep partners within 10–15 kg. Big mismatches are a safety issue and the smaller player can't perform much."
+      },
+      {
+        "type": "paragraph",
+        "text": "Make wins obvious: big clear outcomes (get on top, get behind) beat abstract concepts. Concepts are for advanced players."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "No plug-and-play games"
+      },
+      {
+        "type": "paragraph",
+        "text": "You can run any of these, but you have to know what to do next based on what just happened. \"Next\" might be: same game, new partner. Same game, different time. Same game, one changed constraint. The only question that matters: is this challenging enough to create a change?"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Iterative reality"
+      },
+      {
+        "type": "paragraph",
+        "text": "The first one to three years of designing practice this way will be bumping around in the dark. Start with an idea, run it, watch what emerges, constrain further. That's the work."
+      }
+    ]
+  }
+]

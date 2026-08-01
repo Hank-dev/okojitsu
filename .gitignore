@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Local previews and design experiments
+sketches/
+*.png
+.hermes-*.cjs
+~*
+**/~*
+
+# Local tooling
+.gstack/
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets
+.env
+.env.*
+!.env.example

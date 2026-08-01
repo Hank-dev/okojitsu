@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Dojo — ØkoJitsu</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#040605;
+  color:#e0ede6;
+  line-height:1.5;
+  display:flex;
+  min-height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:#080b09;
+  border-right:1px solid #142118;
+  display:flex;flex-direction:column;padding:0;
+  position:sticky;top:0;height:100vh;
+}
+.sb-logo{
+  padding:20px 18px 16px;
+  border-bottom:1px solid #142118;
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;
+  color:#00ff88;letter-spacing:-0.02em;
+}
+.sb-logo-icon{
+  width:28px;height:28px;border:2px solid #00ff88;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:0 0 20px rgba(0,255,136,0.15);
+}
+.sb-nav{flex:1;padding:10px 10px;display:flex;flex-direction:column;gap:2px;}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;cursor:pointer;
+  font-size:13px;font-weight:500;color:#6a8f7a;transition:all 0.12s;
+  border:none;background:none;font-family:'Inter',sans-serif;text-align:left;
+}
+.sb-item:hover{color:#c4ded0;background:rgba(0,255,136,0.04);}
+.sb-item.active{color:#00ff88;background:rgba(0,255,136,0.08);}
+.sb-item-icon{font-size:16px;width:20px;text-align:center;}
+.sb-stat{
+  padding:14px 18px;border-top:1px solid #142118;
+  font-size:10px;font-family:'JetBrains Mono',monospace;color:#3a5a48;letter-spacing:0.02em;
+}
+
+/* ===== MAIN ===== */
+.main{flex:1;padding:0;display:flex;flex-direction:column;}
+
+/* ===== TOP BAR ===== */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;border-bottom:1px solid #142118;
+  background:#040605;
+}
+.tb-title{font-size:15px;font-weight:600;color:#c4ded0;}
+.tb-right{display:flex;align-items:center;gap:14px;}
+.tb-search{
+  padding:7px 14px;border-radius:6px;border:1px solid #1a2e20;
+  background:#080b09;color:#e0ede6;font-size:13px;width:220px;
+  font-family:'Inter',sans-serif;outline:none;transition:border-color 0.12s;
+}
+.tb-search:focus{border-color:rgba(0,255,136,0.3);box-shadow:0 0 0 3px rgba(0,255,136,0.05);}
+.tb-search::placeholder{color:#3a5a48;}
+.tb-btn{
+  padding:7px 16px;border-radius:6px;border:1px solid #1a2e20;
+  background:transparent;color:#6a8f7a;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.12s;
+}
+.tb-btn:hover{border-color:#00ff88;color:#00ff88;box-shadow:0 0 16px rgba(0,255,136,0.1);}
+
+/* ===== CONTENT AREA ===== */
+.content{padding:28px 32px;flex:1;}
+
+/* ===== STAT CARDS ROW ===== */
+.stats{display:flex;gap:14px;margin-bottom:28px;}
+.stat-card{
+  background:#080b09;border:1px solid #142118;border-radius:10px;
+  padding:16px 20px;flex:1;
+}
+.stat-num{font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#00ff88;letter-spacing:-0.03em;}
+.stat-label{font-size:12px;color:#4d6b5b;margin-top:4px;}
+
+/* ===== SECTION HEADER ===== */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;
+}
+.section-title{font-size:18px;font-weight:600;color:#c4ded0;}
+.section-count{font-size:12px;color:#4d6b5b;font-family:'JetBrains Mono',monospace;}
+
+/* ===== CATEGORY PILLS ===== */
+.cat-pills{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+.cat-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:20px;cursor:pointer;
+  font-size:12px;font-weight:500;color:#6a8f7a;
+  background:transparent;border:1px solid #1a2e20;
+  font-family:'Inter',sans-serif;transition:all 0.12s;
+}
+.cat-pill:hover{border-color:#2a4834;color:#a0c0ae;}
+.cat-pill.active{background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.25);color:#00ff88;}
+.cat-pill-count{
+  font-size:10px;font-family:'JetBrains Mono',monospace;
+  background:rgba(255,255,255,0.04);padding:0 6px;border-radius:6px;
+}
+
+/* ===== GAME GRID (compact cards) ===== */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
+.game-card{
+  background:#080b09;border:1px solid #142118;border-radius:8px;
+  padding:14px 16px;cursor:pointer;transition:all 0.12s;
+  position:relative;overflow:hidden;
+}
+.game-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--cat-color,#00ff88);opacity:0.3;
+}
+.game-card:hover{border-color:#1d3326;background:#0b100d;transform:translateY(-1px);}
+.game-card:hover::before{opacity:0.8;}
+.gc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.gc-title{font-size:14px;font-weight:600;color:#c4ded0;}
+.gc-badges{display:flex;gap:4px;flex-shrink:0;}
+.gc-badge{
+  padding:1px 6px;border-radius:3px;font-size:9px;font-weight:600;
+  font-family:'JetBrains Mono',monospace;
+}
+.bg-beginner{background:rgba(0,255,136,0.1);color:#00ff88;}
+.bg-intermediate{background:rgba(240,151,58,0.12);color:#f0973a;}
+.bg-advanced{background:rgba(239,68,85,0.1);color:#ef4455;}
+.bg-all{background:rgba(255,255,255,0.04);color:#6a8f7a;}
+.gc-start{font-size:12px;color:#4d6b5b;line-height:1.5;margin-bottom:8px;}
+.gc-players{display:flex;flex-direction:column;gap:4px;}
+.gc-p{display:flex;align-items:flex-start;gap:6px;font-size:12px;}
+.gc-p-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#00ff88;min-width:52px;padding-top:2px;}
+.gc-p-d{color:#6a8f7a;}
+.gc-p.d .gc-p-label{color:#f0973a;}
+.gc-source{font-size:10px;color:#3a5a48;font-family:'JetBrains Mono',monospace;margin-top:8px;padding-top:8px;border-top:1px solid #0d1a12;}
+
+/* ===== SESSION CARDS ===== */
+.session-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;margin-top:0;}
+.session-card{
+  background:#080b09;border:1px solid #142118;border-radius:10px;
+  padding:18px;cursor:pointer;transition:border-color 0.12s;
+}
+.session-card:hover{border-color:#1d3326;}
+.sc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.sc-title{font-size:14px;font-weight:600;color:#c4ded0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sc-badge{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:2px 6px;border-radius:3px;background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.15);font-family:'JetBrains Mono',monospace;}
+.sc-meta{font-size:11px;color:#4d6b5b;font-family:'JetBrains Mono',monospace;display:flex;gap:6px;margin-bottom:6px;}
+.sc-focus{font-size:12px;color:#6a8f7a;font-style:italic;margin-bottom:10px;}
+.sc-games{display:flex;flex-direction:column;gap:3px;}
+.sc-g{font-size:12px;color:#6a8f7a;display:flex;align-items:center;gap:6px;}
+.sc-g-dur{color:#00ff88;font-family:'JetBrains Mono',monospace;font-weight:500;min-width:24px;}
+
+/* ===== PLAYER DETAIL PANEL ===== */
+.detail-panel{max-width:720px;}
+.dp-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #142118;}
+.dp-emoji{font-size:36px;}
+.dp-title{font-size:24px;font-weight:600;letter-spacing:-0.02em;color:#c4ded0;margin-bottom:4px;}
+.dp-meta{font-size:12px;color:#4d6b5b;font-family:'JetBrains Mono',monospace;display:flex;gap:8px;}
+.dp-section{margin-bottom:24px;}
+.dp-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#3a5a48;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.dp-start{font-size:14px;color:#6a8f7a;line-height:1.6;}
+.dp-players{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.dp-player{background:#080b09;border:1px solid #142118;border-radius:8px;padding:14px;border-top:2px solid #00ff88;}
+.dp-player.d{background:rgba(7,10,8,0.9);border-top-color:#f0973a;}
+.dp-role{font-size:13px;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #142118;}
+.dp-player .dp-role{color:#00ff88;}
+.dp-player.d .dp-role{color:#f0973a;}
+.dp-field{margin-bottom:8px;}
+.dp-field:last-child{margin-bottom:0;}
+.dp-f-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3a5a48;margin-bottom:2px;font-family:'JetBrains Mono',monospace;}
+.dp-f-text{font-size:13px;color:#6a8f7a;line-height:1.5;}
+.dp-rationale{background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);border-radius:8px;padding:14px;font-size:13px;color:#6a8f7a;font-style:italic;line-height:1.6;}
+
+/* ===== PAGE TITLES ===== */
+.page-title{font-size:28px;font-weight:600;letter-spacing:-0.02em;color:#c4ded0;margin-bottom:6px;}
+.page-desc{font-size:14px;color:#4d6b5b;margin-bottom:28px;}
+
+/* ===== THEORY / COACHING SPLIT ===== */
+.theory-layout{display:grid;grid-template-columns:220px 1fr;gap:32px;}
+.tsidebar{position:sticky;top:28px;align-self:start;}
+.ts-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;cursor:pointer;color:#4d6b5b;font-size:13px;transition:all 0.12s;}
+.ts-item:hover{color:#a0c0ae;background:rgba(0,255,136,0.03);}
+.ts-item.active{color:#00ff88;background:rgba(0,255,136,0.06);}
+.ts-emoji{font-size:16px;}
+.tcontent h2{font-size:18px;font-weight:600;margin-top:28px;margin-bottom:10px;color:#c4ded0;}
+.tcontent p{font-size:14px;color:#6a8f7a;line-height:1.7;margin-bottom:14px;}
+
+/* ===== Builder ===== */
+.bld-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;}
+.bld-sb{background:#080b09;border:1px solid #142118;border-radius:10px;padding:16px;position:sticky;top:28px;align-self:start;max-height:calc(100vh-60px);display:flex;flex-direction:column;}
+.bld-sb h3{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#3a5a48;margin-bottom:12px;font-family:'JetBrains Mono',monospace;}
+.bld-item{padding:7px 10px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid transparent;transition:all 0.1s;}
+.bld-item:hover{border-color:#1a2e20;background:rgba(0,255,136,0.03);}
+.bld-item-title{font-size:12px;font-weight:500;color:#6a8f7a;}
+.bld-add{background:rgba(0,255,136,0.06);color:#00ff88;border:1px solid rgba(0,255,136,0.12);border-radius:4px;padding:3px 8px;font-size:10px;font-weight:600;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+
+/* ===== SESSION FORM ===== */
+.sf-box{background:#080b09;border:1px solid #142118;border-radius:10px;padding:20px;}
+.sf-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sf-title{font-size:16px;font-weight:600;color:#c4ded0;}
+.sf-total{font-size:12px;color:#00ff88;font-family:'JetBrains Mono',monospace;}
+.sf-slots{display:flex;flex-direction:column;gap:6px;}
+.sf-slot{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid #142118;}
+.sf-num{width:24px;height:24px;border-radius:50%;background:rgba(0,255,136,0.06);color:#00ff88;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.sf-game{flex:1;font-size:13px;color:#6a8f7a;}
+.sf-dur{font-size:12px;color:#3a5a48;font-family:'JetBrains Mono',monospace;}
+.sf-remove{color:#3a5a48;cursor:pointer;border:none;background:none;font-size:16px;}
+
+/* ===== MEMES ===== */
+.meme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.meme-box{background:#080b09;border:1px solid #142118;border-radius:10px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:#3a5a48;font-size:12px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .content{padding:20px 16px}
+  .game-grid{grid-template-columns:1fr}
+  .session-grid{grid-template-columns:1fr}
+  .stats{flex-direction:column}
+  .dp-players{grid-template-columns:1fr}
+  .bld-layout{grid-template-columns:1fr}
+  .theory-layout{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR NAV ===== -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <span class="sb-logo-icon">Ø</span>
+    <span>ØkoJitsu</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-item active"><span class="sb-item-icon">🏠</span> Dashboard</div>
+    <div class="sb-item"><span class="sb-item-icon">📖</span> Theory</div>
+    <div class="sb-item"><span class="sb-item-icon">🤼</span> Game Library</div>
+    <div class="sb-item"><span class="sb-item-icon">🫄</span> Class Builder</div>
+    <div class="sb-item"><span class="sb-item-icon">📋</span> My Sessions</div>
+    <div class="sb-item"><span class="sb-item-icon">🕵️</span> Coaching</div>
+    <div class="sb-item"><span class="sb-item-icon">📜</span> Memes</div>
+  </div>
+  <div class="sb-stat">161 GAMES · 16 CATEGORIES</div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-title">🏠 Dashboard</div>
+    <div class="tb-right">
+      <input class="tb-search" placeholder="Search games..." />
+      <button class="tb-btn">+ New Game</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STATS ROW -->
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num">161</div><div class="stat-label">Games</div></div>
+      <div class="stat-card"><div class="stat-num">16</div><div class="stat-label">Categories</div></div>
+      <div class="stat-card"><div class="stat-num">13</div><div class="stat-label">Sessions</div></div>
+      <div class="stat-card"><div class="stat-num">19</div><div class="stat-label">Images</div></div>
+    </div>
+
+    <!-- GAME LIBRARY -->
+    <div class="section-header">
+      <div class="section-title">Game Library</div>
+      <div class="section-count">Showing 45 games</div>
+    </div>
+
+    <div class="cat-pills">
+      <div class="cat-pill active"><span>🎲</span> All <span class="cat-pill-count">161</span></div>
+      <div class="cat-pill"><span>🌈</span> Wraslin' <span class="cat-pill-count">23</span></div>
+      <div class="cat-pill"><span>🦄</span> Passing <span class="cat-pill-count">15</span></div>
+      <div class="cat-pill"><span>💂</span> Guard <span class="cat-pill-count">10</span></div>
+      <div class="cat-pill"><span>🧓</span> Half Guard <span class="cat-pill-count">7</span></div>
+      <div class="cat-pill"><span>🐖</span> Pinning <span class="cat-pill-count">19</span></div>
+      <div class="cat-pill"><span>🐍</span> Back Control <span class="cat-pill-count">9</span></div>
+      <div class="cat-pill"><span>🦶</span> Leg Locks <span class="cat-pill-count">33</span></div>
+      <div class="cat-pill"><span>🦍</span> Whole Space <span class="cat-pill-count">3</span></div>
+      <div class="cat-pill"><span>🧍</span> Stand Up <span class="cat-pill-count">8</span></div>
+    </div>
+
+    <div class="game-grid">
+      <div class="game-card" style="--cat-color:#3b82f6">
+        <div class="gc-top">
+          <span class="gc-title">🦄 Feet Off</span>
+          <div class="gc-badges"><span class="gc-badge bg-beginner">Beginner</span><span class="gc-badge bg-all">Mixed</span></div>
+        </div>
+        <div class="gc-start">Bottom player lies on back, feet pointed at top player. Top player stands in front.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Attacker</span><span class="gc-p-d">Stay on your feet, keep one hand connected, keep feet off.</span></div>
+          <div class="gc-p d"><span class="gc-p-label">Defender</span><span class="gc-p-d">Use hands and feet to make top player hit their butt.</span></div>
+        </div>
+        <div class="gc-source">Beginner Session Guide</div>
+      </div>
+
+      <div class="game-card" style="--cat-color:#3b82f6">
+        <div class="gc-top">
+          <span class="gc-title">🦄 Inside Position</span>
+          <div class="gc-badges"><span class="gc-badge bg-beginner">Beginner</span><span class="gc-badge bg-all">Mixed</span></div>
+        </div>
+        <div class="gc-start">Same setup as Feet Off. Top player must also get one leg between partner's knees.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Attacker</span><span class="gc-p-d">Keep feet off + get one leg between knees and hold it.</span></div>
+          <div class="gc-p d"><span class="gc-p-label">Defender</span><span class="gc-p-d">Get both feet inside knees, make top player hit butt.</span></div>
+        </div>
+        <div class="gc-source">Beginner Session Guide</div>
+      </div>
+
+      <div class="game-card" style="--cat-color:#f59e0b">
+        <div class="gc-top">
+          <span class="gc-title">🌈 Hands Down / Knee Touch Snapdown</span>
+          <div class="gc-badges"><span class="gc-badge bg-all">All Levels</span><span class="gc-badge bg-all">Mixed</span></div>
+        </div>
+        <div class="gc-start">Both players standing, hand fighting. Farm points by making hands touch mat or touching behind knees.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Both</span><span class="gc-p-d">Collect points: hands to mat, behind knee touches. Connect hands to win.</span></div>
+        </div>
+        <div class="gc-source">Greg Souders Seminar</div>
+      </div>
+
+      <div class="game-card" style="--cat-color:#10b981">
+        <div class="gc-top">
+          <span class="gc-title">💂 Guard Retention — Stay Connected</span>
+          <div class="gc-badges"><span class="gc-badge bg-intermediate">Inter.</span><span class="gc-badge bg-beginner">Cont.</span></div>
+        </div>
+        <div class="gc-start">Bottom player on back, both hooks between partner's knees, one hand on each ankle.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Attacker</span><span class="gc-p-d">Keep feet and hands connected, push/pull with feet.</span></div>
+          <div class="gc-p d"><span class="gc-p-label">Defender</span><span class="gc-p-d">Get both legs to outside, break all connections.</span></div>
+        </div>
+        <div class="gc-source">Black Flag Jiu-Jitsu Seminar</div>
+      </div>
+
+      <div class="game-card" style="--cat-color:#ef4444">
+        <div class="gc-top">
+          <span class="gc-title">🐖 Stay on Top, Hold Them Down</span>
+          <div class="gc-badges"><span class="gc-badge bg-beginner">Beginner</span><span class="gc-badge bg-beginner">Cont.</span></div>
+        </div>
+        <div class="gc-start">Chest-to-chest, past the legs. Top player holds down, bottom player tries to get legs back in front.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Attacker</span><span class="gc-p-d">Stay on top, hold partner down, move around their body.</span></div>
+          <div class="gc-p d"><span class="gc-p-label">Defender</span><span class="gc-p-d">Push top player off, get legs back in front.</span></div>
+        </div>
+        <div class="gc-source">Beginner Session Guide</div>
+      </div>
+
+      <div class="game-card" style="--cat-color:#84cc16">
+        <div class="gc-top">
+          <span class="gc-title">🦶 Inside Position — Learning Entanglements</span>
+          <div class="gc-badges"><span class="gc-badge bg-beginner">Beginner</span><span class="gc-badge bg-all">Terminal</span></div>
+        </div>
+        <div class="gc-start">Straight ashi double seated. Bottom player explores foot positions.</div>
+        <div class="gc-players">
+          <div class="gc-p"><span class="gc-p-label">Attacker</span><span class="gc-p-d">Get both feet outside → move leg → get both feet back inside.</span></div>
+          <div class="gc-p d"><span class="gc-p-label">Defender</span><span class="gc-p-d">Separate feet, get both between partner's knees.</span></div>
+        </div>
+        <div class="gc-source">CLA Seminar (Beginner Friendly)</div>
+      </div>
+    </div>
+
+    <!-- SESSIONS -->
+    <div style="margin-top:48px">
+      <div class="section-header">
+        <div class="section-title">My Sessions</div>
+        <div class="section-count">11 from doc · 2 custom</div>
+      </div>
+
+      <div class="session-grid">
+        <div class="session-card">
+          <div class="sc-header">
+            <div class="sc-title">Fundamentals CLA Class <span class="sc-badge">from doc</span></div>
+          </div>
+          <div class="sc-meta"><span>Beginner</span> · <span>36 min</span> · <span>6 games</span></div>
+          <div class="sc-focus">Guard connection → knee line → pinning → back control → whole game</div>
+          <div class="sc-games">
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 💂 Make Inside Connection</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 💂 Make Inside Connection (One Leg)</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 💂 Destabilize to Hands / Advance Knee Line</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🐖 Side Control: Figure Four / Arm Extension</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🐍 Rear Mount: Maintain Back / Clear Defenders</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 💂 Whole Game</div>
+          </div>
+        </div>
+
+        <div class="session-card">
+          <div class="sc-header">
+            <div class="sc-title">Just Stand Up Bro <span class="sc-badge">from doc</span></div>
+          </div>
+          <div class="sc-meta"><span>All Levels</span> · <span>60 min</span> · <span>10 games</span></div>
+          <div class="sc-focus">Getting to your feet from every bad position</div>
+          <div class="sc-games">
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 Hand Connection Denial — Standing</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 Re-attack on the Break</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 One Hand, One Knee Get-Up</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 Turtle — Hip Breakdown</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 Chest-to-Chest Get-Up (No Hands)</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🧍 Chest-to-Chest — With Free Grip</div>
+          </div>
+        </div>
+
+        <div class="session-card">
+          <div class="sc-header">
+            <div class="sc-title">Playing the Whole Space <span class="sc-badge">from doc</span></div>
+          </div>
+          <div class="sc-meta"><span>Intermediate</span> · <span>30 min</span> · <span>3 games</span></div>
+          <div class="sc-focus">Move through back, seated, and standing while maintaining control</div>
+          <div class="sc-games">
+            <div class="sc-g"><span class="sc-g-dur">10m</span> 🦍 Playing the Whole Space</div>
+            <div class="sc-g"><span class="sc-g-dur">10m</span> 🦍 Out to the Ankle</div>
+            <div class="sc-g"><span class="sc-g-dur">10m</span> 🦍 Even Start</div>
+          </div>
+        </div>
+
+        <div class="session-card">
+          <div class="sc-header">
+            <div class="sc-title">Overhook/Underhook, K-Guard & Kimura <span class="sc-badge">from doc</span></div>
+          </div>
+          <div class="sc-meta"><span>All Levels</span> · <span>42 min</span> · <span>7 games</span></div>
+          <div class="sc-focus">Clinch → K-guard → kimura → armbar isolation</div>
+          <div class="sc-games">
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🌈 Overhook/Underhook — Sticking</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🌈 Stick and Pull</div>
+            <div class="sc-g"><span class="sc-g-dur">06m</span> 🐊 K-Guard: Inside Position</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COACHING -->
+    <div style="margin-top:48px">
+      <div class="section-header">
+        <div class="section-title">🕵️ Coaching</div>
+        <div class="section-count">7 sections from the doc</div>
+      </div>
+      <div class="theory-layout">
+        <aside class="tsidebar">
+          <div class="ts-item active"><span class="ts-emoji">🦧</span> Designing CLA Games</div>
+          <div class="ts-item"><span class="ts-emoji">🐇</span> Structuring a Session</div>
+          <div class="ts-item"><span class="ts-emoji">🕵️</span> Coaching Cues</div>
+          <div class="ts-item"><span class="ts-emoji">⚖️</span> Beginners vs Advanced</div>
+          <div class="ts-item"><span class="ts-emoji">🧑‍🍼</span> Iterative Practice</div>
+          <div class="ts-item"><span class="ts-emoji">🐯</span> Scaling Practice</div>
+          <div class="ts-item"><span class="ts-emoji">🌟</span> Five Skills Framework</div>
+        </aside>
+        <div class="tcontent">
+          <h2>🦧 Designing CLA Games</h2>
+          <p>CLA games are not drills. They are live, resisted situations where both players have a task — and skill emerges from the struggle. The coach's job is to design the environment. The athlete's job is to solve the problem.</p>
+          <h2>The 7-Step Process</h2>
+          <p><strong>1. Identify the invariant</strong> — what never changes? <strong>2. Define the problem</strong> — put them in the problem, don't explain the solution. <strong>3. Create the win condition</strong> — clear, achievable through multiple paths. <strong>4. Set the constraints</strong> — task rules, starting position, partner. <strong>5. Keep it live</strong> — both resisting, unscripted. <strong>6. Progress the game</strong> — add conditions, not techniques. <strong>7. Coach in real time</strong> — observe, then adjust.</p>
+          <p>You can run any of these, but you have to know what to do next based on what just happened. "Next" might be: same game, new partner. Same game, different time. Same game, one changed constraint. The only question that matters: is this challenging enough to create a change?</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

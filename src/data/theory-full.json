@@ -1,0 +1,1369 @@
+[
+  {
+    "id": "intro",
+    "title": "Enter the Real Game",
+    "emoji": "💊",
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/img/enter-real-game.jpg"
+      },
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "💊 Enter the real game"
+      },
+      {
+        "type": "paragraph",
+        "text": "**(Ragebait alert😂)***"
+      },
+      {
+        "type": "paragraph",
+        "text": "*Morpheus sits down in front of you.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "Before we begin, I need to ask you something."
+      },
+      {
+        "type": "paragraph",
+        "text": "Are you willing to consider that everything you think you know about training is wrong?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Not some of it. *Everything.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "You've felt it, haven't you. It's there — like a splinter in your mind. Something you can't quite name. You drill the movement perfectly, and then the moment someone actually resists, it dissolves. You memorize the system, and then the match arrives and the system is nowhere to be found. You watch the footage, absorb the details, take the notes — and still, something doesn't add up."
+      },
+      {
+        "type": "paragraph",
+        "text": "You've been telling yourself it's you. That you just need more repetitions. More footage. A better instructional."
+      },
+      {
+        "type": "paragraph",
+        "text": "But the splinter remains."
+      },
+      {
+        "type": "paragraph",
+        "text": "*He walks to the window.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "What if skill was never something you store. Never something you retrieve. What if it was always something that *emerges* — alive, relational, inseparable from the body in front of you and the chaotic struggle."
+      },
+      {
+        "type": "paragraph",
+        "text": "**What if the map was never the territory. And what if every instructional ever sold to you was just someone else's map.**"
+      },
+      {
+        "type": "paragraph",
+        "text": "*He turns.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "There is another way to look at this. A way that begins not with technique but with cause and effect. Not with memory but with perception. Not with what you've been told to do — but with what two bodies, in genuine unscripted struggle, inevitably discover together."
+      },
+      {
+        "type": "paragraph",
+        "text": "It is not new. It is not comfortable. And it cannot be packaged in ten hours of footage."
+      },
+      {
+        "type": "paragraph",
+        "text": "*He opens his hands.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "Take the blue pill — and the drilling continues."
+      },
+      {
+        "type": "paragraph",
+        "text": "Or take the red pill."
+      },
+      {
+        "type": "paragraph",
+        "text": "And I will show you how deep the rabbit hole goes."
+      }
+    ]
+  },
+  {
+    "id": "theory-matters",
+    "title": "Does Theory Matter in Jiu-Jitsu?",
+    "emoji": "📖",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "📖 Does Theory Matter in Jiu-Jitsu?"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "For the coach: theory is non-negotiable"
+      },
+      {
+        "type": "paragraph",
+        "text": "Beliefs inform action. If you think the brain is a computer that stores information, you'll coach one way. If you think it's a modeling system that builds behavior through interaction with the environment, you'll coach in a completely different way. You can't avoid having a theory — every coach has one in their head, whether they admit it or not. The question is whether it's a clear, examined theory or a vague set of habits inherited from your old coach."
+      },
+      {
+        "type": "paragraph",
+        "text": "A coach has to be able to define the concepts they're working with. If you don't have a clear definition of what an affordance or an attractor is, you can't manipulate those things in practice. Without theory, you can't design practice — you can only copy what was done to you. The whole job of a coach is to create new behavior in someone who doesn't have it yet. That's a serious claim. It demands that we actually study what behavior is and how it's built, instead of pulling the wool over everyone's eyes to protect the job."
+      },
+      {
+        "type": "paragraph",
+        "text": "Theory also gives you a framework to read the room in real time. There is no curriculum, no template — just a way of looking at what's happening and filtering it through principles. Without that lens, you can't adjust on the fly, and you can't tell whether what you're doing is actually working."
+      },
+      {
+        "type": "paragraph",
+        "text": "Historical knowledge is part of this too. Every coach has to know their field historically because that gives selective power when designing training. Knowing the historical record of what works (for example: legs become passable once we clear the feet and step between the knees) is what lets us identify the invariant relationships we want students to be attracted to."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "For the athlete/student: not strictly required"
+      },
+      {
+        "type": "paragraph",
+        "text": "Students do not need to know the framework to practice. Practice is the opportunity for engagement — they need rich opportunities for action, not lectures on direct perception. In the room, the language is human language: push, rotate, turn, stand, squeeze, get behind your partner, get your back off the mat. The science only informs how the coach designs the practice; it doesn't have to be spoken to the student to work."
+      },
+      {
+        "type": "paragraph",
+        "text": "There are different levels of engagement in any class. Some students just want to sweat. Some just want to learn how to get their training partner off them. The general practice has to appeal to that full room. Forcing theory on everyone misses the point."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "When theory does help the student"
+      },
+      {
+        "type": "paragraph",
+        "text": "Some students genuinely benefit from it. They want to go home and think. They want to understand why they're being asked to do what they're doing. For those people — sit down, theorize, share the science, point them at things to read."
+      },
+      {
+        "type": "paragraph",
+        "text": "There's also a split worth being aware of: when instruction is the only intervention, the more intellectual students get more from it than the more physical, instinctive ones. The \"brutes\" tend to get more out of just being put in positions with constraints and made to grind. So theory-heavy teaching is not a universal upgrade — it advantages one type of learner. The better move is to learn to whisper the secret in both languages, so each student gets what works for them."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "The bottom line"
+      },
+      {
+        "type": "paragraph",
+        "text": "Theory is for the coach. It's the thing that lets you design practice instead of just copying drills. For students, the practice itself is the teacher — they don't need the vocabulary, they need rich problems to solve. Offer the theory to those who want it, but never assume understanding the framework is what produces the skill. The skill comes from interacting with the live environment."
+      }
+    ]
+  },
+  {
+    "id": "what-is-bjj",
+    "title": "The Game of Immobilization",
+    "emoji": "🤼",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🤼The Game of Immobilization"
+      },
+      {
+        "type": "paragraph",
+        "text": "BJJ is fundamentally *the game of immobilization as it leads to strangulation and breaking.*"
+      },
+      {
+        "type": "paragraph",
+        "text": "To immobilize an opponent, you must first attack the **periphery** — the head, arms, and legs — in order to gain access to **center mass** (hips, chest, shoulders, and back). Once you control center mass, you immobilize it, which then allows you to isolate, immobilize, and reattach the periphery to finish."
+      },
+      {
+        "type": "paragraph",
+        "text": "The foundational skills required to begin this process are:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Connection** — making and maintaining physical contact"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Distance management** — controlling space through segmentation"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Destabilization** — breaking your opponent's base and structure"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Immobilization** — pinning and controlling your opponent's body"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Isolation** — separating the target limb from everything that can defend it"
+      }
+    ]
+  },
+  {
+    "id": "ecological-approach",
+    "title": "The Ecological Approach & CLA",
+    "emoji": "🌳",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "🌳 The Ecological Approach & Constraints-Led Approach (CLA) Based on Rob Gray – Perception Action Podcast"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The Ecological Approach – Core Principles**"
+      },
+      {
+        "type": "paragraph",
+        "text": "The ecological approach to skill acquisition is built on the idea that skillful movement is not about storing techniques in the brain, but about developing a relationship between the athlete and their environment. Key principles include:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Athlete-environment symmetry**: Skill emerges from the interaction between the athlete and their surroundings, not from mental models or motor programs stored in the head."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Information-movement coupling**: Athletes learn to attach their movement to powerful, specifying information from the environment (e.g. tau – the optical variable that tells you when an object will arrive)."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Self-organization**: Rather than prescribing one correct technique, the approach allows the body to find its own movement solutions within given constraints."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Repetition without repetition** (Bernstein): The goal is to repeat a good *outcome* without repeating the same *movement*. Variability in movement is necessary to handle the variability of real performance environments."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Affordances**: Athletes perceive opportunities for action directly from the environment – not abstract physical parameters."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Two Approaches to Skill Acquisition: Key Differences**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Rob Gray contrasts the ecological approach with the traditional **Information Processing (IP) approach**:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The Constraints-Led Approach (CLA) – What It Is**"
+      },
+      {
+        "type": "paragraph",
+        "text": "The CLA is the primary coaching methodology within ecological dynamics. A constraint is defined as *a feature of the individual, task, or environment that reduces the number of possible movement solutions*. All coaching involves constraint manipulation – the difference lies in the *purpose*."
+      },
+      {
+        "type": "paragraph",
+        "text": "The CLA uses constraints to encourage **guided self-organization**: the athlete is not told what to do, but is given problems that make their current (ineffective) solution unworkable, pushing them to explore and find a better one."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Four key goals of the CLA:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Destabilize** the existing non-optimal movement pattern"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Encourage exploration and self-organization**"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Amplify information and invite affordances** – make the better solution obvious through the environment"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Provide transition feedback** – feedback about whether the athlete's *search* for a new solution is going in the right direction (not just about outcome or technique)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Practical Examples**"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Baseball – Bat Speed (Lars Nootbaar / Drive Line)** A player had low bat speed due to poor hip-shoulder separation. Instead of telling him to \"rotate his hips more,\" coaches gave him a longer bat and asked him to hit to the opposite field – a task nearly impossible with his current swing. The constraint forced him to self-organize a new solution."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Baseball – Forearm Flyout (Connection Ball)** Pitchers who \"fly out\" the arm lose velocity and risk injury. A small rubber ball is placed under the pitching arm. The instruction: \"make the ball fall forward when it drops.\" If the arm separates too early, the ball falls backward – giving immediate transition feedback. The pitcher self-organizes a more connected delivery."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Small-Sided Games (Soccer, Basketball, etc.)** Changing field size, player numbers, and rules are classic task constraint manipulations that push players toward better movement decisions and tactical behavior without explicit instruction."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Evidence Supporting the Ecological Approach**"
+      },
+      {
+        "type": "list",
+        "items": [
+          "**1. You don't need to learn fundamentals first through decomposition**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "A study (Decker et al.) compared 10-year-old soccer players trained via skill-and-drill vs. small-sided games. Even on tests *biased toward technical skill*, both groups improved equally – with the small-sided game group showing better retention and a higher return on investment per rep (0.006s improvement per pass vs. 0.003s for the drill group)."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**2. Learning is not slower**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "Research by Schöllhorn and colleagues found no consistent evidence that ecological/variable practice leads to slower skill acquisition compared to traditional block practice – even on sports tasks."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**3. Variability is restructured, not eliminated**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "Elite athletes are not less variable – their variability is *restructured* to align with the solution space (e.g. different release angles in basketball shooting that all go in). This adaptability is what allows performance under changing conditions."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**4. Unpredictability is critical**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "A volleyball study showed that athletes who trained blocks (line, diagonal, open) in a random/unpredictable order outperformed those who practiced each type in a blocked fashion. Even a small number of unpredictable options produces significantly better results."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**5. Self-organization does not increase injury risk**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "A study measuring 8 ACL injury risk markers (ground reaction forces, joint angles) found that constraints-led and differential learning groups showed *reduced* risk factors compared to traditional training groups."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**6. More movement solutions available after CLA training**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "Studies in tennis and baseball show that ecological training leads to more movement options available to the athlete – not fewer. This is what allows them to adapt to changing pitch types, defenders, fatigue, etc."
+      },
+      {
+        "type": "list",
+        "items": [
+          "**7. Tactical behavior in team sports**"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "A series of studies by Ramos et al. (volleyball) showed that CLA training through small-sided games with varying task constraints improved team synergy and tactical coordination across a full competitive season."
+      },
+      {
+        "type": "paragraph",
+        "text": "**Key Implications for Practice Design**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Use **guided self-organization** – manipulate constraints, not technique cues"
+      },
+      {
+        "type": "paragraph",
+        "text": "Prioritize **representative learning design** – practice should reflect the information structure of competition"
+      },
+      {
+        "type": "paragraph",
+        "text": "Add **variability early**, not after fundamentals are established"
+      },
+      {
+        "type": "paragraph",
+        "text": "Favor **simplification** (scaling equipment/speed/distance) over **decomposition** (breaking skills apart)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Keep perception and action **coupled** at all times"
+      },
+      {
+        "type": "paragraph",
+        "text": "Allow athletes **autonomy** – constrained choice promotes intrinsic motivation"
+      },
+      {
+        "type": "paragraph",
+        "text": "Ask: *\"What can I add to practice that makes their current solution no longer work?\"*"
+      },
+      {
+        "type": "paragraph",
+        "text": "*Sources: Rob Gray, Perception Action Podcast – \"The Constraints-Led Approach\" (Netherlands Olympic Team Presentation), \"Two Approaches to Skill Acquisition,\" \"CLA and Tactical Behavior,\" and \"Evidence Supporting the Ecological Approach.\"*"
+      }
+    ]
+  },
+  {
+    "id": "cla-theory",
+    "title": "The CLA Approach for BJJ",
+    "emoji": "🍃",
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/img/cla-for-bjj.jpg"
+      },
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🍃The CLA Approach for BJJ"
+      },
+      {
+        "type": "paragraph",
+        "text": "*As explained by Greg Souders*"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What is it?"
+      },
+      {
+        "type": "paragraph",
+        "text": "CLA stands for **Constraints-Led Approach**, rooted in **Ecological Dynamics** — a framework for understanding how behavior emerges from the interaction between three things:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The individual** (their body, psychology, experience)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The task** (what they're trying to do)"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The environment** (who they're with, the space, the rules)"
+      },
+      {
+        "type": "paragraph",
+        "text": "The core idea is that perception and action are constantly feeding each other. You perceive something, you act, that action changes what you perceive, and so on. Skill emerges from this loop — not from memorizing steps."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What are \"constraints\"?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Constraints are simply **things that limit options**. Greg's example: tie one hand behind your back and you can only reach for a cup one way. Constraints aren't special tricks — they're always present (your height, experience, strength are all constraints). The CLA just uses them deliberately to shape behavior."
+      },
+      {
+        "type": "paragraph",
+        "text": "A BJJ example he gives: instead of teaching guard passing as a technique, you set up a live drill where the bottom player tries to put their feet on the top player, and the top player tries to keep the feet off. Both players are now solving a real, live problem that is *embedded inside* guard passing — without being told \"here's the technique.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "How is this different from traditional BJJ teaching?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Traditional approach:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Show technique → drill it statically → maybe some situational sparring → a few rounds at the end"
+      },
+      {
+        "type": "paragraph",
+        "text": "CLA approach:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Live work almost exclusively → constraints designed around **invariant features** of the skill → student finds their own solution within that space"
+      },
+      {
+        "type": "paragraph",
+        "text": "Greg's gym does **no drilling, no explicit technique instruction** as the primary method. All work is live and unscripted from day one."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What are \"invariant features\" and why do they matter?"
+      },
+      {
+        "type": "paragraph",
+        "text": "This is the key practical concept. An invariant feature is **something that never changes**, no matter who performs the skill or how."
+      },
+      {
+        "type": "paragraph",
+        "text": "His armlock example: no matter *how* you get an armlock from mount, you always have to move the opponent's **elbow** to transition from parallel (on their hips) to perpendicular (on their shoulders). The elbow is the invariant. So instead of teaching \"the armlock technique,\" you design a drill where the top player's job is simply: *get your partner's elbow to touch their head*. The student discovers solutions within that space on their own."
+      },
+      {
+        "type": "paragraph",
+        "text": "This matters because:"
+      },
+      {
+        "type": "paragraph",
+        "text": "A specific technique detail (like \"walk your fingers up\") works for some body types and not others"
+      },
+      {
+        "type": "paragraph",
+        "text": "The invariant works for everyone, because it's the physical reality of what *must* happen"
+      },
+      {
+        "type": "paragraph",
+        "text": "Students develop **their own** movement solutions, which fit their own body"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What does a session actually look like?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Mostly or entirely live rolling/sparring"
+      },
+      {
+        "type": "paragraph",
+        "text": "Coach sets up a **scenario with a task** (e.g. \"top player: keep feet off you, bottom player: get feet on top player\")"
+      },
+      {
+        "type": "paragraph",
+        "text": "Coach observes and gives **feedback in real time** — not a script, but guided by what's happening"
+      },
+      {
+        "type": "paragraph",
+        "text": "No curriculum, no template — just a way of looking at what's happening and adjusting"
+      },
+      {
+        "type": "paragraph",
+        "text": "Greg describes his role as a **guide and facilitator**, not an information deliverer."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What about showing techniques at all?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Greg isn't saying never show anything. His points are:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Showing a technique is fine as **context** — students need to know *what* they're working toward"
+      },
+      {
+        "type": "paragraph",
+        "text": "The problem is using showing + drilling as a substitute for live development of skill"
+      },
+      {
+        "type": "paragraph",
+        "text": "Conversations, watching grappling, discussing what you see — all healthy and part of the process"
+      },
+      {
+        "type": "paragraph",
+        "text": "The issue is the **ratio**: most gyms do 80% drilling, 20% rolling. He argues it should be the opposite or more extreme"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "The \"invariance\" practical takeaway for coaches"
+      },
+      {
+        "type": "paragraph",
+        "text": "If you want to build a game or drill:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Pick a skill (e.g. passing guard, armlocking from mount)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Ask: **what is the one thing that ALWAYS has to happen** for this skill to work, regardless of body type or technique variation?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Build a live task around that invariant — give both players a job"
+      },
+      {
+        "type": "paragraph",
+        "text": "Let them figure it out, observe, then adjust the constraint if needed"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Why do people resist this?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Greg gives a few reasons:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**It's not sellable** — you can't package \"go roll more\" into a $400 instructional"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Drilling feels productive** — the intellect loves being told answers because it *feels* like learning"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Coaches built identities** around technique instruction and would have to reinvent themselves"
+      },
+      {
+        "type": "paragraph",
+        "text": "**It takes deep knowledge to do well** — you need to truly understand grappling to design good constraints, which is harder than just showing a move"
+      },
+      {
+        "type": "paragraph",
+        "text": "His bottom line: the shortcuts being sold (instructionals, drilling systems) are a lie. The people selling them actually got good through live mat time and trial and error — then packaged that up differently."
+      },
+      {
+        "type": "paragraph",
+        "text": "Source:"
+      },
+      {
+        "type": "paragraph",
+        "text": "BJJ Instructional Shortcuts Are A Lie, All You Need Is Live Work - Greg Souders | #54"
+      }
+    ]
+  },
+  {
+    "id": "arguments",
+    "title": "Addressing Common Arguments Against CLA",
+    "emoji": "🦉",
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/img/arguments-cla.jpg"
+      },
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🦉Addressing Common Arguments Against CLA"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"Students need to be shown techniques first — they need knowledge to start learning\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Without showing someone what to do, how will they know what they're working towards? You can't just throw a white belt into live rolling and expect anything useful to happen."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "This assumes knowledge must be delivered *before* experience, but the opposite is true — experience makes knowledge meaningful. When you tell someone what to do before they've felt the problem, the information has no context to attach to. After they've struggled with the problem, the same information lands completely differently."
+      },
+      {
+        "type": "paragraph",
+        "text": "The deeper issue: if knowledge were required to *start* learning, who learned the first thing? The first person to ever grab two legs and take someone down had no instructor. They learned through interaction with the live environment. Everything we now call \"technique\" is just the historical record of what worked."
+      },
+      {
+        "type": "paragraph",
+        "text": "What Greg does: Show the student *what* the outcome is (e.g. what an arm lock looks like), then immediately put them in a situation where they have to start working towards it. The outcome provides context. The live struggle provides learning."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"A person needs knowledge to start learning? That's the craziest thing I've ever heard in my life.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"But what about technical details — things like specific grips, foot position, angles?\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Some moves are genuinely complex. Without being shown the exact grip or the specific angle, students will waste time doing it wrong or never find it at all."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Two things are worth separating here:"
+      },
+      {
+        "type": "list",
+        "items": [
+          "**1. Specific details are only useful when the student has context for them.** If you show someone a specific C-grip before they understand why the arm needs to be isolated in the first place, the grip is meaningless. They'll remember it as a shape, not as a solution to a problem.",
+          "**2. Specific solutions don't transfer universally.** A 145 lb person and a 200 lb person will not solve the same problem the same way. If you give the small person a specific grip to \"walk their fingers up,\" it won't work against someone stronger. But if you give both players the general task — *get your partner's elbow to move away from their body* — each person will find a solution scaled to their own capacity. That solution will actually work for them."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "What Greg does: Start with the invariant (the thing that must happen), not the specific method. Let the student find *a* solution. Then refine from there."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"We don't start with the specifics. We start with the general. Any way that you can — this gives you the freedom to experience it for you.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"Live rolling all the time isn't structured enough — students won't develop systematically\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Without a curriculum, students are just flailing. Drilling gives you a repeatable, teachable structure that ensures everyone covers the same material."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "CLA is not the absence of structure — it requires *more* structure from the coach, not less. The difference is where the structure lives. In traditional drilling, the structure is in the choreography (do this, then this, then this). In CLA, the structure is in the game design — the starting position, the win conditions, the constraints, and the progression of complexity."
+      },
+      {
+        "type": "paragraph",
+        "text": "The coach must understand the invariants of jiu-jitsu deeply enough to design situations that expose students to the right problems at the right time. That's a much harder job than running a technique class."
+      },
+      {
+        "type": "paragraph",
+        "text": "Drilling feels systematic because it's visible and countable. But performing a technique correctly in a cooperative drill does not mean you can perform it in a live, resisted situation — because the problems you face in live rolling are completely different from the problems you practice in drilling."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"This method requires a deep understanding of what you're doing. It's not a plug-and-play. It is not just press start and go.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"What about beginners? Surely they need more guidance, not just live rolling\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Throwing a complete beginner into live work is overwhelming and discouraging. They need foundational building blocks first."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Beginners do need guidance — but the guidance should come through game design, not technique explanation. The mistake is thinking that guidance = instruction. You can guide someone by choosing the right starting position, the right opponent, and the right task without ever saying \"put your hand here.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "What actually happens with beginners in traditional classes: they watch a technique for 20 minutes, try to replicate it with a cooperative partner, and then do two rounds of live rolling at the end where none of the technique appears. The technique felt like learning. The live rolling was the learning."
+      },
+      {
+        "type": "paragraph",
+        "text": "With CLA, beginners start with simple, achievable tasks in live situations immediately. The first game might be: *\"keep your partner's feet off you while staying in front of them.\"* Any human being can engage with that on day one — no prior knowledge required."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"We're not teaching techniques — we're teaching the competitive struggle. This is what it feels like to perform this game.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"Elite grapplers use drilling — Gordon Ryan, John Danaher. If it works for them, why change it?\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** The best competitors in the world come from systems that use drilling and explicit instruction. That's proof it works."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Look at *how* they describe acquiring their skills, not what they sell. Gordon Ryan has described his training as: start in a position, find where you struggle, go back to that spot, struggle there until you figure it out, move on. That's trial and error in a live environment — not drilling a choreographed sequence."
+      },
+      {
+        "type": "paragraph",
+        "text": "John Danaher's instructionals follow the same pattern: the first 5–20 minutes contain the entire framework as principles. The remaining hours are just variations of those same principles applied in different situations. If you understood the principles, you wouldn't need the eight hours."
+      },
+      {
+        "type": "paragraph",
+        "text": "Elite athletes get good because they accumulate massive amounts of live mat time and genuinely care about solving the problems they encounter. The drilling and instructionals exist around that core, not as the cause of it."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"He's admitting that the way he acquired the skill he's now selling you on his DVD was done through trial and error and interaction with the live environment. And nobody flinches.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"I tried just rolling with my students and nothing improved\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** We already do a lot of live rolling and it doesn't seem to work any better. People just keep doing the same things."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Unstructured rolling is not the same as CLA. Telling students to \"just roll\" and hoping skill emerges is not the approach — that's the absence of coaching, not an alternative to it."
+      },
+      {
+        "type": "paragraph",
+        "text": "CLA requires the coach to:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Identify the invariant of what they're trying to develop"
+      },
+      {
+        "type": "paragraph",
+        "text": "Design a game with a specific starting position and clear win conditions"
+      },
+      {
+        "type": "paragraph",
+        "text": "Choose constraints that direct attention to the right problem"
+      },
+      {
+        "type": "paragraph",
+        "text": "Observe what's happening and adjust the game in real time"
+      },
+      {
+        "type": "paragraph",
+        "text": "If students keep doing the same things in rolling, that's feedback about the game design — the constraints aren't redirecting behavior, or the win condition isn't connected to the skill you want to develop. The answer is to redesign the game, not to go back to drilling."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"There is no curriculum. There is no template. There's only a way to look at what's happening and filter it.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"This takes too long. Traditional instruction is more time-efficient\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Showing a technique and drilling it is faster than waiting for students to discover things on their own through live play."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "What's being measured as \"efficient\" here? If the measure is how quickly students can reproduce a technique in a cooperative drill — drilling wins. If the measure is how quickly students can apply that skill under pressure against a resisting opponent — live work wins."
+      },
+      {
+        "type": "paragraph",
+        "text": "The illusion of efficiency in technique instruction comes from how satisfying it feels to be shown something. The intellect loves a clear answer. But feeling like you know something and actually being able to use it under pressure are completely different things."
+      },
+      {
+        "type": "paragraph",
+        "text": "Students who only drill also often accumulate what they think are skills but are actually choreographed responses — patterns that collapse the moment the other person doesn't cooperate."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"The intellect loves to hear answers because it makes you feel like you know it all. But if you just remember what they said, do you really know anything?\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"Students lose confidence when they can't do the techniques properly\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** When students struggle without explicit guidance, they feel lost and frustrated. That damages retention and enjoyment."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Two things worth unpacking here:"
+      },
+      {
+        "type": "list",
+        "items": [
+          "**1. Struggling is the learning.** The discomfort of not knowing what to do is not a sign that the method is failing — it's a sign that the student is encountering real problems. That discomfort, when managed well by the coach (appropriate partners, achievable tasks, enough safety), builds resilience and genuine competence.",
+          "**2. The alternative has its own confidence problem.** Students who learn primarily through drilling often feel confident until they hit live rolling — and then discover their technique doesn't work. That collapse of confidence is arguably more damaging than struggling in live work from the start."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "The coach's job is to design games that are challenging but winnable, and to pair students appropriately. A new player should be playing with other new players, not the comp team."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"If it's too uncomfortable, you're probably not going to enjoy the learning process.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"I'm a coach who's been teaching techniques for 20 years. I can't just throw that away\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Switching to CLA means invalidating everything I know and starting from scratch. That's not realistic."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "You don't throw it away — you use it differently. Your technical knowledge is exactly what informs good game design. The question isn't *whether* to use what you know. It's *how* to use it."
+      },
+      {
+        "type": "paragraph",
+        "text": "Instead of: \"Here's how to do an arm lock — step 1, step 2, step 3...\" Use it as: \"I know the arm must move away from the body. So I'll design a game where the student's task is to move the arm, and see what solutions they find.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "Your 20 years of experience lets you identify the invariants faster, design better starting positions, and recognize when a student is close to a breakthrough. That knowledge is more valuable in game design than in technique instruction."
+      },
+      {
+        "type": "paragraph",
+        "text": "What you're giving up: the need to have all the answers in the room. What you're gaining: students who actually solve problems on their own."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"Coach takes knowledge, makes practice, athlete engages in practice, they become better over time.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"I don't have time to understand all this theory\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** Ecological dynamics, invariants, affordances — this is academic language that doesn't translate to a regular gym setting."
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "You don't need the academic language. The practical version is simple:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Pick one thing you want to get better at"
+      },
+      {
+        "type": "paragraph",
+        "text": "Find the thing that always has to happen for it to work (the invariant)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Create a live game where both players are fighting over that thing"
+      },
+      {
+        "type": "paragraph",
+        "text": "Give clear win conditions"
+      },
+      {
+        "type": "paragraph",
+        "text": "Watch what happens and adjust"
+      },
+      {
+        "type": "paragraph",
+        "text": "That's it. The theory exists to explain *why* this works. But you don't need the theory to do it. Greg's framework — make and maintain connection, manage distance, destabilize, segment, isolate, immobilize — is a lens, not a rulebook."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"If you understand what problem you're having, you need to expose yourself to the problem. And whatever game you create needs to give you an opportunity to solve it. Exposure and opportunity. That's it.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "\"What about watching instructionals and studying technique? Is that all useless?\""
+      },
+      {
+        "type": "paragraph",
+        "text": "**The concern:** If drilling and instructionals don't develop skill, does that mean there's no value in studying technique at all?"
+      },
+      {
+        "type": "paragraph",
+        "text": "**The response:**"
+      },
+      {
+        "type": "paragraph",
+        "text": "Watching, discussing, and thinking about jiu-jitsu all have real value — they're part of how humans learn from their environment and culture. There's nothing wrong with watching Gordon Ryan or John Danaher. There's nothing wrong with talking about what you saw."
+      },
+      {
+        "type": "paragraph",
+        "text": "The issue is using *talking about* technique as a substitute for *experiencing* it in a live situation. Watching someone cook a Michelin-star meal doesn't make you a better cook. But if it inspires you to go into the kitchen and try something, it's useful."
+      },
+      {
+        "type": "paragraph",
+        "text": "The same applies to instructionals. If they give you a starting point — a position to explore, a problem to investigate in live work — they're useful. If they're consumed passively and never tested under resistance, they're not."
+      },
+      {
+        "type": "paragraph",
+        "text": "\"You could put him on mute and you'll probably learn more. There's nothing wrong with hearing people's opinions. I think it's all healthy. All I'm saying is that when we train, it should be all live.\""
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Quick Reference: The One-Sentence Answers"
+      },
+      {
+        "type": "paragraph",
+        "text": "*Based on the work of Greg Souders, Standard Jiu-Jitsu. Instagram: @GD_STS*"
+      }
+    ]
+  },
+  {
+    "id": "invariants",
+    "title": "The Invariant Framework",
+    "emoji": "🌞",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "🌞The Invariant Framework"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Invariant Framework - Standard Jiu-Jitsu's Coach Greg Souders"
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "What is an invariant?"
+      },
+      {
+        "type": "paragraph",
+        "text": "An invariant is something that is *always* happening in jiu-jitsu, regardless of position, tactic, or move. The framework exists to describe the game at every level — standing, on the ground, in guard, in pins, everywhere."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Part 1: Attack the Periphery to Gain Access to Center Mass"
+      },
+      {
+        "type": "paragraph",
+        "text": "The first invariant concept is: **attack the periphery to gain access to center mass.**"
+      },
+      {
+        "type": "paragraph",
+        "text": "The periphery is whatever is sticking out from your partner that controls the gap between you — arms, legs, frames. You must interact with these things — remove them, change angle relative to them, or threaten them with pressure — in order to get to **center mass**: the hips, chest, shoulders, and back."
+      },
+      {
+        "type": "paragraph",
+        "text": "Once you gain access to center mass, the full sequence is:"
+      },
+      {
+        "type": "paragraph",
+        "text": "**Attack the periphery → Gain access to center mass → Immobilize center mass → Isolate and reattack the periphery**"
+      },
+      {
+        "type": "paragraph",
+        "text": "This is not a one-time linear process. It is a loop. You can enter it at any point. When passing guard, for example, you may already be at center mass and in the process of isolating a limb, then the legs come back in and you redirect — you are still operating within the same framework."
+      },
+      {
+        "type": "paragraph",
+        "text": "Pick any technique in jiu-jitsu. This pattern is present."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "Part 2: Make and Maintain Connection to Manage Distance"
+      },
+      {
+        "type": "paragraph",
+        "text": "The second part of the framework is: **make and maintain connection to manage distance through segmentation, destabilization, isolation, and immobilization.**"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Make and Maintain Connection"
+      },
+      {
+        "type": "paragraph",
+        "text": "You cannot fight unless you can grip your partner and *hold* that connection long enough to create an effect. There is a direct relationship between **time in condition** and **time for effect**. If the connection breaks before anything can be done with it, everything that depended on that connection is lost."
+      },
+      {
+        "type": "paragraph",
+        "text": "This is why connection quality matters — not just making contact, but maintaining it."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Managing Distance"
+      },
+      {
+        "type": "paragraph",
+        "text": "Distance is not something you simply close or create. It is a continuous, complex event that is always changing. Sometimes you use your connections to close distance, sometimes to create it, and sometimes distance is being forced on you and you have to manage it indirectly. The word \"manage\" reflects this — it accounts for all the different ways distance functions in a match."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Segmentation"
+      },
+      {
+        "type": "paragraph",
+        "text": "As you make and maintain connections, you are doing so to your partner's **segments**. In the legs: knee, ankle, hip are segments. In the arms: hands, elbows, shoulders. Moving through these segments is an invariant pattern of progression. Clearing the feet to reach the knees, the knees to the hips — this happens regardless of the path taken. Segmentation describes *how* we use connection to navigate toward our objective."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Destabilization"
+      },
+      {
+        "type": "paragraph",
+        "text": "If your partner is stable, they control the distance. If you are destabilizing them — taking their structure away — you take control of the distance. Whether standing, holding a single leg, working from guard, or being pinned: if your partner cannot stabilize, they cannot manage the space between you. Destabilization is not a separate step — it is happening continuously alongside everything else."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Isolation"
+      },
+      {
+        "type": "paragraph",
+        "text": "Isolation means separating one of your partner's limbs from the rest of their body. Once a limb is isolated, your partner must recover it to regain meaningful function. Until they do, you can use that isolated position to manage distance and threaten everything connected to it. This applies to arms in hand-fighting, legs in entanglements, and limbs being set up for submission."
+      },
+      {
+        "type": "paragraph",
+        "text": "Isolation is what allows the final step — it starts at one point and ends with a submission at another."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Immobilization"
+      },
+      {
+        "type": "paragraph",
+        "text": "Immobilization is the overarching concept that begins the moment engagement starts. Even walking toward your partner takes space away from them — they can no longer occupy that space. That is already a form of immobilization."
+      },
+      {
+        "type": "paragraph",
+        "text": "It progresses: proximity reduces movement options, connections reduce them further, pins reduce them even more. Full immobilization is when your partner is covered at hips and shoulders, pressed to the floor, connected at all points, with a limb isolated and under threat. All other elements of the framework must be present for immobilization to be expressed maximally."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "These Things Happen Simultaneously"
+      },
+      {
+        "type": "paragraph",
+        "text": "These concepts — segmentation, destabilization, isolation, immobilization — are not steps you cycle through one at a time. They are happening **at the same time**, continuously. When you grip a wrist with the intention of isolating a limb, you are simultaneously segmenting it, immobilizing it, and destabilizing it. The words are separate; the process is not."
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "The Paradox: Direct vs. Indirect Control"
+      },
+      {
+        "type": "paragraph",
+        "text": "To maximize **direct control** over your partner, you need them on the floor, covered at hips and shoulders, with your arms and legs involved. Mount and rear mount are the clearest expressions of this."
+      },
+      {
+        "type": "paragraph",
+        "text": "But here is the paradox: when you go to isolate and attack the periphery — when you go for the submission — you give up that full coverage. You move from full control to partial coverage. **Direct control decreases in the transition to submission.**"
+      },
+      {
+        "type": "paragraph",
+        "text": "What replaces it is **indirect control** — threat. The threat of the break, the angle, the feeling of the joint under pressure. These indirect measures take over and increase immobilization at the moment you need it most. You maximized your control in order to minimize it, and then use the threat of submission to try to remaximize it through indirect means."
+      }
+    ]
+  },
+  {
+    "id": "hidden-logic",
+    "title": "The Hidden Logic of Jiu-Jitsu",
+    "emoji": "🤖",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "🤖 The Hidden Logic of Jiu-Jitsu"
+      },
+      {
+        "type": "paragraph",
+        "text": "Watch a Brazilian jiu-jitsu match without knowing the sport and it looks like two people slowly tangling on the floor for reasons that never quite surface. Learn the sport and a different confusion sets in: there are thousands of named techniques, each with its own setup, grip, and counter, and it's tempting to conclude that jiu-jitsu simply **is** that enormous vocabulary of moves."
+      },
+      {
+        "type": "paragraph",
+        "text": "It isn't. Underneath the moves sit a handful of plain physical facts, and those facts decide everything that happens. The techniques are just the local ways of obeying them. Once you can see the facts, the chaos resolves into something close to logic. Here is that logic, built from the ground up."
+      },
+      {
+        "type": "paragraph",
+        "text": "Two ways a fight ends"
+      },
+      {
+        "type": "paragraph",
+        "text": "Every submission works through one of two mechanisms, and they are not interchangeable."
+      },
+      {
+        "type": "paragraph",
+        "text": "The first is the strangle. The chokes that matter in jiu-jitsu don't cut off air — they compress the two arteries on the sides of the neck that carry blood to the brain. Starve the brain of blood and a person loses consciousness within seconds, whether they want to or not. This is the crucial part: a true blood choke does not care how tough you are. Pain tolerance, willpower, a thick neck, a high threshold for discomfort — none of it helps much once the arteries are sealed, because you cannot decide to keep your own blood flowing. That is why the highest-percentage finishes in the entire sport are blood chokes like the rear naked choke. They route around the opponent's grit entirely."
+      },
+      {
+        "type": "paragraph",
+        "text": "The second mechanism is the joint lock. Here you take a joint — usually an elbow, shoulder, or knee — and load it past the range it was built to travel. Now the opponent has exactly two options: give up, or let the joint break. Joint locks are real and decisive, but notice the difference. A joint lock **negotiates** with the opponent's toughness in a way a strangle does not; a determined or reckless person can buy themselves time, or eat damage, in a way that's simply unavailable against a clean choke. This single distinction quietly explains a lot about which finishes show up most often at the highest levels."
+      },
+      {
+        "type": "paragraph",
+        "text": "Why leverage beats muscle — and where it stops"
+      },
+      {
+        "type": "paragraph",
+        "text": "The famous promise of jiu-jitsu is that a smaller, weaker person can defeat a larger, stronger one. This is true, and it is not mystical. It is levers."
+      },
+      {
+        "type": "paragraph",
+        "text": "Every control and every submission is a lever — a configuration of fulcrums and arms that multiplies force. An armlock places your hips directly beneath the opponent's elbow so that the strength of your whole body, pivoting on that point, is delivered against a joint that can only resist with the small muscles around it. Done with the right geometry, a slight person generates more force at that joint than a powerful person can withstand, because the leverage, not the muscle, is doing the work."
+      },
+      {
+        "type": "paragraph",
+        "text": "But an honest account has to name the ceiling. Levers have limits. Stack the geometry wrong — put the elbow on the wrong side of the fulcrum — and no amount of strength will finish the lock, because you've voided the mechanism. And run the size difference high enough, and raw power can overwhelm even good leverage. \"Technique beats strength\" is true within a range, and the fact that it has a boundary is part of why the explanation is trustworthy rather than a slogan."
+      },
+      {
+        "type": "paragraph",
+        "text": "Balance is really about the floor"
+      },
+      {
+        "type": "paragraph",
+        "text": "People talk about \"off-balancing\" an opponent as if balance were a vague quality. It isn't. On the ground, both people are pinned in gravity, and the floor is a wall neither can be pushed through. A stable structure is one that channels incoming force *down into the floor* through a posted hand, knee, or foot — the earth absorbs it, and you don't move."
+      },
+      {
+        "type": "paragraph",
+        "text": "So off-balancing has a precise meaning: it is the act of taking away the opponent's ability to send force into the floor. Remove the post and their own force, or yours, displaces *them* instead of the ground."
+      },
+      {
+        "type": "paragraph",
+        "text": "This explains something every beginner gets wrong. You cannot sweep someone in a direction where they have a limb posted and carrying their weight into the floor — you'll fail every time against anyone competent. That is why good sweeps are always preceded by killing a base point: lifting the posting hand, blocking the knee, clearing the foot. First you remove the floor; only then does the person tip."
+      },
+      {
+        "type": "paragraph",
+        "text": "The real skill is the trap, not the move"
+      },
+      {
+        "type": "paragraph",
+        "text": "Against a beginner, a single attack works. Against a skilled opponent, almost no attack works on its own — they simply do the known defense. What actually beats a good grappler is a **dilemma**: a position arranged so that the opponent has two ways out, and each one walks them into a different finish. Defend the armlock and you feed the choke; defend the choke and you feed the armlock. Whatever they choose, they lose. It's the grappling version of a checkmate, where every legal move is still a loss."
+      },
+      {
+        "type": "paragraph",
+        "text": "This reframes what \"skill\" even means. The expert isn't the person with the most moves. It's the person who can build the position where the opponent's remaining options have all been pre-loaded to fail."
+      },
+      {
+        "type": "paragraph",
+        "text": "And it comes with a built-in warning that separates a real trap from a fake one. If there exists a **third **response — a single defense that answers both threats at once — then it was never a dilemma. It was one attack with a known escape, and a good opponent will find that third door and walk straight through it. This is exactly why sequences that look \"unstoppable\" eventually get solved at the elite level: someone locates the move that defuses both horns at once. The traps that endure are the ones with no third door."
+      },
+      {
+        "type": "paragraph",
+        "text": "The slow leak"
+      },
+      {
+        "type": "paragraph",
+        "text": "The last fact is about time. Holding someone with muscle — gripping hard, bracing, clamping — burns energy fast, and that energy drains on a predictable schedule. Holding someone with **structure** — bones stacked, alignment doing the work, the floor carrying the load — costs almost nothing by comparison."
+      },
+      {
+        "type": "paragraph",
+        "text": "This is the real reason the calm, \"lazy\"-looking veteran beats the explosive newcomer. The newcomer's control is real but expensive; it runs on a fuel tank that empties. As the minutes pass, the muscular grip decays while the structural one doesn't, and control quietly transfers to whoever was spending less to hold it. The classic signature of an inexperienced grappler is to dominate the first two minutes and collapse in the next five."
+      },
+      {
+        "type": "paragraph",
+        "text": "One idea underneath"
+      },
+      {
+        "type": "paragraph",
+        "text": "Put the five facts together and a single picture emerges. Jiu-jitsu is the steady shrinking of your opponent's available options — fewer places they can move, fewer things they can do — until the only options left are ones that lose, while you spend less of your own limited reserves of structure and energy than they spend on theirs."
+      },
+      {
+        "type": "paragraph",
+        "text": "That picture also resolves the sport's central paradox. The most complete control you can have — a heavy, pinning top position — is precisely the thing you must **give up **to actually finish, because the finish requires reaching in and isolating a limb, which hands the opponent room to move again. So the submission is a trade: you surrender coverage in exchange for inserting a lethal threat into the space you just reopened. The trade only pays off if the threat closes **faster **than the escape route opens. When you leave a dominant pin to chase a submission and it fails, this is almost always why — you gave back more room than your attack could close in time."
+      },
+      {
+        "type": "paragraph",
+        "text": "That, not a longer list of techniques, is the discipline: take away your opponent's options until none of them are survivable, spend less than they do to get there, and only cash in your control for a finish when the finish closes faster than the door you're opening."
+      }
+    ]
+  },
+  {
+    "id": "further-reading",
+    "title": "About this document",
+    "emoji": "📚",
+    "blocks": [
+      {
+        "type": "heading",
+        "level": "1",
+        "text": "📚About this document"
+      },
+      {
+        "type": "paragraph",
+        "text": "The text in this document is generated using Claude to summarise the ideas of Greg Souders, Rob Gray and others from Youtube transcripts. The AI is good at summarizing but often its best to get info straight from the source. Also there might be errors in the document. Please comment if you find any.  Also feel free to comment if you think something is missing, can be improved or if you disagree."
+      },
+      {
+        "type": "paragraph",
+        "text": "Here are some good sources for further research:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Books:"
+      },
+      {
+        "type": "paragraph",
+        "text": "How we learn to move by Rob Gray:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://www.goodreads.com/book/show/59507312-how-we-learn-to-move](https://www.goodreads.com/book/show/59507312-how-we-learn-to-move)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Constraints Led Approach Principles for Sports Based Caching and Practice Design:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://www.akademika.no/hjem-og-fritid/sport-og-friluft/constraints-led-approach/9781138104075](https://www.akademika.no/hjem-og-fritid/sport-og-friluft/constraints-led-approach/9781138104075)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Podcasts about CLA:"
+      },
+      {
+        "type": "paragraph",
+        "text": "YT playlist:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://youtube.com/playlist?list=PLEmjNuJJkxDJFpzJqn3E4ZWSpFd02sZyx&si=Uy5ujjXo4OJfF_3c](https://youtube.com/playlist?list=PLEmjNuJJkxDJFpzJqn3E4ZWSpFd02sZyx&si=Uy5ujjXo4OJfF_3c)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Spotify playlist with Greg Souders:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://open.spotify.com/playlist/6wDBsSfC7EINQuzwPhvuC6?si=d3f2ecc0335b420e](https://open.spotify.com/playlist/6wDBsSfC7EINQuzwPhvuC6?si=d3f2ecc0335b420e)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Rob Gray Podcast:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://open.spotify.com/show/6P7OPFNTMnwRYjVsj8OYaM?si=c63b2e04bbd744e9](https://open.spotify.com/show/6P7OPFNTMnwRYjVsj8OYaM?si=c63b2e04bbd744e9)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Videos with CLA games:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://youtube.com/playlist?list=PLEmjNuJJkxDJDUg-UOFO_SpeKvusKIzmO&si=CiSLo8fCRBX-LMKc](https://youtube.com/playlist?list=PLEmjNuJJkxDJDUg-UOFO_SpeKvusKIzmO&si=CiSLo8fCRBX-LMKc)"
+      },
+      {
+        "type": "paragraph",
+        "text": "Articles:"
+      },
+      {
+        "type": "paragraph",
+        "text": "[https://www.nytimes.com/athletic/6665943/2025/09/29/sports-training-cla-coaching-wembanyana-ohtani/](https://www.nytimes.com/athletic/6665943/2025/09/29/sports-training-cla-coaching-wembanyana-ohtani/)"
+      }
+    ]
+  }
+]
