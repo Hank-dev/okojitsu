@@ -730,7 +730,7 @@ html, body {
 .session-tabs {
   display: flex;
   gap: 6px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
   scrollbar-width: none;
   margin-bottom: 20px;
@@ -901,8 +901,32 @@ html, body {
 
   /* Sessions grid */
   .saved-sessions { grid-template-columns: 1fr !important; gap: 12px; }
-  .sessions-page { padding: 20px 16px !important; max-width: 100% !important; }
+  .sessions-page { padding: 20px 16px 0 !important; max-width: 100% !important; }
   .sessions-page-title { font-size: 18px; margin-bottom: 16px; }
+
+  /* Session tabs sticky at bottom on mobile */
+  .session-tabs {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    width: calc(100% + 32px);
+    min-width: 0;
+    max-width: calc(100% + 32px);
+    box-sizing: border-box;
+    margin: 20px -16px 0;
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.96);
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .session-tabs::-webkit-scrollbar { display: none; }
+  .session-tab { min-height: 40px; padding: 9px 12px; }
+
   .saved-session-card { padding: 14px !important; }
   .saved-session-card .card-title { font-size: 14px; }
   .sg-row {
