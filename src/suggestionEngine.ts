@@ -58,8 +58,6 @@ const COMPLEMENTARY_PAIRS: ReadonlyArray<readonly [string, string]> = [
 const LEVEL_DIFFICULTY: Record<string, number> = {
   beginner: 0,
   'all-levels': 1,
-  intermediate: 2,
-  advanced: 3,
 };
 
 // ---------------------------------------------------------------------------

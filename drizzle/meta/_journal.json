@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1787502687896,
+      "tag": "0000_strange_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787603409236,
+      "tag": "0001_sharp_owl",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787606987778,
+      "tag": "0002_silly_kid_colt",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1787772951998,
+      "tag": "0003_tough_fenris",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1787827084595,
+      "tag": "0004_demonic_tony_stark",
+      "breakpoints": true
+    }
+  ]
+}

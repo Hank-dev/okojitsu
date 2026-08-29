@@ -5,11 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3099",
-    "build": "tsc -b && vite build",
+    "build": "rm -rf dist && tsc -b && vite build && node scripts/create-sites-worker.mjs",
+    "db:generate": "drizzle-kit generate",
+    "test:admin": "node --experimental-strip-types --test tests/adminAuth.test.ts",
+    "test:field-manual": "node --experimental-strip-types --test tests/fieldManual.test.ts",
+    "test:visual-contract": "node --test tests/visualContract.test.mjs",
+    "test:library": "node --experimental-strip-types --test tests/library.test.ts",
+    "test:sessions": "node --experimental-strip-types --test tests/sessions.test.ts",
+    "test:shared-sessions": "node --experimental-strip-types --test tests/sharedSessions.test.ts",
+    "test:session-api": "node --experimental-strip-types --test tests/sessionApi.test.ts",
+    "test:custom-game-store": "node --import tsx --test tests/customGameStore.test.ts",
+    "test:game-draft-store": "node --import tsx --test tests/gameDraftStore.test.ts",
+    "test:game-api": "node --experimental-strip-types --test tests/gameApi.test.ts",
+    "test:game-draft-api": "node --experimental-strip-types --test tests/gameDraftApi.test.ts",
+    "test:custom-game-worker": "node --import tsx --test tests/customGameWorker.test.ts",
+    "test:session-store": "node --import tsx --test tests/sessionStore.test.ts",
+    "test:session-worker": "node --import tsx --test tests/sessionWorker.test.ts",
+    "test:sites-build": "node --test tests/sitesBuild.test.mjs",
     "preview": "vite preview --host 0.0.0.0 --port 3099",
     "serve": "vite preview --host 0.0.0.0 --port 3099"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "drizzle-orm": "^0.45.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
@@ -17,6 +37,8 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.23.12",
     "typescript": "^5.8.0",
     "vite": "^6.3.0"
   }

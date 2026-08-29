@@ -233,7 +233,7 @@
     "title": "Scalable Pinning (Choose Your Difficulty)",
     "category": "pinning",
     "source": "Beginner Session Guide",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Chest-to-chest, past the legs.",
     "players": [
@@ -283,7 +283,7 @@
     "title": "Hands Down / Knee Touch Snapdown Entry",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "Both players standing, hand fighting.",
     "players": [
@@ -316,7 +316,7 @@
     "title": "Closed Hands Snapdown + Clinch Entry",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both players standing, hand fighting.",
     "players": [
@@ -348,7 +348,7 @@
     "title": "Foot Sweeps — Foot-to-Foot Contact",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "One player with an underhook, one with an overhook.",
     "players": [
@@ -389,7 +389,7 @@
     "title": "Connection Cycling (Knee / Hip / Ankle)",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Single leg connected around the knee pit.",
     "players": [
@@ -436,7 +436,7 @@
     "title": "Single Leg Finish",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Single leg connected around the knee pit.",
     "players": [
@@ -479,7 +479,7 @@
     "title": "Dynamic Starts (Finishing the Shot)",
     "category": "standing",
     "source": "Wraslin' with Greg Games",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both players moving freely. Attacker begins either with hands behind back or turned around (alternating each round).",
     "players": [
@@ -528,7 +528,7 @@
     "title": "Hand Fight: Collect & Connect",
     "category": "standing",
     "source": "Greg @ B-Team",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, hand fighting (any grip).",
     "players": [
@@ -568,7 +568,7 @@
     "title": "Stay Connected: Put Them Down to Switch",
     "category": "standing",
     "source": "Greg @ B-Team",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Standing, already connected in one of three positions: front headlock, tight waist, or single leg.",
     "players": [
@@ -618,7 +618,7 @@
     "title": "Hand Fighting / Inside Position (Standup)",
     "category": "standing",
     "source": "PJ Barch Session",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "Both players standing, neutral.",
     "players": [
@@ -650,7 +650,7 @@
     "title": "Guard Pummeling (Elbows vs. Feet)",
     "category": "guard",
     "source": "PJ Barch Session",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "One player standing, one player on their back in front of them.",
     "players": [
@@ -687,20 +687,20 @@
     "title": "Takedown to Back Control",
     "category": "standing",
     "source": "PJ Barch Session",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, connected (rotate through: single leg, double leg, body lock). Top player takes partner down cooperatively.",
     "players": [
       {
         "role": "Top player",
-        "objective": "Keep bottom player's knees facing the ceiling immediately off the takedown.",
+        "objective": "Keep the bottom player's knees facing the ceiling immediately off the takedown. If the bottom player gets their knees to the mat, score via hooks in, a body triangle, or a guard pass.",
         "winCondition": "Knees facing ceiling = terminal win.",
         "constraints": []
       },
       {
         "role": "Bottom player",
         "objective": "Get knees facing the mat as fast as possible, then get to feet or on top to escape.",
-        "winCondition": "Knees to mat, then score via hooks in, body triangle, or guard pass.",
+        "winCondition": "Get to feet or on top to escape.",
         "constraints": []
       }
     ],
@@ -723,7 +723,7 @@
     "title": "ADCC Simulation Round",
     "category": "standing",
     "source": "PJ Barch Session",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, neutral.",
     "players": [
@@ -759,7 +759,7 @@
     "title": "Down Two Points (Bottom Pressure)",
     "category": "guard",
     "source": "PJ Barch Session",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "One player on bottom (two-feet-in guard), one player on top. Bottom player is down by 2 points with 2 minutes left.",
     "players": [
@@ -798,7 +798,7 @@
     "title": "Hand Fighting / Inside Position (Post-Round)",
     "category": "standing",
     "source": "PJ Barch Session",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "Both players standing, after a hard round (tired).",
     "players": [
@@ -828,7 +828,7 @@
     "title": "Overhook/Underhook — Sticking and Connecting",
     "category": "standing",
     "source": "10th Planet South Bay",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Standing, clinch — one player has overhook, one has underhook. Neither can remove their hook.",
     "players": [
@@ -879,7 +879,7 @@
     "title": "Stick and Pull",
     "category": "standing",
     "source": "10th Planet South Bay",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, overhook/underhook clinch.",
     "players": [
@@ -926,7 +926,7 @@
     "title": "Upper vs. Lower Body",
     "category": "standing",
     "source": "10th Planet South Bay",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, free movement.",
     "players": [
@@ -1057,7 +1057,7 @@
     "title": "Over-Under Disconnect",
     "category": "standing",
     "source": "Standing with Scott",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Over-under clinch.",
     "players": [
@@ -1102,7 +1102,7 @@
     "title": "Back → Single → Back (Continuous)",
     "category": "standing",
     "source": "Standing with Scott",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Back body lock.",
     "players": [
@@ -1146,7 +1146,7 @@
     "title": "Two-on-One to Single",
     "category": "standing",
     "source": "Standing with Scott",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing.",
     "players": [
@@ -1191,7 +1191,7 @@
     "title": "Catch and Release Wrestling (Closing)",
     "category": "standing",
     "source": "Standing with Scott",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both players standing.",
     "players": [
@@ -1259,7 +1259,7 @@
     "title": "Completing the Full Pin — Side",
     "category": "pinning",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Partner on their side. Top player hands connected around partner's waist.",
     "players": [
@@ -1304,7 +1304,7 @@
     "title": "Segmentation to Pin",
     "category": "pinning",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Partner on their side. Top player hands connected around partner's waist.",
     "players": [
@@ -1350,7 +1350,7 @@
     "title": "Standing to Locked Hands",
     "category": "guard-passing",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player standing with one leg between partner's knees, hands on partner's stomach. Bottom player supine.",
     "players": [
@@ -1395,7 +1395,7 @@
     "title": "Denying the Feet — Fully Disconnected",
     "category": "guard-passing",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player completely disconnected and standing in front of partner's legs. Bottom player supine.",
     "players": [
@@ -1441,7 +1441,7 @@
     "title": "Full Process — Seated Start",
     "category": "guard-passing",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Partner seated. Top player standing, disconnected.",
     "players": [
@@ -1486,7 +1486,7 @@
     "title": "Clearing Frames (Wrist Pin Passing)",
     "category": "half-guard",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Half guard. Bottom player on their side, both hands on top player's chest. Top player leaning in. No knees as frames allowed for bottom player.",
     "players": [
@@ -1539,7 +1539,7 @@
     "title": "Getting Under Elbows (Wrist Pin Passing)",
     "category": "half-guard",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Clearing Frames, but top player starts with one wrist already pinned to hip and own other arm across the body.",
     "players": [
@@ -1587,7 +1587,7 @@
     "title": "Clearing the Knee (Wrist Pin Passing)",
     "category": "half-guard",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player has one knee cutting through, bottom player's both knees in front. No hands on each other.",
     "players": [
@@ -1634,7 +1634,7 @@
     "title": "Standing vs. Supine — Knee Line Control (Progression A)",
     "category": "guard-passing",
     "source": "Outside Camping",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player on back. Top player standing, starting with hands on partner's feet, in front of the feet.",
     "players": [
@@ -1683,7 +1683,7 @@
     "title": "Standing vs. Supine — Outside Knee Line (Progression B)",
     "category": "guard-passing",
     "source": "Outside Camping",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Top player already at knee line, outside partner's legs. Hands on partner's feet.",
     "players": [
@@ -1740,7 +1740,7 @@
     "title": "Line Holding",
     "category": "guard-passing",
     "source": "Outside Camping",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player supine, top player past the feet (shin on same-side hamstring or outside past feet).",
     "players": [
@@ -1788,7 +1788,7 @@
     "title": "Staying Behind the Knees (Double Under)",
     "category": "guard-passing",
     "source": "CLA Double Under Passing @ Next Level MMA",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Top player with both arms under partner's knees, hands open. Bottom player in guard.",
     "players": [
@@ -1835,7 +1835,7 @@
     "title": "Connecting Hands Past the Hips or Shoulders (Double Under)",
     "category": "guard-passing",
     "source": "CLA Double Under Passing @ Next Level MMA",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Staying Behind the Knees — top player with both arms under partner's knees, hands open.",
     "players": [
@@ -1882,7 +1882,7 @@
     "title": "Getting to the Knees from Standing (Double Under)",
     "category": "guard-passing",
     "source": "CLA Double Under Passing @ Next Level MMA",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player standing behind partner's feet. Bottom player on back.",
     "players": [
@@ -1930,7 +1930,7 @@
     "title": "Open Guard: Pass the Outsides",
     "category": "guard-passing",
     "source": "Outside Passing @ B-Team",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player belly up in open guard, top player standing.",
     "players": [
@@ -1970,7 +1970,7 @@
     "title": "Open Guard: Pass the Insides",
     "category": "guard-passing",
     "source": "Outside Passing @ B-Team",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Pass the Outsides — belly up open guard, top player standing.",
     "players": [
@@ -2100,7 +2100,7 @@
     "title": "Wrestling Up from Connection",
     "category": "seated-guard",
     "source": "Seated Guard",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "One player seated, one player standing.",
     "players": [
@@ -2191,7 +2191,7 @@
     "title": "Guard Retention — Stay Connected",
     "category": "guard",
     "source": "Supine Open Guard Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player on back, both hooks between partner's knees, one hand on each ankle. Top player standing.",
     "players": [
@@ -2238,13 +2238,13 @@
     "title": "Competing Destabilizations",
     "category": "guard",
     "source": "Supine Open Guard Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Guard Retention.",
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Cause 3 total destabilizations: partner's hands touch mat OR partner's butt touches mat.",
+        "objective": "Cause 3 total destabilizations: the partner's hands touch the mat, initiated by the bottom player, OR the partner's butt touches the mat.",
         "winCondition": "3 destabilizations first.",
         "constraints": []
       },
@@ -2286,7 +2286,7 @@
     "title": "Guard to Hip Control",
     "category": "guard",
     "source": "Supine Open Guard Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Guard Retention.",
     "players": [
@@ -2333,7 +2333,7 @@
     "title": "Inside Position vs. Leg Entanglement",
     "category": "guard",
     "source": "Supine Open Guard Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on back with feet between partner's legs and hands on partner's ankles. Top player standing.",
     "players": [
@@ -2380,7 +2380,7 @@
     "title": "Butterfly Guard — Inside/Outside Position",
     "category": "guard",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Alternating each turn: both feet inside, OR one foot inside, one outside with a hand on the ankle.",
     "players": [
@@ -2416,7 +2416,7 @@
     "title": "Knee Shield Half Guard: Destabilize",
     "category": "half-guard",
     "source": "Ecopalooza Spring 2024 (Greg Souders)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Knee shield half guard — bottom player's knee between them and the top player. Two legs interacting with one.",
     "players": [
@@ -2462,7 +2462,7 @@
     "title": "Knee Shield Half Guard: Feet to the Inside",
     "category": "half-guard",
     "source": "Ecopalooza Spring 2024 (Greg Souders)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Knee Shield Destabilize.",
     "players": [
@@ -2506,7 +2506,7 @@
     "title": "Knee Shield Half Guard: Full Entanglement",
     "category": "half-guard",
     "source": "Ecopalooza Spring 2024 (Greg Souders)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Knee Shield Destabilize.",
     "players": [
@@ -2552,7 +2552,7 @@
     "title": "Segmenting to Pin (Half Guard)",
     "category": "half-guard",
     "source": "Philippines Seminar",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Half guard / top player already past the knees, bottom player framing.",
     "players": [
@@ -2594,13 +2594,13 @@
     "title": "K-Guard: Getting Inside Position",
     "category": "k-guard-dlr",
     "source": "CLA Guard Games @ Team Laurien and Alex",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player supine, both feet outside partner's hips, one hand gripping partner's knee. Top player standing.",
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Get feet inside and grip both ankles. Put partner on the ground. Only then: finish any entanglement.",
+        "objective": "Get feet inside and grip both ankles, either front-facing or rear-facing. Put the partner on the ground. The inside-position and put-down conditions may be completed in any order; only then finish any entanglement.",
         "winCondition": "Inside position + put partner down + entanglement.",
         "constraints": []
       },
@@ -2636,13 +2636,13 @@
     "title": "DLR (vs. Standing)",
     "category": "k-guard-dlr",
     "source": "CLA Guard Games @ Team Laurien and Alex",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player supine with one cross hook and same-side grip on the ankle. Top player standing.",
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Get feet inside and grip both ankles. Put partner on the ground. Only then: finish any entanglement.",
+        "objective": "Get feet inside and grip both ankles, either front-facing or rear-facing. Put the partner on the ground. The inside-position and put-down conditions may be completed in any order; only then finish any entanglement.",
         "winCondition": "Same objectives as K-Guard game.",
         "constraints": []
       },
@@ -2675,7 +2675,7 @@
     "title": "Putting It All Together (from Closed Guard)",
     "category": "k-guard-dlr",
     "source": "CLA Guard Games @ Team Laurien and Alex",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Closed guard.",
     "players": [
@@ -2759,7 +2759,7 @@
     "title": "Connected Clinch — Put Partner on Back",
     "category": "seated-guard",
     "source": "Seated w/ Upper Body Connection",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Stay Connected, alternating between head and arm connection, both hands around shoulder.",
     "players": [
@@ -2802,7 +2802,7 @@
     "title": "Arm/Wrist Control — Cause Posting",
     "category": "seated-guard",
     "source": "Seated w/ Upper Body Connection",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on back, top player above.",
     "players": [
@@ -2850,7 +2850,7 @@
     "title": "Head & Arm Trap — Ankle Cross",
     "category": "seated-guard",
     "source": "Seated w/ Upper Body Connection",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on back with partner's head and arm trapped between crossed ankles.",
     "players": [
@@ -2895,7 +2895,7 @@
     "title": "Overhook Escape",
     "category": "seated-guard",
     "source": "Seated w/ Upper Body Connection",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player with overhook connection, top player trapped.",
     "players": [
@@ -2939,7 +2939,7 @@
     "title": "Hips to Shoulders (Crab Ride Progression)",
     "category": "pinning",
     "source": "Philippines Seminar",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Crab ride (top player feet inside behind knees, partner facing away).",
     "players": [
@@ -2982,7 +2982,7 @@
     "title": "Stay Behind / Back Control Entry (Turtle)",
     "category": "back-control",
     "source": "Turtle Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Defender on hands and knees. Attacker chest-to-back, hands connected around defender's shoulders.",
     "players": [
@@ -3023,7 +3023,7 @@
     "title": "Holding Under the Elbows — Mount",
     "category": "pinning",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Mount. Top player with double underhooks, hands connected.",
     "players": [
@@ -3062,7 +3062,7 @@
     "title": "Getting Under the Elbows — Mount",
     "category": "pinning",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Mount. Hips and shoulders covered, but no underhooks.",
     "players": [
@@ -3100,7 +3100,7 @@
     "title": "Stopping Rotation — Back Mount",
     "category": "back-control",
     "source": "Greg Souders Seminar Session 1 (10th Planet South Bay)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Chest-to-back. One arm over, one arm under partner's shoulder. No hooks allowed.",
     "players": [
@@ -3143,7 +3143,7 @@
     "title": "Get Under the Elbow (B-Team Day 1)",
     "category": "pinning",
     "source": "Greg @ B-Team Day 1",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player past the legs, hands locked around partner's hips, chest-to-chest, same side.",
     "players": [
@@ -3189,7 +3189,7 @@
     "title": "Stay Under the Elbows, Submit (B-Team Day 1)",
     "category": "pinning",
     "source": "Greg @ B-Team Day 1",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player with double underhooks under partner's elbows, hips covered.",
     "players": [
@@ -3238,7 +3238,7 @@
     "title": "Hips to Shoulders (10th Planet South Bay)",
     "category": "pinning",
     "source": "10th Planet South Bay Full CLA Practice",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Floor — top player hands locked under partner's hips. Three alternating setups.",
     "players": [
@@ -3286,7 +3286,7 @@
     "title": "Submitting While Under Elbows (10th Planet South Bay)",
     "category": "pinning",
     "source": "10th Planet South Bay Full CLA Practice",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Floor — chest-to-chest or chest-to-back, under at least one elbow.",
     "players": [
@@ -3333,7 +3333,7 @@
     "title": "Mount — Under Elbow Control to Submission",
     "category": "pinning",
     "source": "Pin to Submission",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Mount. Top player starts with underhooks. Bottom player actively resisting.",
     "players": [
@@ -3384,7 +3384,7 @@
     "title": "Mount — No Grips to Submission",
     "category": "pinning",
     "source": "Pin to Submission",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Mount. Bottom player starts with forearm across the hip frame.",
     "players": [
@@ -3431,7 +3431,7 @@
     "title": "Holding the Breaking Position",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Armbar breaking position — one leg over head, one under armpit. Any connection.",
     "players": [
@@ -3476,7 +3476,7 @@
     "title": "Holding from Above the Shoulder",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "From armbar position, tuck shin behind partner's head, transition body on top and base on the other side.",
     "players": [
@@ -3521,7 +3521,7 @@
     "title": "Holding from Mount",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Mount with double underhooks, hands connected.",
     "players": [
@@ -3566,7 +3566,7 @@
     "title": "Isolating the Arm — Breaking Position",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "advanced",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Armbar breaking position. Any connection.",
     "players": [
@@ -3612,7 +3612,7 @@
     "title": "Isolating the Arm — From Above the Shoulder",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "advanced",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Same transition as Holding from Above the Shoulder.",
     "players": [
@@ -3657,7 +3657,7 @@
     "title": "Full Process from Mount",
     "category": "armbar",
     "source": "Armbar Games — Immobilization & Isolation",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Mount with double underhooks, hands connected.",
     "players": [
@@ -3703,7 +3703,7 @@
     "title": "Arm Retention Hold-Down",
     "category": "armbar",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player has elbow-to-elbow grip on bottom player's nearest arm. Bottom player on back.",
     "players": [
@@ -3750,7 +3750,7 @@
     "title": "Arm Lock Finish",
     "category": "armbar",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same elbow-to-elbow grip, bottom player on back.",
     "players": [
@@ -3795,7 +3795,7 @@
     "title": "Mount Elbow Control — Armbar Setup",
     "category": "armbar",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player mounted, both arms under bottom player's elbows.",
     "players": [
@@ -3841,7 +3841,7 @@
     "title": "Arm Trap Survival",
     "category": "back-control",
     "source": "Back Control — Arm Trap Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Attacker chest glued to defender's back. Overarm and underarm grip defender's wrists. Underarm-side leg traps the arm. Feet crossed.",
     "players": [
@@ -3888,7 +3888,7 @@
     "title": "Arm Trap — Finish It",
     "category": "back-control",
     "source": "Back Control — Arm Trap Series (Black Flag Jiu-Jitsu Seminar)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Arm Trap Survival.",
     "players": [
@@ -3979,7 +3979,7 @@
     "title": "Back Control with Submissions",
     "category": "back-control",
     "source": "Session Plans",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Back control, seated with defensive grips seatbelt and hooks.",
     "players": [
@@ -4022,7 +4022,7 @@
     "title": "Front Headlock — Back to Mat",
     "category": "front-headlock",
     "source": "Front Headlock Strangles",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Front headlock — attacker has hands locked around partner's head and arm. Defender on all fours.",
     "players": [
@@ -4058,7 +4058,7 @@
     "title": "Front Headlock — Finishing Grip + Hip Cover",
     "category": "front-headlock",
     "source": "Front Headlock Strangles",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Back to Mat — front headlock, defender on all fours.",
     "players": [
@@ -4145,7 +4145,7 @@
     "title": "Close Hands / Head & Arm Trap / Back to Mat (Front Headlock Progression 2)",
     "category": "front-headlock",
     "source": "Front Headlock Progression (Play Along Series)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Progression 1.",
     "players": [
@@ -4189,7 +4189,7 @@
     "title": "Get Behind the Elbow / Arm-In Strangle (Front Headlock Progression 3)",
     "category": "front-headlock",
     "source": "Front Headlock Progression (Play Along Series)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Progression 2.",
     "players": [
@@ -4234,7 +4234,7 @@
     "title": "Keeping the Arm Bent (Kimura)",
     "category": "kimura",
     "source": "Kimura Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Defending player laying on side with hands locked. Attacking player sitting on defender's head holding kimura grip.",
     "players": [
@@ -4274,7 +4274,7 @@
     "title": "Attack from Kimura Grip",
     "category": "kimura",
     "source": "Kimura Games",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Defending player laying on side with hands locked. Attacking player sitting on defender's head holding kimura grip.",
     "players": [
@@ -4314,7 +4314,7 @@
     "title": "Finish or Backtake (Leg Drag)",
     "category": "leg-locks",
     "source": "Philippines Seminar",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Leg drag (top player has leg across, no chest-to-chest).",
     "players": [
@@ -4356,7 +4356,7 @@
     "title": "Triangle — Threat (Lock Setup)",
     "category": "triangle",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player double knees down, legs around partner, one arm in/one arm out.",
     "players": [
@@ -4401,7 +4401,7 @@
     "title": "Triangle — Full Finish",
     "category": "triangle",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Triangle Threat — one arm in, one arm out, top player double knees down.",
     "players": [
@@ -4444,7 +4444,7 @@
     "title": "Straight Ashi — Inside or Outside to Inside Heel Hook",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Straight ashi garami with an ankle grip.",
     "players": [
@@ -4475,7 +4475,7 @@
     "title": "Inside Position to Inside Heel Hook — No Releasing the Ankles",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Seated with both feet on the inside hooking behind partner's knees, ankle grip on both legs.",
     "players": [
@@ -4510,7 +4510,7 @@
     "title": "Outside Heel Grip vs. 2-on-1",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Attacker has outside position with a heel grip. Defender has a 2-on-1 grip on the attacker's arm.",
     "players": [
@@ -4547,7 +4547,7 @@
     "title": "Ankle Lock and Heel Hook Dilemma",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Attacker in SLX with an ankle grip.",
     "players": [
@@ -4585,7 +4585,7 @@
     "title": "Supine Inside Position — Entry to Outside or SLX (vs. Standing)",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player supine with both feet inside hooking behind partner's knees, one ankle grip. Top player standing outside.",
     "players": [
@@ -4627,7 +4627,7 @@
     "title": "Supine Inside Position — Entry vs. Seated Outside Recovery",
     "category": "leg-locks",
     "source": "Beginner Games From DVD",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player supine with both feet inside, one ankle grip. Top player starts standing outside.",
     "players": [
@@ -4686,9 +4686,9 @@
         "constraints": []
       }
     ],
-    "constraints": [
-      "Safety: Defender may not rotate to free the leg",
-      "No standing up (for new players)"
+        "constraints": [
+          "Safety: Defender may not rotate to free the leg; must separate feet first then pull straight back",
+          "No standing up (for new players)"
     ],
     "designRationale": "",
     "tags": [
@@ -4767,7 +4767,7 @@
     "players": [
       {
         "role": "Bottom player",
-        "objective": "Keep at least one foot inside. Use feet to destabilise and bring partner down. Once down, entangle any leg.",
+        "objective": "Keep at least one foot inside the partner's legs at all times. Use the tops and bottoms of the feet only to destabilise and bring the partner down—no entangling while standing. Once the partner is down, entangle any leg to win.",
         "winCondition": "Entangle any leg after partner is down.",
         "constraints": [
           "No entangling while standing"
@@ -4783,7 +4783,7 @@
       }
     ],
     "constraints": [
-      "Safety: Defender may not rotate to pull the leg out"
+      "Safety: Defender may not rotate to pull the leg out; must separate feet first then pull straight back"
     ],
     "designRationale": "",
     "tags": [
@@ -4814,19 +4814,19 @@
     "title": "Inside Position vs. Standing Passer (Diego Pato)",
     "category": "leg-locks",
     "source": "How to Defeat Diego Pato (Deandre Corbe's Training)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Bottom player supine, top player standing.",
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Get both feet hooked inside top player's knees. Maintain two-hand connection. Put top player on their butt.",
+        "objective": "Get both feet hooked inside the top player's knees, from ankle to hip. Maintain a two-hand connection to both legs. Put the top player on their butt.",
         "winCondition": "Put top player on butt.",
         "constraints": []
       },
       {
         "role": "Top player / Passer",
-        "objective": "Keep one leg between bottom player's knees. Keep outside leg from crossing inside. Never let both feet reach inside simultaneously.",
+        "objective": "Keep one leg between the bottom player's knees at all times. Keep the outside leg from crossing to the inside—step inside or outside, and stay right in front. Never let both feet reach the inside simultaneously: one is fine; two is bad.",
         "winCondition": "Continuous task.",
         "constraints": [
           "Never let both feet reach the inside simultaneously"
@@ -4860,19 +4860,19 @@
     "title": "Inside Position + Cross Leg + Path to Top (Diego Pato)",
     "category": "leg-locks",
     "source": "How to Defeat Diego Pato (Deandre Corbe's Training)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Double seated leg drag.",
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Keep both feet inside. Maintain two-hand connection. Toggle between cross leg and straight leg. Keep partner grounded.",
+        "objective": "Keep both feet inside the partner's legs at all times. Maintain a two-hand connection to both legs. Continuously toggle between cross leg and straight leg, keeping feet hidden inside. Keep the partner grounded; the full space may be played, from seated to standing.",
         "winCondition": "Continuous task.",
         "constraints": []
       },
       {
         "role": "Top player",
-        "objective": "Get to feet AND get one leg to the inside.",
+        "objective": "Get to their feet and get one leg to the inside; order doesn't matter.",
         "winCondition": "Both conditions must be met.",
         "constraints": []
       }
@@ -4904,7 +4904,7 @@
     "title": "Inside Position + Cross Leg + Hip Access (Diego Pato)",
     "category": "leg-locks",
     "source": "How to Defeat Diego Pato (Deandre Corbe's Training)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Double seated leg drag.",
     "players": [
@@ -4950,7 +4950,7 @@
     "title": "Entanglement Flow (SLX ↔ Outside Entanglement)",
     "category": "leg-locks",
     "source": "Greg @ B-Team Day 2",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both seated, attacker in Single Leg X.",
     "players": [
@@ -4999,13 +4999,13 @@
     "title": "Three-Condition Leg Control (B-Team Day 2)",
     "category": "leg-locks",
     "source": "Greg @ B-Team Day 2",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both seated, attacker in Single Leg X.",
     "players": [
       {
         "role": "Attacker",
-        "objective": "Fulfill all three on both legs: cross leg to opposite side, feet to inside, capture second leg. Repeat on other leg.",
+        "objective": "Fulfill all three conditions, in any order, on both legs: cross the leg to the opposite side of the body, put feet to the inside between the partner's knees, and capture the second leg. Repeat all three on the other leg before losing connection.",
         "winCondition": "Complete all conditions on both legs.",
         "constraints": [
           "Must maintain connection throughout"
@@ -5044,13 +5044,13 @@
     "title": "Toe Capture + Hand Connection (B-Team Day 2)",
     "category": "leg-locks",
     "source": "Greg @ B-Team Day 2",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both seated, attacker in Single Leg X.",
     "players": [
       {
         "role": "Attacker",
-        "objective": "Catch toes in armpit, scoop under heel, connect hands. Do on straight side first, then cross side. Repeat on both legs.",
+        "objective": "Catch the partner's toes in the armpit, scoop under the heel, and connect hands. Do this on the straight side first, then transition to the cross side. Repeat on both legs without losing connection.",
         "winCondition": "Complete on both legs.",
         "constraints": [
           "Feet positioning is free"
@@ -5090,13 +5090,13 @@
     "title": "Progressive Finishing — Earn Your Starting Position (B-Team Day 2)",
     "category": "leg-locks",
     "source": "Greg @ B-Team Day 2",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Inside entanglement, both legs controlled.",
     "players": [
       {
         "role": "Attacker",
-        "objective": "Separate feet → capture toes → connect hands → finish (tap). Each successful finish backs you further out next round.",
+        "objective": "Separate the partner's feet → capture toes → connect hands → finish (tap). If successful, the next round starts from single leg: get to cross-leg position with feet inside before finishing. If successful again, the next round starts from just inside position: entangle, get feet inside, cross leg, then finish.",
         "winCondition": "Finish (tap).",
         "constraints": [
           "Each failure resets to that failure point"
@@ -5138,13 +5138,13 @@
     "title": "Keep Them Down (B-Team Day 2)",
     "category": "leg-locks",
     "source": "Greg @ B-Team Day 2",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Attacker with double feet inside, entanglement of choice.",
     "players": [
       {
         "role": "Attacker",
-        "objective": "Entangle, catch toes, connect hands with heel hook finishing grip. Partner must be grounded. No finish required.",
+        "objective": "Entangle using any entanglement, catch the toes, and connect hands with a heel-hook finishing grip while the partner is on the ground. The full space may be used: stand if needed to keep the hips down. No finish is required.",
         "winCondition": "Fulfill grip conditions with partner grounded.",
         "constraints": []
       },
@@ -5232,7 +5232,7 @@
     "title": "False Grip Hunt (Inside Ashi, One Hand)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Control the Entanglement — Inside Ashi / Saddle.",
     "players": [
@@ -5281,7 +5281,7 @@
     "title": "Upgrade the Position (9010 / Outside Base Guard)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Outside base / 9010 — one foot outside, more rotation available but less control.",
     "players": [
@@ -5326,7 +5326,7 @@
     "title": "Upgrade Race (50/50)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "50/50 — open legs, no crossing/locking feet down.",
     "players": [
@@ -5367,7 +5367,7 @@
     "title": "Hip Control Battle (Double Butt Scoot)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Double butt scoot — both seated, one in / one out, hands free.",
     "players": [
@@ -5410,7 +5410,7 @@
     "title": "Get Up (Double Butt Scoot + Stand)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Hip Control Battle — double butt scoot.",
     "players": [
@@ -5419,7 +5419,7 @@
         "objective": "Same hip control battle. Added win condition: stand up and retrieve — if you can get to your feet and out, you win.",
         "winCondition": "Hip control OR stand up and out.",
         "constraints": [
-          "Attacker trying to stand must control the bottom leg"
+          "A player trying to stand must control the bottom leg; otherwise the other player gets up freely"
         ]
       }
     ],
@@ -5449,7 +5449,7 @@
     "title": "Three-Way (Hip / Stand / Back)",
     "category": "leg-locks",
     "source": "Rob Cole Games (Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Get Up — double butt scoot.",
     "players": [
@@ -5491,13 +5491,13 @@
     "title": "Saddle Heel Hide (Play to Win)",
     "category": "leg-locks",
     "source": "Rob Cole Games (USA Camp 2023)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Attacker has defender in the saddle (cross ashi) with secondary leg controlled.",
     "players": [
       {
         "role": "Attacker",
-        "objective": "Maintain saddle control. Dig for a false grip on the heel.",
+        "objective": "Maintain saddle control with the secondary-leg grip. Dig for a false grip on the heel.",
         "winCondition": "False grip catch = win (continuous).",
         "constraints": [
           "No ripping"
@@ -5505,7 +5505,7 @@
       },
       {
         "role": "Defender",
-        "objective": "Ballerina toe to hide heel. Boot foot on attacker's hip. Free trapped leg and re-hide heel.",
+        "objective": "Use ballerina toe to hide the heel. Boot the foot on the attacker's hip. Free the trapped leg and re-hide the heel if recaptured. Spin or extract to escape.",
         "winCondition": "Escape.",
         "constraints": []
       }
@@ -5539,7 +5539,7 @@
     "title": "Saddle → 90/10 Upgrade (Play to Win)",
     "category": "leg-locks",
     "source": "Rob Cole Games (USA Camp 2023)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Saddle with secondary leg control.",
     "players": [
@@ -5584,7 +5584,7 @@
     "title": "50/50 Shootout → 90/10 (Play to Win)",
     "category": "leg-locks",
     "source": "Rob Cole Games (USA Camp 2023)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Open 50/50 — feet not crossed.",
     "players": [
@@ -5626,7 +5626,7 @@
     "title": "Double Butt Scoot — Leg Entanglement / Get Up (Play to Win)",
     "category": "leg-locks",
     "source": "Rob Cole Games (USA Camp 2023)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both seated, one inside, one outside.",
     "players": [
@@ -5669,7 +5669,7 @@
     "title": "Woj Control Without Submitting",
     "category": "leg-locks",
     "source": "Woj Lock Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "Woj lock position.",
     "players": [
@@ -5701,7 +5701,7 @@
     "title": "Woj with One Arm Controlled",
     "category": "leg-locks",
     "source": "Woj Lock Games",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "continuous",
     "startingPosition": "Woj lock position with one of partner's arms already controlled.",
     "players": [
@@ -5734,7 +5734,7 @@
     "title": "Playing the Whole Space",
     "category": "whole-space",
     "source": "Playing the Whole Space (Greg Souders Queretaro Seminar)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player supine, both feet between partner's knees, both hands on partner's ankles. Top player on the ground.",
     "players": [
@@ -5782,7 +5782,7 @@
     "title": "Out to the Ankle",
     "category": "whole-space",
     "source": "Playing the Whole Space (Greg Souders Queretaro Seminar)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both players standing. Attacker gripping partner's leg at the knee.",
     "players": [
@@ -5833,7 +5833,7 @@
     "title": "Even Start",
     "category": "whole-space",
     "source": "Playing the Whole Space (Greg Souders Queretaro Seminar)",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Both players on the ground, each with one foot on the inside.",
     "players": [
@@ -5879,9 +5879,7 @@
         "role": "Attacker",
         "objective": "Connect hands around the waist, a leg, or anywhere from shoulders to ankles.",
         "winCondition": "Connect hands.",
-        "constraints": [
-          "Cannot connect hands (must use other methods)"
-        ]
+        "constraints": []
       },
       {
         "role": "Defender",
@@ -5917,7 +5915,7 @@
     "title": "Re-attack on the Break (Just Stand Up)",
     "category": "stand-up",
     "source": "Just Stand Up (Rob Cole - Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Same as Hand Connection Denial — attacker behind defender.",
     "players": [
@@ -6147,7 +6145,7 @@
     "title": "Quarter Guard Pass → Pin",
     "category": "stand-up",
     "source": "Just Stand Up (Rob Cole - Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Attacker has crossface, underhook, and one knee trapped in quarter guard.",
     "players": [
@@ -6187,7 +6185,7 @@
     "title": "Guard Connections + Stand-Up Option",
     "category": "stand-up",
     "source": "Just Stand Up (Rob Cole - Ecopalooza Spring 2024)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Guard vs. passer — passer tries to break connections and reach the knee line.",
     "players": [
@@ -6226,7 +6224,7 @@
     "title": "Handfight to Closed Hands (Scaling)",
     "category": "standing",
     "source": "Games with Scaling",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Standing, hand fighting.",
     "players": [
@@ -6258,7 +6256,7 @@
     "title": "Seated vs Standing (Scaling)",
     "category": "seated-guard",
     "source": "Games with Scaling",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "One player standing, one player seated.",
     "players": [
@@ -6298,7 +6296,7 @@
     "title": "Completing Pins (Scaling)",
     "category": "pinning",
     "source": "Games with Scaling",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Lying next to partner. Bottom on side facing top. Top's hands connected around bottom's waist.",
     "players": [
@@ -6337,13 +6335,13 @@
     "title": "Finishing (Scaling)",
     "category": "submissions",
     "source": "Games with Scaling",
-    "level": "advanced",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "L1: Armlock breaking position. L2: Figure-four grip. L3: Under both elbows, top chooses position.",
     "players": [
       {
         "role": "Top player / Attacker",
-        "objective": "L1: Hold down, separate hands, finish armlock. L2: Finish kimura OR any submission. L3: Any submission.",
+        "objective": "L1: Hold down, separate hands, finish armlock. L2: Finish kimura OR take the figure four to any other submission. L3: Any submission; any body part, including legs, can be used under the elbows to stop them coming in.",
         "winCondition": "Submission (or chest-to-back on L3).",
         "constraints": []
       },
@@ -6475,7 +6473,7 @@
     "players": [
       {
         "role": "Bottom player / Guard player",
-        "objective": "Maintain inside connection, then destabilize top player onto hands or butt.",
+        "objective": "Make and maintain inside connection, then destabilize the top player onto their hands or butt. If the top player hits their butt, let them stand, restart; if they hit their hands, keep them there, continue pressure.",
         "winCondition": "Continuous — maintain destabilization.",
         "constraints": []
       },
@@ -6514,7 +6512,7 @@
     "title": "Side Control: Figure Four / Arm Extension / Exposed Back",
     "category": "pinning",
     "source": "Standard Jiu Jitsu — CLA Class Games (White/Blue Belt)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Side control (top vs. bottom).",
     "players": [
@@ -6561,7 +6559,7 @@
     "title": "Rear Mount: Maintain Back / Clear Defenders",
     "category": "back-control",
     "source": "Standard Jiu Jitsu — CLA Class Games (White/Blue Belt)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Chest-to-back, hooks in, over-under grip.",
     "players": [
@@ -6573,7 +6571,7 @@
       },
       {
         "role": "Top player / Back control (experienced)",
-        "objective": "Clear defender's arms, work toward strangulation.",
+        "objective": "Use hands to clear the defender's arms, then work toward strangulation. Legs may also be used for arm trapping.",
         "winCondition": "Strangulation setup.",
         "constraints": []
       },
@@ -6606,7 +6604,7 @@
     "title": "Whole Game (Fundamentals)",
     "category": "submissions",
     "source": "Standard Jiu Jitsu — CLA Class Games (White/Blue Belt)",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Belly Up guard vs. standing passer.",
     "players": [
@@ -6638,7 +6636,7 @@
     "title": "Breaking & Back Taking — Leg Entanglements",
     "category": "leg-locks",
     "source": "All Levels CLA Class",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Any leg entanglement of choice.",
     "players": [
@@ -6677,13 +6675,13 @@
     "title": "Breaking & Back Taking — Arm (Figure-Four)",
     "category": "kimura",
     "source": "All Levels CLA Class",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on their side; top player with a figure-four grip on the arm.",
     "players": [
       {
         "role": "Attacker / Top player",
-        "objective": "Submit OR take the back. Keep hips close to partner's shoulder. Separate the arm. Chain threats (twisting → straight → strangle).",
+        "objective": "Submit OR take the back. Keep hips as close to the partner's shoulder as possible at all times. Separate the arm from everything it can touch (body, other arm, leg). Once separated, chain threats continuously (twisting lock → straight lock → strangle) with no lag time between threats.",
         "winCondition": "Submit OR take back.",
         "constraints": []
       },
@@ -6717,7 +6715,7 @@
     "title": "Side Control — Hip Connection",
     "category": "pinning",
     "source": "All Levels CLA Class",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on their side; top player wrapping arm around partner's hip.",
     "players": [
@@ -6757,13 +6755,13 @@
     "title": "All-Fours — Rear Hip Connection",
     "category": "back-control",
     "source": "All Levels CLA Class",
-    "level": "all-levels",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Bottom player on all fours; top player connected around the waist from behind.",
     "players": [
       {
         "role": "Attacker / Top player",
-        "objective": "Submit from any pin. Stay taller than partner's back. Break partner off base points: feet → knees → hips / hands → elbows → shoulders.",
+        "objective": "Submit from any pin (chest-to-chest or chest-to-back). Always stay taller than the partner's back; never fall below their hip height. Break the partner off their base points progressively: feet → knees → hips / hands → elbows → shoulders.",
         "winCondition": "Submission.",
         "constraints": []
       },
@@ -6797,7 +6795,7 @@
     "title": "Tournament Pinning",
     "category": "pinning",
     "source": "Session Plans",
-    "level": "advanced",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Side control.",
     "players": [
@@ -6834,7 +6832,7 @@
     "title": "Tournament Pinning (with Submission)",
     "category": "pinning",
     "source": "Session Plans",
-    "level": "advanced",
+    "level": "beginner",
     "type": "mixed",
     "startingPosition": "Side control.",
     "players": [
@@ -6872,7 +6870,7 @@
     "title": "Back Take from Hip Control",
     "category": "back-control",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player on bottom player's hips.",
     "players": [
@@ -6910,7 +6908,7 @@
     "title": "Guard Passing — Hips to Shoulders (Seminar Transcript)",
     "category": "guard-passing",
     "source": "BJJ CLA Games — Seminar Transcript",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player's hands locked around bottom player's hips.",
     "players": [
@@ -6951,7 +6949,7 @@
     "title": "Inside Position to Ankle Lock — No Releasing the Ankles",
     "category": "leg-locks",
     "source": "Session Plans",
-    "level": "intermediate",
+    "level": "beginner",
     "type": "terminal",
     "startingPosition": "Seated with both feet inside hooking behind partner's knees, ankle grip on both legs.",
     "players": [
@@ -6983,6 +6981,183 @@
     "skills": [
       "connection",
       "isolate"
+    ],
+    "progression": null,
+    "sourceUrl": null
+  },
+  {
+    "id": "transcript-standing-connection-wins",
+    "title": "Standing Connection Wins",
+    "category": "standing",
+    "source": "User-supplied transcript",
+    "level": "beginner",
+    "type": "mixed",
+    "startingPosition": "Both players standing; the transcript then says to start a leg across, but does not otherwise specify an exact initial connection.",
+    "players": [
+      {
+        "role": "Top player / Offensive player",
+        "objective": "Create either a close rear-facing connection at the opponent's hips or shoulders while behind them, or a cross-leg/feet-inside entanglement with both legs collected. Do not go chest-to-chest.",
+        "winCondition": "A close rear-facing hip/shoulder connection, or a cross-leg/feet-inside entanglement with both legs collected.",
+        "constraints": [
+          "No chest-to-chest"
+        ]
+      },
+      {
+        "role": "Defensive player",
+        "objective": "At minimum, stand up/get away and break all connections. A better result is a sweep, submission, back take, or reversal by getting behind the opponent.",
+        "winCondition": "Minimum win: stand up/get away and break all connections. Better wins are a sweep, submission, back take, or reversal by getting behind the opponent.",
+        "constraints": [
+          "If the defender ends on top, clear the legs to safety."
+        ]
+      }
+    ],
+    "constraints": [
+      "Top may not go chest-to-chest.",
+      "The defensive player must break all connections for the minimum win.",
+      "If the defensive player ends on top, clear the legs to safety.",
+      "Flip roles after every win."
+    ],
+    "designRationale": "Transcript 2:41-5:23. The transcript gives two top wins (close rear-facing hip/shoulder connection, or cross-leg/feet-inside entanglement with both legs collected), a minimum defensive win, and a role flip after every win; the initial standing connection remains deliberately unspecified.",
+    "tags": [
+      "transcript",
+      "standing",
+      "connection",
+      "rear-facing",
+      "cross-leg",
+      "leg-collection",
+      "back-take"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "segment"
+    ],
+    "progression": null,
+    "sourceUrl": null
+  },
+  {
+    "id": "transcript-bottom-offensive-connection",
+    "title": "Bottom Offensive Connection",
+    "category": "guard",
+    "source": "User-supplied transcript",
+    "level": "beginner",
+    "type": "mixed",
+    "startingPosition": "Bottom offensive player in any belly-up guard that is not an entanglement; single or double feet inside are allowed.",
+    "players": [
+      {
+        "role": "Bottom player / Offensive player",
+        "objective": "Create cross-leg or cross-arm positioning, then connect hands to the opponent's center (hips or shoulders) while they are down, or get behind them with connected hands. Use connections to put the top player's hands on the ground and take opportunities to put them down and connect.",
+        "winCondition": "Connected hands at the hips or shoulders while the opponent is down, or connected hands behind the opponent.",
+        "constraints": []
+      },
+      {
+        "role": "Top player / Defensive player",
+        "objective": "Stay in the pocket and deny the bottom player's cross-leg/cross-arm and center-connection opportunities; passing is not required.",
+        "winCondition": "Continuous defense: stay in the pocket and deny the bottom player's connection win; the transcript does not state a separate top scoring condition.",
+        "constraints": [
+          "Stay in the pocket; the top player is not necessarily trying to pass."
+        ]
+      }
+    ],
+    "constraints": [
+      "The top player stays in the pocket and is not necessarily trying to pass.",
+      "Flip roles and positions after every win."
+    ],
+    "designRationale": "Transcript 9:04-12:45. The bottom offensive player works from belly-up non-entanglement guard toward cross-leg/cross-arm and connected-center conditions. The transcript says the top stays in the pocket and is not necessarily trying to pass, so no separate top scoring condition is invented.",
+    "tags": [
+      "transcript",
+      "guard",
+      "belly-up",
+      "connection",
+      "cross-leg",
+      "cross-arm",
+      "center-connection"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "segment"
+    ],
+    "progression": null,
+    "sourceUrl": null
+  },
+  {
+    "id": "transcript-connection-warmup",
+    "title": "Six-Minute Connection Warm-Up",
+    "category": "standing",
+    "source": "User-supplied transcript",
+    "level": "beginner",
+    "type": "terminal",
+    "startingPosition": "Both players start standing; play however you want, and sit if you do not want to wrestle.",
+    "players": [
+      {
+        "role": "Both players",
+        "objective": "Play however you want and compete to connect to a leg off the ground, connect to the body front-facing or rear-facing, or make a shoulder/close-hand connection.",
+        "winCondition": "Any of these connections counts: a leg connection off the ground, a body connection front-facing or rear-facing, or a shoulder/close-hand connection.",
+        "constraints": []
+      }
+    ],
+    "constraints": [
+      "Six-minute warm-up round.",
+      "Find a new partner every round."
+    ],
+    "designRationale": "Transcript 18:24-19:12. This is a six-minute connection warm-up with open play: players may sit, and the stated wins are a leg connection off the ground, front- or rear-facing body connection, or shoulder/close-hand connection.",
+    "tags": [
+      "transcript",
+      "warm-up",
+      "connection",
+      "standing",
+      "body-connection",
+      "shoulder-connection"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize"
+    ],
+    "progression": null,
+    "sourceUrl": null
+  },
+  {
+    "id": "transcript-competition-score-rounds",
+    "title": "Competition Score Rounds",
+    "category": "whole-space",
+    "source": "User-supplied transcript",
+    "level": "beginner",
+    "type": "terminal",
+    "startingPosition": "Begin with the six-minute warm-up from standing. After each score, the scoring player chooses the next starting condition, such as neutral, guarded, or passing; the initial score-round start is not otherwise specified.",
+    "players": [
+      {
+        "role": "Both players",
+        "objective": "Play first-to-score rounds: score a takedown, pass, back take, or submission. After scoring, choose the next starting condition.",
+        "winCondition": "A takedown, pass, back take, or submission is a score; restart after each score. The scoring/winning player chooses the next start.",
+        "constraints": []
+      }
+    ],
+    "constraints": [
+      "Do a six-minute connection warm-up first, starting standing; then run four 10-minute rounds.",
+      "Restart after every takedown, pass, back take, or submission score.",
+      "Only the scoring/winning player chooses the next start (neutral, guard, passing, or another option).",
+      "Find a new partner every round."
+    ],
+    "designRationale": "Transcript 18:24-20:20. The first round is a six-minute standing connection warm-up, followed by four 10-minute first-to-score rounds. Every takedown, pass, back take, or submission restarts the round, and the scorer chooses the next start.",
+    "tags": [
+      "transcript",
+      "competition",
+      "score-rounds",
+      "takedown",
+      "passing",
+      "back-take",
+      "submission"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "immobilize",
+      "segment"
     ],
     "progression": null,
     "sourceUrl": null
