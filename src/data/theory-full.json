@@ -207,11 +207,7 @@
       {
         "type": "heading",
         "level": "2",
-        "text": "🌳 The Ecological Approach & Constraints-Led Approach (CLA) Based on Rob Gray – Perception Action Podcast"
-      },
-      {
-        "type": "paragraph",
-        "text": "**The Ecological Approach – Core Principles**"
+        "text": "The Ecological Approach – Core Principles"
       },
       {
         "type": "paragraph",
@@ -294,78 +290,22 @@
         "text": "**Small-Sided Games (Soccer, Basketball, etc.)** Changing field size, player numbers, and rules are classic task constraint manipulations that push players toward better movement decisions and tactical behavior without explicit instruction."
       },
       {
-        "type": "paragraph",
-        "text": "**Evidence Supporting the Ecological Approach**"
+        "type": "heading",
+        "level": "2",
+        "text": "Evidence Supporting the Ecological Approach"
       },
       {
         "type": "list",
+        "ordered": true,
         "items": [
-          "**1. You don't need to learn fundamentals first through decomposition**"
+          "**You don't need to learn fundamentals first through decomposition** A study (Decker et al.) compared 10-year-old soccer players trained via skill-and-drill vs. small-sided games. Even on tests *biased toward technical skill*, both groups improved equally – with the small-sided game group showing better retention and a higher return on investment per rep (0.006s improvement per pass vs. 0.003s for the drill group).",
+          "**Learning is not slower** Research by Schöllhorn and colleagues found no consistent evidence that ecological/variable practice leads to slower skill acquisition compared to traditional block practice – even on sports tasks.",
+          "**Variability is restructured, not eliminated** Elite athletes are not less variable – their variability is *restructured* to align with the solution space (e.g. different release angles in basketball shooting that all go in). This adaptability is what allows performance under changing conditions.",
+          "**Unpredictability is critical** A volleyball study showed that athletes who trained blocks (line, diagonal, open) in a random/unpredictable order outperformed those who practiced each type in a blocked fashion. Even a small number of unpredictable options produces significantly better results.",
+          "**Self-organization does not increase injury risk** A study measuring 8 ACL injury risk markers (ground reaction forces, joint angles) found that constraints-led and differential learning groups showed *reduced* risk factors compared to traditional training groups.",
+          "**More movement solutions available after CLA training** Studies in tennis and baseball show that ecological training leads to more movement options available to the athlete – not fewer. This is what allows them to adapt to changing pitch types, defenders, fatigue, etc.",
+          "**Tactical behavior in team sports** A series of studies by Ramos et al. (volleyball) showed that CLA training through small-sided games with varying task constraints improved team synergy and tactical coordination across a full competitive season."
         ]
-      },
-      {
-        "type": "paragraph",
-        "text": "A study (Decker et al.) compared 10-year-old soccer players trained via skill-and-drill vs. small-sided games. Even on tests *biased toward technical skill*, both groups improved equally – with the small-sided game group showing better retention and a higher return on investment per rep (0.006s improvement per pass vs. 0.003s for the drill group)."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**2. Learning is not slower**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "Research by Schöllhorn and colleagues found no consistent evidence that ecological/variable practice leads to slower skill acquisition compared to traditional block practice – even on sports tasks."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**3. Variability is restructured, not eliminated**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "Elite athletes are not less variable – their variability is *restructured* to align with the solution space (e.g. different release angles in basketball shooting that all go in). This adaptability is what allows performance under changing conditions."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**4. Unpredictability is critical**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "A volleyball study showed that athletes who trained blocks (line, diagonal, open) in a random/unpredictable order outperformed those who practiced each type in a blocked fashion. Even a small number of unpredictable options produces significantly better results."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**5. Self-organization does not increase injury risk**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "A study measuring 8 ACL injury risk markers (ground reaction forces, joint angles) found that constraints-led and differential learning groups showed *reduced* risk factors compared to traditional training groups."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**6. More movement solutions available after CLA training**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "Studies in tennis and baseball show that ecological training leads to more movement options available to the athlete – not fewer. This is what allows them to adapt to changing pitch types, defenders, fatigue, etc."
-      },
-      {
-        "type": "list",
-        "items": [
-          "**7. Tactical behavior in team sports**"
-        ]
-      },
-      {
-        "type": "paragraph",
-        "text": "A series of studies by Ramos et al. (volleyball) showed that CLA training through small-sided games with varying task constraints improved team synergy and tactical coordination across a full competitive season."
       },
       {
         "type": "paragraph",
@@ -1279,90 +1219,6 @@
       {
         "type": "paragraph",
         "text": "That, not a longer list of techniques, is the discipline: take away your opponent's options until none of them are survivable, spend less than they do to get there, and only cash in your control for a finish when the finish closes faster than the door you're opening."
-      }
-    ]
-  },
-  {
-    "id": "further-reading",
-    "title": "About this document",
-    "emoji": "📚",
-    "blocks": [
-      {
-        "type": "heading",
-        "level": "1",
-        "text": "📚About this document"
-      },
-      {
-        "type": "paragraph",
-        "text": "The text in this document is generated using Claude to summarise the ideas of Greg Souders, Rob Gray and others from Youtube transcripts. The AI is good at summarizing but often its best to get info straight from the source. Also there might be errors in the document. Please comment if you find any.  Also feel free to comment if you think something is missing, can be improved or if you disagree."
-      },
-      {
-        "type": "paragraph",
-        "text": "Here are some good sources for further research:"
-      },
-      {
-        "type": "paragraph",
-        "text": "Books:"
-      },
-      {
-        "type": "paragraph",
-        "text": "How we learn to move by Rob Gray:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://www.goodreads.com/book/show/59507312-how-we-learn-to-move](https://www.goodreads.com/book/show/59507312-how-we-learn-to-move)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Constraints Led Approach Principles for Sports Based Caching and Practice Design:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://www.akademika.no/hjem-og-fritid/sport-og-friluft/constraints-led-approach/9781138104075](https://www.akademika.no/hjem-og-fritid/sport-og-friluft/constraints-led-approach/9781138104075)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Podcasts about CLA:"
-      },
-      {
-        "type": "paragraph",
-        "text": "YT playlist:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://youtube.com/playlist?list=PLEmjNuJJkxDJFpzJqn3E4ZWSpFd02sZyx&si=Uy5ujjXo4OJfF_3c](https://youtube.com/playlist?list=PLEmjNuJJkxDJFpzJqn3E4ZWSpFd02sZyx&si=Uy5ujjXo4OJfF_3c)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Spotify playlist with Greg Souders:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://open.spotify.com/playlist/6wDBsSfC7EINQuzwPhvuC6?si=d3f2ecc0335b420e](https://open.spotify.com/playlist/6wDBsSfC7EINQuzwPhvuC6?si=d3f2ecc0335b420e)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Rob Gray Podcast:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://open.spotify.com/show/6P7OPFNTMnwRYjVsj8OYaM?si=c63b2e04bbd744e9](https://open.spotify.com/show/6P7OPFNTMnwRYjVsj8OYaM?si=c63b2e04bbd744e9)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Videos with CLA games:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://youtube.com/playlist?list=PLEmjNuJJkxDJDUg-UOFO_SpeKvusKIzmO&si=CiSLo8fCRBX-LMKc](https://youtube.com/playlist?list=PLEmjNuJJkxDJDUg-UOFO_SpeKvusKIzmO&si=CiSLo8fCRBX-LMKc)"
-      },
-      {
-        "type": "paragraph",
-        "text": "Articles:"
-      },
-      {
-        "type": "paragraph",
-        "text": "[https://www.nytimes.com/athletic/6665943/2025/09/29/sports-training-cla-coaching-wembanyana-ohtani/](https://www.nytimes.com/athletic/6665943/2025/09/29/sports-training-cla-coaching-wembanyana-ohtani/)"
       }
     ]
   }

@@ -1,9 +1,11 @@
 node_modules/
 dist/
 *.tsbuildinfo
+.worktrees/
 
 # Local previews and design experiments
 sketches/
+.superpowers/
 *.png
 .hermes-*.cjs
 ~*

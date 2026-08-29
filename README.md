@@ -64,7 +64,7 @@ Each game follows the `Game` interface in `src/types.ts`:
 - `players[]` with role, objective, win condition, and constraints
 - `skills[]` mapped to the six CLA invariants
 - `progression` chain linking related games in a sequence
-- `category`, `level` (beginner → advanced), and `type` (continuous, terminal, mixed)
+- `category`, `level` (beginner), and `type` (continuous, terminal, mixed)
 
 ## Acknowledgements
 

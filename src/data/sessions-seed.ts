@@ -79,7 +79,7 @@ export const SEED_SESSIONS: SessionPlan[] = [
     title: 'Entanglement Flow, Guard Retention & Arm Traps',
     date: SEED_DATE,
     duration: 48,
-    level: 'intermediate',
+    level: 'beginner',
     focus: 'Standing → leg entanglements → guard retention → competing destabilizations → back control arm traps',
     notes: '8 games. Split the whole game into smaller parts. Switch every time someone wins.',
     games: [
@@ -172,7 +172,7 @@ export const SEED_SESSIONS: SessionPlan[] = [
     title: 'Playing the Whole Space',
     date: SEED_DATE,
     duration: 30,
-    level: 'intermediate',
+    level: 'beginner',
     focus: 'Move through the entire space — back, seated, standing — while maintaining control',
     notes: 'Greg Souders Queretaro Seminar. Keep control of your partner as you move through every position. As long as you can access the ankles and keep them off the mat, you have access to the whole space.',
     games: [

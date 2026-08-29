@@ -22,7 +22,7 @@ import type { Game } from './types';
 export interface GenerateOptions {
   /** Total session length in minutes (e.g. 60). */
   duration: number;
-  /** 'beginner' | 'all-levels' | 'intermediate' | 'advanced'. */
+  /** 'beginner' | 'all-levels'. */
   level: string;
   /** A category key (e.g. 'guard-passing') or the synthetic focus 'balanced'. */
   focus: string;
@@ -79,8 +79,6 @@ const BLOCK_GAME_CAP = 2;
 const LEVEL_DIFFICULTY: Record<string, number> = {
   beginner: 0,
   'all-levels': 1,
-  intermediate: 2,
-  advanced: 3,
 };
 
 /**

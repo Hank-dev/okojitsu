@@ -1,5 +1,7 @@
 export type Skill = 'connection' | 'distance' | 'destabilize' | 'segment' | 'isolate' | 'immobilize'
 
+export type DraftGameLevel = 'beginner' | 'all-levels'
+
 export interface Progression {
   chain: string
   chainLabel: string
@@ -20,6 +22,7 @@ export interface Game {
   id: string;
   title: string;
   category: string;
+  subcategory?: string;
   source: string;
   level: string;
   type: string;
@@ -50,7 +53,17 @@ export interface SessionGame {
   notes?: string;
 }
 
-export const CATEGORY_META: Record<string, { label: string; emoji: string; color: string; description: string; image?: string }> = {
+export interface CategoryMeta {
+  label: string;
+  emoji: string;
+  color: string;
+  description: string;
+  image?: string;
+}
+
+export type CategoryMetaMap = Record<string, CategoryMeta>
+
+export const CATEGORY_META: CategoryMetaMap = {
   'standing': { label: 'Wraslin\'', emoji: '🌈', color: '#f59e0b', description: 'Standing grappling, hand fighting, takedowns', image: '/img/wraslin.jpg' },
   'guard-passing': { label: 'Passing', emoji: '🦄', color: '#3b82f6', description: 'Guard passing: feet → knees → hips', image: '/img/guard-passing.jpg' },
   'guard': { label: 'Guard', emoji: '💂', color: '#10b981', description: 'Open guard, supine guard, guard retention', image: '/img/the-guard.jpg' },
@@ -72,14 +85,12 @@ export const CATEGORY_META: Record<string, { label: string; emoji: string; color
 export const LEVEL_META: Record<string, { label: string; color: string }> = {
   'beginner': { label: 'Beginner', color: '#22c55e' },
   'all-levels': { label: 'All Levels', color: '#3b82f6' },
-  'intermediate': { label: 'Intermediate', color: '#f59e0b' },
-  'advanced': { label: 'Advanced', color: '#ef4444' },
 };
 
 export const TYPE_META: Record<string, { label: string; color: string; description: string }> = {
   'continuous': { label: 'Continuous', color: '#3b82f6', description: 'One player maintains a task as long as possible' },
   'terminal': { label: 'Terminal', color: '#ef4444', description: 'Reach a specific outcome to win' },
-  'mixed': { label: 'Mixed', color: '#a855f7', description: 'Both players have win conditions' },
+  'mixed': { label: 'Mixed', color: '#a855f7', description: 'Players can have different goal styles: continuous or terminal' },
 };
 
 export const SKILL_META: Record<Skill, { label: string; color: string; icon: string; description: string }> = {
