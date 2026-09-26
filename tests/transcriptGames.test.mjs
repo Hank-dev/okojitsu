@@ -30,7 +30,7 @@ test('adds four uniquely identified transcript games and updates metadata totals
   )
   assert.equal(gamesMeta.totalGames, games.length)
   assert.deepEqual(gamesMeta.categories, categoryCounts)
-  assert.equal(gamesMeta.totalGames, 165)
+  assert.equal(gamesMeta.totalGames, 172)
 })
 
 test('preserves the standing connection game transcript conditions', () => {

@@ -234,16 +234,63 @@
         "text": "**Affordances**: Athletes perceive opportunities for action directly from the environment – not abstract physical parameters."
       },
       {
-        "type": "paragraph",
-        "text": "**Two Approaches to Skill Acquisition: Key Differences**"
+        "type": "heading",
+        "level": "2",
+        "text": "Two Approaches to Skill Acquisition: Key Differences"
       },
       {
         "type": "paragraph",
         "text": "Rob Gray contrasts the ecological approach with the traditional **Information Processing (IP) approach**:"
       },
       {
-        "type": "paragraph",
-        "text": "**The Constraints-Led Approach (CLA) – What It Is**"
+        "type": "table",
+        "headers": [
+          "Aspect",
+          "Information Processing",
+          "Ecological Approach"
+        ],
+        "rows": [
+          [
+            "Perception",
+            "Indirect — cues must be interpreted",
+            "Direct — information specifies what to do"
+          ],
+          [
+            "Action control",
+            "Predictive, based on internal models",
+            "Prospective, online adjustment via control laws"
+          ],
+          [
+            "Skill",
+            "Stored motor programs",
+            "Emerges through self-organization"
+          ],
+          [
+            "Coaching",
+            "Prescribe technique, correct errors",
+            "Destabilize ineffective solutions, guide exploration"
+          ],
+          [
+            "Variability",
+            "Added later, for adjustability",
+            "Added early, for adaptability"
+          ],
+          [
+            "Expertise",
+            "Knowledge about (in your head)",
+            "Knowledge of (in the relationship)"
+          ],
+          [
+            "Decomposition",
+            "Effective — modules trained separately",
+            "Counterproductive — perception and action inseparable"
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "level": "2",
+        "text": "The Constraints-Led Approach (CLA) – What It Is"
       },
       {
         "type": "paragraph",
@@ -254,8 +301,9 @@
         "text": "The CLA uses constraints to encourage **guided self-organization**: the athlete is not told what to do, but is given problems that make their current (ineffective) solution unworkable, pushing them to explore and find a better one."
       },
       {
-        "type": "paragraph",
-        "text": "**Four key goals of the CLA:**"
+        "type": "heading",
+        "level": "3",
+        "text": "Four Key Goals of the CLA"
       },
       {
         "type": "paragraph",
@@ -274,20 +322,36 @@
         "text": "**Provide transition feedback** – feedback about whether the athlete's *search* for a new solution is going in the right direction (not just about outcome or technique)"
       },
       {
-        "type": "paragraph",
-        "text": "**Practical Examples**"
+        "type": "heading",
+        "level": "2",
+        "text": "Practical Examples"
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Baseball – Bat Speed (Lars Nootbaar / Drive Line)"
       },
       {
         "type": "paragraph",
-        "text": "**Baseball – Bat Speed (Lars Nootbaar / Drive Line)** A player had low bat speed due to poor hip-shoulder separation. Instead of telling him to \"rotate his hips more,\" coaches gave him a longer bat and asked him to hit to the opposite field – a task nearly impossible with his current swing. The constraint forced him to self-organize a new solution."
+        "text": "A player had low bat speed due to poor hip-shoulder separation. Instead of telling him to \"rotate his hips more,\" coaches gave him a longer bat and asked him to hit to the opposite field – a task nearly impossible with his current swing. The constraint forced him to self-organize a new solution."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Baseball – Forearm Flyout (Connection Ball)"
       },
       {
         "type": "paragraph",
-        "text": "**Baseball – Forearm Flyout (Connection Ball)** Pitchers who \"fly out\" the arm lose velocity and risk injury. A small rubber ball is placed under the pitching arm. The instruction: \"make the ball fall forward when it drops.\" If the arm separates too early, the ball falls backward – giving immediate transition feedback. The pitcher self-organizes a more connected delivery."
+        "text": "Pitchers who \"fly out\" the arm lose velocity and risk injury. A small rubber ball is placed under the pitching arm. The instruction: \"make the ball fall forward when it drops.\" If the arm separates too early, the ball falls backward – giving immediate transition feedback. The pitcher self-organizes a more connected delivery."
+      },
+      {
+        "type": "heading",
+        "level": "3",
+        "text": "Small-Sided Games (Soccer, Basketball, etc.)"
       },
       {
         "type": "paragraph",
-        "text": "**Small-Sided Games (Soccer, Basketball, etc.)** Changing field size, player numbers, and rules are classic task constraint manipulations that push players toward better movement decisions and tactical behavior without explicit instruction."
+        "text": "Changing field size, player numbers, and rules are classic task constraint manipulations that push players toward better movement decisions and tactical behavior without explicit instruction."
       },
       {
         "type": "heading",
@@ -308,8 +372,9 @@
         ]
       },
       {
-        "type": "paragraph",
-        "text": "**Key Implications for Practice Design**"
+        "type": "heading",
+        "level": "2",
+        "text": "Key Implications for Practice Design"
       },
       {
         "type": "paragraph",

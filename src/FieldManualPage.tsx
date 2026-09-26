@@ -15,10 +15,13 @@ import {
 type Props = {
   articles: ManualArticle[]
   mode: ManualMode
+  initialArticleId?: string
 }
 
-export default function FieldManualPage({ articles, mode }: Props) {
-  const [activeId, setActiveId] = useState(articles[0]?.id ?? '')
+export default function FieldManualPage({ articles, mode, initialArticleId }: Props) {
+  const [activeId, setActiveId] = useState(
+    articles.some(article => article.id === initialArticleId) ? initialArticleId! : (articles[0]?.id ?? ''),
+  )
   const active = articles.find(article => article.id === activeId) ?? articles[0]
   const navigation = getArticleNavigation(articles, activeId)
   const blocks = useMemo(
@@ -154,6 +157,30 @@ function EditorialFallback({ block }: { block: ManualBlock }) {
   )
 }
 
+function TableBlock({ block }: { block: ManualBlock }) {
+  const headers = Array.isArray(block.headers) ? block.headers as string[] : []
+  const rows = Array.isArray(block.rows) ? block.rows as string[][] : []
+
+  return (
+    <div className="manual-table-wrap" tabIndex={0}>
+      <table className="manual-table">
+        <thead>
+          <tr>{headers.map(header => <th key={header} scope="col">{header}</th>)}</tr>
+        </thead>
+        <tbody>
+          {rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => cellIndex === 0
+                ? <th key={cell} scope="row">{parseInlineMd(cell)}</th>
+                : <td key={cell}>{parseInlineMd(cell)}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function ManualBlockView({ presented, articleTitle, blockIndex }: { presented: PresentedBlock; articleTitle: string; blockIndex: number }) {
   const { block, kind } = presented
   if (kind === 'image') {
@@ -176,6 +203,7 @@ function ManualBlockView({ presented, articleTitle, blockIndex }: { presented: P
       ? <h2 className="manual-section-heading" id={id}><a href={`#${id}`}>{text}</a></h2>
       : <h3 className="manual-subheading" id={id}><a href={`#${id}`}>{text}</a></h3>
   }
+  if (kind === 'table') return <TableBlock block={block} />
   if (kind === 'checklist') {
     const text = typeof block.text === 'string' && block.text.trim() ? block.text : null
     if (!text) return <EditorialFallback block={block} />

@@ -32,7 +32,7 @@ export class D1SessionDraftStore implements SessionDraftStore {
     return result.results.flatMap(row => {
       try {
         const raw = JSON.parse(row.payload_json) as unknown
-        return isSessionDraft(raw) ? [{ id: row.id, title: raw.session.title, updatedAt: row.updated_at }] : []
+        return isSessionDraft(raw) ? [{ id: row.id, title: raw.session.title, updatedAt: row.updated_at, ...(raw.ownerId ? { ownerId: raw.ownerId } : {}) }] : []
       } catch { return [] }
     })
   }

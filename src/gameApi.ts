@@ -23,7 +23,14 @@ async function responseJson<T>(response: Response): Promise<T> {
 
 export async function fetchSharedGames() {
   const response = await fetch('/api/games', { credentials: 'same-origin' })
-  return responseJson<{ games: Game[]; categories: CategoryMetaMap; deletedSeedGameIds: string[] }>(response)
+  return responseJson<{ games: Game[]; categories: CategoryMetaMap; deletedSeedGameIds: string[]; deletedCategoryIds: string[] }>(response)
+}
+
+export async function bulkUpdateSharedGames(games: Game[]) {
+  const response = await fetch('/api/games/bulk', {
+    method: 'PUT', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ games }),
+  })
+  return responseJson<{ updated: number }>(response)
 }
 
 export async function createSharedGame(game: Game) {
@@ -64,4 +71,12 @@ export async function createSharedCategory(key: string, category: CategoryMeta) 
   })
   const body = await responseJson<{ category: CategoryMeta }>(response)
   return body.category
+}
+
+
+export async function deleteSharedCategory(key: string) {
+  const response = await fetch(`/api/categories/${encodeURIComponent(key)}`, {
+    method: 'DELETE', credentials: 'same-origin',
+  })
+  if (!response.ok) await responseJson<never>(response)
 }

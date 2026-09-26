@@ -229,6 +229,16 @@ test('preserves legacy table headers and rows in editorial fallback text', () =>
   ])
 })
 
+test('presents complete tables as semantic tables', () => {
+  const presented = presentBlock({
+    type: 'table',
+    headers: ['Aspect', 'Ecological Approach'],
+    rows: [['Skill', 'Emerges through self-organization']],
+  }, 'theory')
+
+  assert.equal(presented.kind, 'table')
+})
+
 test('uses the first readable fallback field before lower-priority payloads', () => {
   assert.deepEqual(getEditorialFallbackText({
     type: 'legacy',

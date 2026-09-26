@@ -1,4 +1,4 @@
-import { isGameDraft } from '../sharedGameDrafts'
+import { isEmptyGameDraft, isGameDraft } from '../sharedGameDrafts'
 import type { GameDraft, GameDraftSummary } from '../sharedGameDrafts'
 import type { D1Database, D1RunResult } from './sessionStore'
 
@@ -80,6 +80,7 @@ export class D1GameDraftStore implements GameDraftStore {
         id: row.id,
         sourceGameId: row.source_game_id,
         title: draft.game.title,
+        isEmpty: isEmptyGameDraft(draft),
         updatedAt: row.updated_at,
       }] : []
     })

@@ -1,4 +1,5 @@
 import { isSessionPlan } from '../sharedSessions'
+import { migrateLegacySessionDates, sortSessionsByDateDescending } from '../sessions'
 import type { SessionPlan } from '../types'
 
 export interface D1RunResult {
@@ -26,8 +27,10 @@ export interface SessionStore {
 }
 
 const SEED_BOOTSTRAP_KEY = 'seed-sessions-v1'
+const SESSION_DATE_MIGRATION_KEY = 'session-dates-v1'
+const SESSION_DATE_MIGRATION_REFERENCE = '2026-09-14'
 
-type PayloadRow = { payload_json: string }
+type PayloadRow = { id: string; payload_json: string }
 type BootstrapRow = { key: string }
 
 function now() {
@@ -54,6 +57,32 @@ function parsePayload(value: string): SessionPlan | null {
 export class D1SessionStore implements SessionStore {
   constructor(private readonly db: D1Database) {}
 
+  private async ensureSessionDates() {
+    const bootstrap = await this.db
+      .prepare('SELECT key FROM session_bootstrap WHERE key = ? LIMIT 1')
+      .bind(SESSION_DATE_MIGRATION_KEY)
+      .all<BootstrapRow>()
+    if (bootstrap.results.length > 0) return
+
+    const result = await this.db
+      .prepare('SELECT id, payload_json FROM sessions')
+      .all<PayloadRow>()
+    const parsed = result.results.flatMap(row => {
+      const session = parsePayload(row.payload_json)
+      return session ? [session] : []
+    })
+    const migrated = migrateLegacySessionDates(parsed, SESSION_DATE_MIGRATION_REFERENCE)
+    const timestamp = now()
+    const statements = migrated.flatMap((session, index) => {
+      if (payload(session) === payload(parsed[index])) return []
+      return [this.db.prepare('UPDATE sessions SET payload_json = ?, updated_at = ? WHERE id = ?').bind(payload(session), timestamp, session.id)]
+    })
+    statements.push(this.db
+      .prepare('INSERT OR IGNORE INTO session_bootstrap (key, completed_at) VALUES (?, ?)')
+      .bind(SESSION_DATE_MIGRATION_KEY, timestamp))
+    await this.db.batch(statements)
+  }
+
   async ensureSeedSessions(seedSessions: SessionPlan[]) {
     const bootstrap = await this.db
       .prepare('SELECT key FROM session_bootstrap WHERE key = ? LIMIT 1')
@@ -74,14 +103,15 @@ export class D1SessionStore implements SessionStore {
   }
 
   async list() {
+    await this.ensureSessionDates()
     const result = await this.db
-      .prepare('SELECT payload_json FROM sessions ORDER BY is_seed ASC, updated_at DESC')
+      .prepare('SELECT id, payload_json FROM sessions')
       .all<PayloadRow>()
 
-    return result.results.flatMap((row) => {
+    return sortSessionsByDateDescending(result.results.flatMap((row) => {
       const session = parsePayload(row.payload_json)
       return session ? [session] : []
-    })
+    }))
   }
 
   async create(session: SessionPlan) {

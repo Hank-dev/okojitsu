@@ -1,4 +1,4 @@
-import type { Game, Skill } from './types'
+import type { Game, SessionPlan, Skill } from './types'
 
 export interface LibraryFilters {
   category: string
@@ -11,27 +11,28 @@ export interface LibraryFilters {
 
 export type LibrarySort = 'recommended' | 'title' | 'category'
 
+export function mergeGamesWithOverrides(
+  seedGames: Game[],
+  customGames: Game[],
+  deletedSeedGameIds: string[] = [],
+): Game[] {
+  const deletedIds = new Set(deletedSeedGameIds)
+  const customById = new Map(customGames.map(game => [game.id, game]))
+  const merged = seedGames
+    .filter(game => !deletedIds.has(game.id))
+    .map(game => customById.get(game.id) ?? game)
+  const seedIds = new Set(seedGames.map(game => game.id))
+
+  return [...merged, ...customGames.filter(game => !seedIds.has(game.id))]
+}
+
 export function gameMatchesSearch(game: Game, query: string, categoryLabel = ''): boolean {
   const needle = query.trim().toLowerCase()
   if (!needle) return true
   const values = [
     game.title,
-    game.category,
-    game.category.replaceAll('-', ' '),
-    game.subcategory ?? '',
-    categoryLabel,
     game.startingPosition,
     game.designRationale ?? '',
-    game.source,
-    ...game.tags,
-    ...game.skills,
-    ...game.constraints,
-    ...game.players.flatMap(player => [
-      player.role,
-      player.objective,
-      player.winCondition,
-      ...player.constraints,
-    ]),
   ]
   return values.some(value => value.toLowerCase().includes(needle))
 }
@@ -54,13 +55,28 @@ export function countGamesByCategory(games: Game[]): Record<string, number> {
   }, {})
 }
 
+export function countGameUsage(sessions: SessionPlan[]): Record<string, number> {
+  return sessions.reduce<Record<string, number>>((counts, session) => {
+    for (const game of session.games) {
+      counts[game.gameId] = (counts[game.gameId] ?? 0) + 1
+    }
+    return counts
+  }, {})
+}
+
 export function sortGames(
   games: Game[],
   sort: LibrarySort,
   categoryLabels: Readonly<Record<string, string>> = {},
+  usageCounts: Readonly<Record<string, number>> = {},
 ): Game[] {
   const sorted = [...games]
-  if (sort === 'recommended') return sorted
+  if (sort === 'recommended') {
+    return sorted.sort((a, b) =>
+      (usageCounts[b.id] ?? 0) - (usageCounts[a.id] ?? 0)
+      || a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }),
+    )
+  }
 
   return sorted.sort((a, b) => {
     const aPrimary = sort === 'title' ? a.title : (categoryLabels[a.category] ?? a.category.replaceAll('-', ' '))

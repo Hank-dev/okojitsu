@@ -35,12 +35,15 @@ export interface CustomGameStore {
   ): Promise<PendingCategoryPublicationResult>
   delete(id: string): Promise<boolean>
   importMissing(games: Game[]): Promise<number>
+  upsertMany(games: Game[]): Promise<number>
 }
 
 export interface CategoryStore {
   list(): Promise<CategoryMetaMap>
+  listDeleted(): Promise<string[]>
   createIfAbsent(key: string, category: CategoryMeta): Promise<CategoryMeta | null>
   upsert(key: string, category: CategoryMeta): Promise<CategoryMeta>
+  delete(key: string): Promise<void>
 }
 
 export interface DeletedSeedGameStore {
@@ -190,6 +193,15 @@ export class D1CustomGameStore implements CustomGameStore {
 
     return results.reduce((total, result) => total + changes(result), 0)
   }
+
+  async upsertMany(games: Game[]) {
+    if (games.length === 0) return 0
+    const timestamp = now()
+    const results = await this.db.batch(games.map(game => this.db
+      .prepare('INSERT INTO custom_games (id, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload_json = excluded.payload_json, updated_at = excluded.updated_at')
+      .bind(game.id, payload({ ...game, level: 'beginner' }), timestamp, timestamp)))
+    return results.reduce((total, result) => total + changes(result), 0)
+  }
 }
 
 export class D1DeletedSeedGameStore implements DeletedSeedGameStore {
@@ -223,6 +235,13 @@ export class D1CustomCategoryStore implements CategoryStore {
     }))
   }
 
+  async listDeleted() {
+    const result = await this.db
+      .prepare('SELECT id, payload_json FROM custom_categories ORDER BY updated_at DESC')
+      .all<CategoryRow>()
+    return result.results.filter(row => row.payload_json === '{"deleted":true}').map(row => row.id)
+  }
+
   async upsert(key: string, category: CategoryMeta) {
     const timestamp = now()
     await this.db
@@ -239,5 +258,14 @@ export class D1CustomCategoryStore implements CategoryStore {
       .bind(key, payload(category), timestamp, timestamp)
       .run()
     return changes(result) > 0 ? category : null
+  }
+
+
+  async delete(key: string) {
+    const timestamp = now()
+    await this.db
+      .prepare('INSERT INTO custom_categories (id, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload_json = excluded.payload_json, updated_at = excluded.updated_at')
+      .bind(key, '{"deleted":true}', timestamp, timestamp)
+      .run()
   }
 }

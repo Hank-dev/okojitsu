@@ -1,6 +1,43 @@
 import { sql } from 'drizzle-orm'
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
 
+export const accounts = sqliteTable('accounts', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  role: text('role').notNull().default('coach'),
+  status: text('status').notNull().default('pending'),
+  createdAt: text('created_at').notNull(),
+})
+
+export const accountSettings = sqliteTable('account_settings', {
+  key: text('key').primaryKey(),
+})
+
+export const accountPasswords = sqliteTable('account_passwords', {
+  accountId: text('account_id').primaryKey().references(() => accounts.id),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+})
+
+export const accountSessions = sqliteTable('account_sessions', {
+  tokenHash: text('token_hash').primaryKey(),
+  accountId: text('account_id').notNull().references(() => accounts.id),
+  expiresAt: integer('expires_at').notNull(),
+}, table => [index('idx_account_sessions_account').on(table.accountId)])
+
+export const accountInvites = sqliteTable('account_invites', {
+  tokenHash: text('token_hash').primaryKey(),
+  accountId: text('account_id').notNull().unique().references(() => accounts.id),
+  expiresAt: integer('expires_at').notNull(),
+})
+
+export const authAttempts = sqliteTable('auth_attempts', {
+  key: text('key').primaryKey(),
+  attempts: integer('attempts').notNull(),
+  expiresAt: integer('expires_at').notNull(),
+})
+
 export const sessions = sqliteTable('sessions', {
   id: text('id').primaryKey(),
   payloadJson: text('payload_json').notNull(),

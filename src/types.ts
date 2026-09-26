@@ -16,13 +16,16 @@ export interface PlayerRole {
   objective: string;
   winCondition: string;
   constraints: string[];
+  taskFocus?: string[];
 }
 
 export interface Game {
   id: string;
   title: string;
   category: string;
+  /** Legacy single-value field kept for previously published games. */
   subcategory?: string;
+  subcategories?: string[];
   source: string;
   level: string;
   type: string;
@@ -37,6 +40,8 @@ export interface Game {
 }
 
 export interface SessionPlan {
+  ownerId?: string | null;
+  ownerName?: string | null;
   id: string;
   title: string;
   date: string;
@@ -59,6 +64,7 @@ export interface CategoryMeta {
   color: string;
   description: string;
   image?: string;
+  subcategories?: string[];
 }
 
 export type CategoryMetaMap = Record<string, CategoryMeta>
@@ -71,13 +77,14 @@ export const CATEGORY_META: CategoryMetaMap = {
   'half-guard': { label: 'Half Guard', emoji: '🧓', color: '#ec4899', description: 'Knee shield, half guard entanglements' },
   'k-guard-dlr': { label: 'K-Guard & DLR', emoji: '🐊', color: '#06b6d4', description: 'K-guard, De La Riva, guard entries' },
   'pinning': { label: 'Pinning', emoji: '🐖', color: '#ef4444', description: 'Side control, mount, holding down', image: '/img/pinning-1.jpg' },
+  'turtle': { label: 'Turtle', emoji: '🐢', color: '#14b8a6', description: 'Turtle control, breakdowns, and escapes' },
   'back-control': { label: 'Back Control', emoji: '🐍', color: '#f97316', description: 'Back takes, arm traps, rear strangles' },
   'armbar': { label: 'Armbar', emoji: '💪', color: '#a855f7', description: 'Armbar progressions, arm isolation' },
   'triangle': { label: 'Triangle', emoji: '⛰️', color: '#14b8a6', description: 'Triangle choke progressions' },
   'kimura': { label: 'Kimura', emoji: '🥇', color: '#eab308', description: 'Kimura grip, figure-four attacks' },
   'front-headlock': { label: 'Front Headlock', emoji: '🤕', color: '#dc2626', description: 'Front headlock strangles, guillotines' },
   'leg-locks': { label: 'Leg Locks', emoji: '🦶', color: '#84cc16', description: 'Heel hooks, ankle locks, entanglements', image: '/img/leg-locks.jpg' },
-  'submissions': { label: 'Submissions', emoji: '🤑', color: '#f43f5e', description: 'General submission games' },
+  'submissions': { label: 'Upper Body Submissions', emoji: '🤑', color: '#f43f5e', description: 'Armbars, triangles, kimuras, front headlocks, and general upper-body submission games' },
   'stand-up': { label: 'Stand Up', emoji: '🧍', color: '#6366f1', description: 'Getting to your feet, escapes', image: '/img/just-stand-up.jpg' },
   'whole-space': { label: 'Whole Space', emoji: '🦍', color: '#9333ea', description: 'Control through the entire space — back, seated, standing' },
 };

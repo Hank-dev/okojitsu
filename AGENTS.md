@@ -4,14 +4,16 @@
 
 ## Project overview
 
-ØkoJitsu is a single-page React app for ecological jiu-jitsu coaching. It provides a game library, session builder, theory reader, and coaching notes. All state is client-side (localStorage). No backend, no server, no API calls.
+ØkoJitsu is a React app for ecological jiu-jitsu coaching, with a Sites Worker API and D1 database. Sessions, live drafts, custom games, categories and coach accounts are server-backed. Read the current implementation rather than assuming older client-only architecture notes below still apply.
+
+Accounts primarily use application-owned email/password authentication with private, expiring setup links created by admins. A temporary migration path may read Sites-dispatch ChatGPT identity headers for accounts created before this change. Roles are `coach`/`admin` and status is `pending`/`active`/`disabled`. Enforce ownership and membership on the server for every write and private draft read. Never grant admin access from an email, browser state, or open registration. See README.md for bootstrap, migration, and shared-password retirement.
 
 ## Tech stack
 
 - **React 19** + **TypeScript** (strict mode) + **Vite 6**
 - Pure CSS in `src/index.css` — no Tailwind, no CSS-in-JS, no styled-components
-- No test framework configured
-- No external runtime dependencies beyond `react` and `react-dom`
+- Tests use Node's test runner, with `tsx` where needed; account tests use real SQLite and all Drizzle migrations.
+- Preserve dependencies declared in package.json, including React, dnd-kit and Drizzle.
 
 ## Build & run
 
