@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { buildSessionTimeline, filterSessions, resolveActiveSession } from '../src/sessions.ts'
+import { buildSessionTimeline, filterSessions, migrateLegacySessionDates, resolveActiveSession, sortSessionsByDateDescending } from '../src/sessions.ts'
 import {
   addMinute,
   createTimerState,
@@ -112,6 +112,29 @@ test('resolves the active session from the full list and falls back safely', () 
   assert.equal(resolveActiveSession(sessions, 'standing-class')?.id, 'standing-class')
   assert.equal(resolveActiveSession(sessions, 'missing')?.id, 'guard-class')
   assert.equal(resolveActiveSession([], 'missing'), undefined)
+})
+
+test('sorts sessions by their class date with the latest first', () => {
+  assert.deepEqual(sortSessionsByDateDescending(sessions).map(session => session.id), ['standing-class', 'guard-class'])
+  assert.deepEqual(sessions.map(session => session.id), ['guard-class', 'standing-class'])
+})
+
+test('moves dates out of legacy titles and assigns unused recent Mondays', () => {
+  const migrated = migrateLegacySessionDates([
+    { ...sessions[0], id: 'dated-numeric', title: 'mandag 31.08', date: '2026-08-31T11:03:24.906Z' },
+    { ...sessions[0], id: 'dated-month', title: 'NTNUI 14 sept.', date: '2026-09-14T10:35:41.192Z' },
+    { ...sessions[0], id: 'dated-parenthetical', title: 'Overhook & Kimura (Økt 26.04)', date: '2026-04-15T10:00:00.000Z' },
+    { ...sessions[0], id: 'undated', title: 'Tirsdag TTBJJ', date: '2026-09-07T18:02:28.373Z' },
+    { ...sessions[0], id: 'already-migrated', title: 'Friday class', date: '2026-09-07' },
+  ], '2026-09-14')
+
+  assert.deepEqual(migrated.map(session => [session.id, session.title, session.date]), [
+    ['dated-numeric', 'mandag', '2026-08-31'],
+    ['dated-month', 'NTNUI', '2026-09-14'],
+    ['dated-parenthetical', 'Overhook & Kimura', '2026-04-26'],
+    ['undated', 'Tirsdag TTBJJ', '2026-08-24'],
+    ['already-migrated', 'Friday class', '2026-09-07'],
+  ])
 })
 
 test('moves one selected session game one place without mutating the existing list', async () => {

@@ -20,6 +20,7 @@ function isPlayerRole(value: unknown): value is PlayerRole {
     && typeof value.objective === 'string'
     && typeof value.winCondition === 'string'
     && isStringArray(value.constraints)
+    && (value.taskFocus === undefined || isStringArray(value.taskFocus))
 }
 
 function isProgression(value: unknown): value is Progression | null {
@@ -42,12 +43,13 @@ export function isGame(value: unknown): value is Game {
     && isNonEmptyString(value.title)
     && isNonEmptyString(value.category)
     && (value.subcategory === undefined || typeof value.subcategory === 'string')
+    && (value.subcategories === undefined || isStringArray(value.subcategories))
     && typeof value.source === 'string'
     && isNonEmptyString(value.level)
     && isNonEmptyString(value.type)
     && typeof value.startingPosition === 'string'
     && Array.isArray(value.players)
-    && value.players.length >= 2
+    && value.players.length > 0
     && value.players.every(isPlayerRole)
     && isStringArray(value.constraints)
     && (value.designRationale === undefined || typeof value.designRationale === 'string')
@@ -58,6 +60,19 @@ export function isGame(value: unknown): value is Game {
     && (value.sourceUrl === undefined || value.sourceUrl === null || typeof value.sourceUrl === 'string')
 }
 
+export function getIncompleteGameFields(game: Game): string[] {
+  const fields: string[] = []
+  if (!game.title.trim()) fields.push('Title')
+  if (!game.category.trim()) fields.push('Category')
+  if (!game.startingPosition.trim()) fields.push('Starting position')
+  if (!game.players.length) fields.push('At least one player task')
+  game.players.forEach((player, index) => {
+    if (!player.role.trim()) fields.push(`Player ${index + 1} role`)
+    if (!player.objective.trim()) fields.push(`Player ${index + 1} task objective`)
+  })
+  return fields
+}
+
 export function isCategoryMeta(value: unknown): value is CategoryMeta {
   return isRecord(value)
     && isNonEmptyString(value.label)
@@ -65,6 +80,7 @@ export function isCategoryMeta(value: unknown): value is CategoryMeta {
     && isNonEmptyString(value.color)
     && typeof value.description === 'string'
     && (value.image === undefined || typeof value.image === 'string')
+    && (value.subcategories === undefined || isStringArray(value.subcategories))
 }
 
 export function isCategoryKey(value: unknown): value is string {

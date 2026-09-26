@@ -56,6 +56,23 @@ test('keeps every class-builder category reachable from Add Games', () => {
   assert.match(css, /\.builder-category-select\s*\{[^}]*min-height:\s*44px;/s)
 })
 
+test('gives the class-builder game picker a comfortably tall scroll area', () => {
+  const builder = app.slice(app.indexOf('function BuilderPage'), app.indexOf('// ============ SESSIONS ============'))
+
+  assert.match(builder, /<div className="builder-games-list">/)
+  assert.match(css, /\.builder-sidebar\s*\{[^}]*max-height:\s*min\(780px,\s*75vh\);/s)
+  assert.match(css, /\.builder-games-list\s*\{[^}]*min-height:\s*300px;[^}]*max-height:\s*65dvh;/s)
+})
+
+test('keeps the Other games subcategory available when a category has no named subcategories', () => {
+  const app = readFileSync('src/App.tsx', 'utf8')
+
+  assert.match(app, /disabled=\{subcategories\.length === 0 && uncategorizedCount === 0\}/)
+  assert.match(app, /activeTab !== 'all' && \(subcategories\.length > 0 \|\| uncategorizedCount > 0\)/)
+  assert.match(app, /disabled=\{sidebarSubcategories\.length === 0 && sidebarUncategorizedCount === 0\}/)
+  assert.match(app, /sidebarCategory !== 'all' && \(sidebarSubcategories\.length > 0 \|\| sidebarUncategorizedCount > 0\)/)
+})
+
 test('lets coaches create and add a published game from the Class Builder', () => {
   assert.match(app, /<BuilderPage[\s\S]*?onRefreshGames=\{refreshSharedGames\}/)
   const builder = app.slice(app.indexOf('function BuilderPage'), app.indexOf('// ============ SESSIONS ============'))
@@ -74,25 +91,45 @@ test('lets the new game form create a category with a name and emoji', () => {
   assert.match(gameForm, /Emoji/)
 })
 
-test('uses optional task focus labels for each player', () => {
+test('uses one required task objective and source-backed optional task focus', () => {
   const gameForm = app.slice(app.indexOf('function GameForm'))
-  assert.match(gameForm, /Task focus and Constraints are optional for each player/)
-  assert.match(gameForm, /htmlFor=\{`gf-task-focus-\$\{index\}`\}>Task focus<\/label>/)
-  assert.match(gameForm, /id=\{`gf-task-focus-\$\{index\}`\}[\s\S]*?rows=\{3\} \/>/)
-  assert.doesNotMatch(gameForm, /Main objective/)
-  assert.doesNotMatch(gameForm, /<textarea id=\{`gf-task-focus-\$\{index\}`\}[^>]*\brequired/)
-  assert.match(app, /aria-label="Player task focus"/)
+  assert.match(gameForm, /Every player needs one Task objective/)
+  assert.match(gameForm, /htmlFor=\{`gf-task-objective-\$\{index\}`\}>Task objective<\/label>/)
+  assert.match(gameForm, /id=\{`gf-task-objective-\$\{index\}`\}[\s\S]*?rows=\{3\} required/)
+  assert.doesNotMatch(gameForm, /htmlFor=\{`gf-win-\$\{index\}`\}/)
+  assert.match(gameForm, /updateField\(playerPath\(index, 'objective'\), value\)[\s\S]*?updateField\(playerPath\(index, 'winCondition'\), value\)/)
+  assert.match(gameForm, /Task focus \(one option per line\)/)
+  assert.match(app, /getPresentedTaskFocus\(game, i\)/)
+  assert.match(sessionsPage, /session-detail-label">Task objective<\/span>/)
   assert.match(sessionsPage, /session-detail-label">Task focus<\/span>/)
-  assert.doesNotMatch(sessionsPage, /Main objective/)
+  assert.doesNotMatch(sessionsPage, /Win condition|Success condition/)
 })
 
-test('keeps the game catalog beginner-only and removes retired level choices', () => {
+test('edits shared game constraints and keeps session-browser rows from shrinking', () => {
+  const gameForm = app.slice(app.indexOf('function GameForm'))
+  assert.match(gameForm, /htmlFor="game-shared-constraints">Shared constraints/)
+  assert.match(gameForm, /beginField\('constraints'\)/)
+  assert.match(gameForm, /updateField\('constraints',[\s\S]*?filter\(Boolean\)\)/)
+  assert.match(sessionsCss, /\.sessions-browser-item\s*\{[^}]*flex:\s*0 0 auto;[^}]*min-height:\s*86px;/s)
+})
+
+test('requires a session date and shows focus in the session browser', () => {
+  const builder = app.slice(app.indexOf('function BuilderPage'), app.indexOf('// ============ SESSIONS ============'))
+  assert.match(builder, /id="session-date" type="date" required/)
+  assert.match(builder, /beginField\('date'\)/)
+  assert.match(sessionsPage, /sessions-browser-focus/)
+  assert.match(sessionsPage, /sortSessionsByDateDescending|formatSessionDate/)
+})
+
+test('keeps retired level choices out and removes level from game presentation', () => {
   assert.ok(games.length > 0)
-  assert.deepEqual(new Set(games.map(game => game.level)), new Set(['beginner']))
+  assert.ok(games.every(game => game.level === 'beginner' || game.level === 'all-levels'))
   assert.doesNotMatch(types, /['"]intermediate['"]\s*:/)
   assert.doesNotMatch(types, /['"]advanced['"]\s*:/)
   assert.doesNotMatch(app, /<option value="intermediate">/)
   assert.doesNotMatch(app, /<option value="advanced">/)
+  const presentation = app.slice(app.indexOf('function AtlasGameCard'), app.indexOf('// ============ LIBRARY ============'))
+  assert.doesNotMatch(presentation, /LEVEL_META\[game\.level\]|TYPE_META\[game\.type\]|game\.skills\.map/)
 })
 
 test('shows all training-library categories on desktop without horizontal scrolling', () => {
@@ -128,6 +165,43 @@ test('exposes the live session draft workbench to administrators', () => {
   assert.match(sessionsPage, /Start shared session/)
 })
 
+test('offers edit-in-place or copy-and-edit for an existing session', () => {
+  assert.match(sessionsPage, />Edit session</)
+  assert.match(sessionsPage, /Edit this session/)
+  assert.match(sessionsPage, /Copy &amp; edit/)
+  assert.match(sessionsPage, /onEdit\(active\)/)
+  assert.match(sessionsPage, /onCopyEdit\(active\)/)
+  assert.match(sessionsCss, /\.session-edit-choice-actions/)
+})
+
+test('opens full game details from session games and supports additive subcategories', () => {
+  assert.match(sessionsPage, /Game series/)
+  assert.match(sessionsPage, /Game \{game\.progression\.step\} of \{game\.progression\.totalSteps\}/)
+  assert.match(sessionsPage, /if \(game\) onOpenGame\(game\)/)
+  assert.doesNotMatch(sessionsPage, /aria-controls=\{detailId\}/)
+  assert.match(app, /flatMap\(getGameSubcategories\)/)
+  assert.match(app, /gameHasSubcategory/)
+  assert.match(app, /Subcategories \(optional\)/)
+  assert.match(app, /Choose an existing subcategory/)
+  assert.match(app, /aria-label=\{`Remove subcategory \$\{value\}`\}[\s\S]*?>Remove<\/button>/)
+})
+
+test('keeps the taxonomy organizer canonical, stable during refreshes, and admin-only', () => {
+  assert.match(app, /CONSOLIDATED_CATEGORY_KEYS/)
+  assert.match(app, /loaded\.games\.map\(game => normalizeVisibleGame/)
+  assert.match(app, /\}, \[categoryKey\]\)/)
+  assert.match(app, /isAdmin && taxonomyOpen && <TaxonomyManager/)
+  assert.match(app, /isAdmin && <button className="atlas-organize"/)
+})
+
+test('edits built-in games in place and presents every saved game rationale', () => {
+  const library = app.slice(app.indexOf('function LibraryPage'), app.indexOf('// ============ BUILDER'))
+  assert.match(app, /mergeGamesWithOverrides\(GAMES, customGames, deletedSeedGameIds\)/)
+  assert.doesNotMatch(library, /id: `custom-\$\{crypto\.randomUUID\(\)\}`/)
+  assert.match(library, /draftGame,[\s\S]*?isCustom \? 'replace' : 'create',[\s\S]*?game\.id/)
+  assert.match(app, /getSourceDocumentRationale\(game\)/)
+})
+
 test('loads custom games and categories from shared storage across pages', () => {
   assert.match(app, /fetchSharedGames\(\)/)
   assert.match(app, /importSharedGames\(gamesToImport, categoriesToImport\)/)
@@ -147,6 +221,14 @@ test('labels the collaborative form and exposes publish and discard controls', (
   assert.match(gameForm, /Live draft/)
   assert.match(gameForm, /Publish game/)
   assert.match(gameForm, /Discard draft/)
+})
+
+test('discards an untouched game draft instead of leaving it in the live-draft list', () => {
+  const gameForm = app.slice(app.indexOf('function GameForm'))
+  const library = app.slice(app.indexOf('function LibraryPage'), app.indexOf('function BuilderPage'))
+
+  assert.match(gameForm, /if \(isEmptyGameDraft\(liveDraft\.draft\)\) \{\s*await liveDraft\.discard\(\)\s*return\s*\}/s)
+  assert.match(library, /Discard empty drafts/)
 })
 
 test('keeps only the latest live-draft request eligible to open', () => {
@@ -229,13 +311,14 @@ test('uses line and typography hierarchy instead of shadows and tinted active na
   assert.match(css, /\.card\s*{[^}]*background:\s*#000000/s)
 })
 
-test('renders a selected session as one continuous timeline instead of nested cards', () => {
+test('renders a selected session as a timeline with highlighted game instructions', () => {
   assert.match(sessionsCss, /\.session-timeline\s*\{[^}]*position:\s*relative;?/s)
   assert.match(sessionsCss, /\.session-timeline::before\s*\{[^}]*content:\s*['"][^'"]*['"]/s)
   assert.match(sessionsCss, /\.session-timeline-item\s*\{[^}]*border:\s*0;[^}]*border-bottom:\s*1px solid var\(--border\)/s)
   assert.match(sessionsCss, /\.session-game-panel\s*\{[^}]*border-top:\s*1px solid var\(--border\);[^}]*background:\s*transparent;?/s)
-  assert.match(sessionsCss, /\.session-player\s*\{[^}]*border:\s*0;[^}]*background:\s*transparent;?/s)
-  assert.match(sessionsCss, /\.session-player\s*\+\s*\.session-player\s*\{[^}]*border-left:\s*1px solid var\(--border\);?/s)
+  assert.match(sessionsCss, /\.session-start-position,\.session-run-start\s*\{[^}]*border-left:\s*3px solid var\(--accent\)/s)
+  assert.match(sessionsCss, /\.session-objective-block\s*\{[^}]*border:\s*1px solid var\(--border-light\)/s)
+  assert.match(sessionsCss, /\.session-constraints-block,\.session-shared-constraints\s*\{[^}]*background:\s*rgba\(249,115,22,\.08\)/s)
 })
 
 test('keeps reachable large surfaces flat black and free of gradients', () => {

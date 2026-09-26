@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CategoryMetaMap, Game, PlayerRole, SessionPlan } from './types'
 import { LEVEL_META } from './types'
-import { getPlayerGoalType } from './library'
+import { getPresentedSharedConstraints, getPresentedTaskFocus, getPresentedTaskObjective, getSourceDocumentGameTaskFocus, getSourceDocumentRationale } from './sourceDocumentPresentation'
 import type { LegacySessionParse } from './sharedSessions'
 import type { SessionDraftSummary } from './sharedSessionDrafts'
 import { buildSessionTimeline, filterSessions, resolveActiveSession } from './sessions'
 import { type TimerState, addMinute, createTimerState, formatRemainingTime, markCompletionSignaled, pauseTimer, resetTimer, sampleTimer, startTimer } from './sessionTimer'
 import './sessions.css'
+import { canManageSession } from './accounts'
 
 type Props = {
   isAdmin: boolean
+  canPlan: boolean
+  userId?: string
   sessions: SessionPlan[]
   games: Game[]
   categoryMeta: CategoryMetaMap
@@ -24,7 +27,9 @@ type Props = {
   sessionDraftError: string
   onStartLiveSessionDraft: () => void
   onOpenLiveSessionDraft: (id: string) => void
+  onEdit: (session: SessionPlan) => void
   onCopyEdit: (session: SessionPlan) => void
+  onOpenGame: (game: Game) => void
 }
 
 const ALARM_PEAK_GAIN = 0.42
@@ -33,28 +38,58 @@ const ALARM_BEEP_DURATION_SECONDS = 0.28
 const ALARM_BEEP_STARTS = [0, 0.45, 0.9, 1.35, 1.8]
 const ALARM_VIBRATION_PATTERN = [300, 120, 300, 120, 600, 150, 600]
 
+function formatSessionDate(value: string) {
+  const dateOnly = value.slice(0, 10)
+  const parsed = new Date(`${dateOnly}T00:00:00Z`)
+  if (!Number.isFinite(parsed.getTime())) return value
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeZone: 'UTC' }).format(parsed)
+}
+
 function PlayerTask({ game, player, index }: { game: Game; player: PlayerRole; index: number }) {
-  const goalType = getPlayerGoalType(game, index)
+  const taskFocus = getPresentedTaskFocus(game, index)
   return (
     <section className={`session-player session-player-${index + 1}`}>
       <div className="session-player-heading">
         <span className="session-player-number">Player {index + 1}</span>
-        <span className={`session-goal-badge session-goal-${goalType}`}>
-          {goalType === 'continuous' ? 'Continuous' : 'Terminal'}
-        </span>
       </div>
       {player.role.trim() !== `Player ${index + 1}` && <h4>{player.role}</h4>}
-      <div className="session-task-block"><span className="session-detail-label">Task focus</span><p>{player.objective || 'No task focus added.'}</p></div>
-      <div className="session-task-block">
-        <span className="session-detail-label">{goalType === 'continuous' ? 'Success condition' : 'Win condition'}</span>
-        <p>{player.winCondition || (goalType === 'continuous' ? 'Continue with the task focus.' : 'No win condition added.')}</p>
-      </div>
-      <div className="session-task-block">
+      <div className="session-task-block session-objective-block"><span className="session-detail-label">Task objective</span><p>{getPresentedTaskObjective(game, index) || 'Not provided.'}</p></div>
+      {player.constraints.length > 0 && <div className="session-task-block session-constraints-block">
         <span className="session-detail-label">Constraints</span>
-        {player.constraints.length ? <ul className="session-constraint-list">{player.constraints.map((c, i) => <li key={`${c}-${i}`}>{c}</li>)}</ul> : <p>No additional constraints.</p>}
-      </div>
+        <ul className="session-constraint-list">{player.constraints.map((constraint, constraintIndex) => <li key={`${constraint}-${constraintIndex}`}>{constraint}</li>)}</ul>
+      </div>}
+      {taskFocus.length > 0 && <div className="session-task-block session-focus-block">
+        <span className="session-detail-label">Task focus</span>
+        {taskFocus.length === 1 ? <p>{taskFocus[0]}</p> : <ul className="session-focus-list">{taskFocus.map((focus, focusIndex) => <li key={focusIndex}>{focus}</li>)}</ul>}
+      </div>}
     </section>
   )
+}
+
+function GameSeriesDetails({ game, gameById }: { game: Game; gameById: ReadonlyMap<string, Game> }) {
+  if (!game.progression) return null
+  const previous = game.progression.prevId ? gameById.get(game.progression.prevId) : undefined
+  const next = game.progression.nextId ? gameById.get(game.progression.nextId) : undefined
+  return <section className="session-game-series" aria-label={`Game series: ${game.progression.chainLabel}`}>
+    <span className="session-detail-label">Game series</span>
+    <div className="session-game-series-heading"><strong>{game.progression.chainLabel}</strong><span>Game {game.progression.step} of {game.progression.totalSteps}</span></div>
+    {(previous || next) && <div className="session-game-series-neighbours">
+      {previous && <span><small>Previous</small>{previous.title}</span>}
+      {next && <span><small>Next</small>{next.title}</span>}
+    </div>}
+  </section>
+}
+
+function GameSupportingDetails({ game, gameById }: { game: Game; gameById: ReadonlyMap<string, Game> }) {
+  const sourceRationale = getSourceDocumentRationale(game)
+  const sharedConstraints = getPresentedSharedConstraints(game)
+  const gameTaskFocus = getSourceDocumentGameTaskFocus(game.id)
+  return <>
+    <GameSeriesDetails game={game} gameById={gameById} />
+    {sharedConstraints.length > 0 && <div className="session-shared-constraints"><span className="session-detail-label">Shared constraints</span><ul className="session-constraint-list">{sharedConstraints.map((constraint, index) => <li key={index}>{constraint}</li>)}</ul></div>}
+    {gameTaskFocus.length > 0 && <div className="session-game-focus"><span className="session-detail-label">Task focus</span><p>{gameTaskFocus.join(' · ')}</p></div>}
+    {sourceRationale && <div className="session-game-rationale"><span className="session-detail-label">Game rationale</span><p>{sourceRationale}</p></div>}
+  </>
 }
 
 function SharedSessionNotice({
@@ -83,10 +118,10 @@ function LiveSessionDrafts({ drafts, error, onStart, onOpen }: { drafts: Session
     <section className="shared-sessions-notice is-ready" aria-labelledby="live-session-drafts-heading">
       <div className="legacy-sessions-import">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-          <div><p className="sessions-eyebrow">Collaborative planning</p><strong id="live-session-drafts-heading">Live session drafts</strong></div>
-          <button type="button" className="btn btn-primary" onClick={onStart}>+ Start shared session</button>
+          <div><p className="sessions-eyebrow">Session planning</p><strong id="live-session-drafts-heading">Live session drafts</strong></div>
+          <button type="button" className="btn btn-primary" onClick={onStart}>Start shared session</button>
         </div>
-        <p>Open the same draft from another signed-in browser to plan together. Changes save automatically.</p>
+        <p>Drafts save automatically and are visible to their owner and the admins. Publish when the session is ready to share.</p>
         {error && <p role="alert">{error}</p>}
         {drafts.length > 0 && <div className="sessions-browser-list" style={{ marginTop: 10 }}>{drafts.map(draft => (
           <button key={draft.id} type="button" className="sessions-browser-item" onClick={() => onOpen(draft.id)}>
@@ -98,12 +133,13 @@ function LiveSessionDrafts({ drafts, error, onStart, onOpen }: { drafts: Session
   )
 }
 
-export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, syncStatus, syncError, legacySessionImport, isPublishingLegacySessions, onRetry, onPublishLegacySessions, onDeleteSession, liveSessionDrafts, sessionDraftError, onStartLiveSessionDraft, onOpenLiveSessionDraft, onCopyEdit }: Props) {
+export default function SessionsPage({ isAdmin, canPlan, userId, sessions, games, categoryMeta, syncStatus, syncError, legacySessionImport, isPublishingLegacySessions, onRetry, onPublishLegacySessions, onDeleteSession, liveSessionDrafts, sessionDraftError, onStartLiveSessionDraft, onOpenLiveSessionDraft, onEdit, onCopyEdit, onOpenGame }: Props) {
+  const [scope, setScope] = useState<'all' | 'mine'>('all')
   const [activeId, setActiveId] = useState(sessions[0]?.id ?? '')
   const [query, setQuery] = useState('')
   const [browserOpen, setBrowserOpen] = useState(false)
-  const [expandedGameIndex, setExpandedGameIndex] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [editChoiceOpen, setEditChoiceOpen] = useState(false)
   const [runGameIndex, setRunGameIndex] = useState<number | null>(null)
   const runDialogRef = useRef<HTMLDivElement>(null)
   const runTriggerRef = useRef<HTMLButtonElement>(null)
@@ -138,7 +174,7 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
     clearAlarm()
   }, [clearAlarm])
 
-  const visibleSessions = useMemo(() => filterSessions(sessions, games, query), [sessions, games, query])
+  const visibleSessions = useMemo(() => filterSessions(scope === 'mine' && userId ? sessions.filter(session => session.ownerId === userId) : sessions, games, query), [sessions, games, query, scope, userId])
   const active = resolveActiveSession(sessions, activeId)
   const gameById = useMemo(() => new Map(games.map(game => [game.id, game])), [games])
   const timeline = useMemo(() => active ? buildSessionTimeline(active) : [], [active])
@@ -156,6 +192,13 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
     window.addEventListener('click', close)
     return () => window.removeEventListener('click', close)
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!editChoiceOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setEditChoiceOpen(false) }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [editChoiceOpen])
 
   useEffect(() => {
     clearTimerWork()
@@ -299,7 +342,6 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
 
   const selectSession = (session: SessionPlan) => {
     setActiveId(session.id)
-    setExpandedGameIndex(0)
     setBrowserOpen(false)
   }
 
@@ -315,7 +357,7 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
         onRetry={onRetry}
         onPublishLegacySessions={onPublishLegacySessions}
       />
-      {isAdmin && <LiveSessionDrafts drafts={liveSessionDrafts} error={sessionDraftError} onStart={onStartLiveSessionDraft} onOpen={onOpenLiveSessionDraft} />}
+      {canPlan && <LiveSessionDrafts drafts={liveSessionDrafts} error={sessionDraftError} onStart={onStartLiveSessionDraft} onOpen={onOpenLiveSessionDraft} />}
       <div className="empty-state"><div className="empty-state-icon" aria-hidden="true">📋</div><h2>{syncStatus === 'loading' ? 'Loading sessions' : syncStatus === 'error' ? 'Could not load sessions' : 'No sessions yet'}</h2><p>{syncStatus === 'loading' ? 'Getting the shared class list.' : syncStatus === 'error' ? 'Try again to reconnect to the shared class list.' : 'Build a class to create the first shared session.'}</p></div>
     </div>
   )
@@ -333,20 +375,22 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
         onRetry={onRetry}
         onPublishLegacySessions={onPublishLegacySessions}
       />
-      {isAdmin && <LiveSessionDrafts drafts={liveSessionDrafts} error={sessionDraftError} onStart={onStartLiveSessionDraft} onOpen={onOpenLiveSessionDraft} />}
+      {canPlan && <LiveSessionDrafts drafts={liveSessionDrafts} error={sessionDraftError} onStart={onStartLiveSessionDraft} onOpen={onOpenLiveSessionDraft} />}
       <button type="button" className="sessions-browser-toggle" aria-expanded={browserOpen} aria-controls="sessions-browser-panel" onClick={() => setBrowserOpen(v => !v)}>
-        <span><small>Choose session</small><strong>{active.title}</strong></span><span aria-hidden="true">{browserOpen ? '−' : '+'}</span>
+        <span><small>{visibleSessions.length} saved {visibleSessions.length === 1 ? 'session' : 'sessions'} · tap to browse</small><strong>{active.title}</strong></span><span className="sessions-browser-toggle-icon" aria-hidden="true">{browserOpen ? '▲' : '▼'}</span>
       </button>
       <div className="sessions-workspace">
         <aside id="sessions-browser-panel" className={`sessions-browser ${browserOpen ? 'is-open' : ''}`}>
-          <div className="sessions-browser-heading"><p className="sessions-eyebrow">Class workspace</p><h2>My Sessions</h2></div>
+          <div className="sessions-browser-heading"><p className="sessions-eyebrow">Class workspace</p><h2>Sessions</h2></div>
+          {userId && <div className="session-scope" aria-label="Session filter"><button className="btn btn-secondary" aria-pressed={scope === 'all'} onClick={() => setScope('all')}>All sessions</button><button className="btn btn-secondary" aria-pressed={scope === 'mine'} onClick={() => setScope('mine')}>My sessions</button></div>}
           <label className="sessions-search-label" htmlFor="sessions-search">Search saved sessions</label>
           <div className="sessions-search-wrap"><span aria-hidden="true">⌕</span><input id="sessions-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Title, focus, game…" /></div>
           <div className="sessions-result-count" aria-live="polite">{visibleSessions.length} {visibleSessions.length === 1 ? 'session' : 'sessions'}</div>
           {visibleSessions.length ? (
             <div className="sessions-browser-list">{visibleSessions.map(session => (
               <button type="button" key={session.id} className="sessions-browser-item" aria-pressed={active.id === session.id} onClick={() => selectSession(session)}>
-                <strong>{session.title}</strong><span>{LEVEL_META[session.level]?.label ?? session.level} · {session.duration} min · {session.games.length} games</span>
+                <strong>{session.title}</strong><span>{formatSessionDate(session.date)} · {LEVEL_META[session.level]?.label ?? session.level} · {session.duration} min · {session.games.length} games</span>
+                {session.focus && <span className="sessions-browser-focus">{session.focus}</span>}
               </button>
             ))}</div>
           ) : (
@@ -358,12 +402,14 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
           <header className="session-workspace-header">
             <div className="session-title-group">
               <p className="sessions-eyebrow">Selected session</p><h1>{active.title}</h1>
-              <div className="session-meta"><span>{LEVEL_META[active.level]?.label ?? active.level}</span><span>{active.duration} min</span><span>{active.games.length} games</span></div>
+              <div className="session-meta"><span>{formatSessionDate(active.date)}</span><span>{LEVEL_META[active.level]?.label ?? active.level}</span><span>{active.duration} min</span><span>{active.games.length} games</span></div>
+              <p className="session-workspace-focus">{active.ownerName || 'Shared collection'}</p>
               {active.focus && <p className="session-workspace-focus">{active.focus}</p>}
             </div>
             <div className="session-header-actions">
               <button ref={runTriggerRef} type="button" className="btn btn-primary session-run-btn" disabled={!timeline.length} onClick={() => setRunGameIndex(0)}>▶ Run session</button>
-              {isAdmin && <><button type="button" className="btn btn-secondary session-copy-btn" onClick={() => onCopyEdit(active)}>Copy &amp; edit</button>
+              {canPlan && !canManageSession(isAdmin, userId, active.ownerId) && <button type="button" className="btn btn-secondary session-copy-btn" onClick={() => onCopyEdit(active)}>Copy &amp; edit</button>}
+              {canManageSession(isAdmin, userId, active.ownerId) && <><button type="button" className="btn btn-secondary session-copy-btn" onClick={() => setEditChoiceOpen(true)}>Edit session</button>
                 <div className="session-menu-wrap">
                   <button type="button" className="session-menu-btn" aria-label="Session actions" aria-expanded={menuOpen} onClick={e => { e.stopPropagation(); setMenuOpen(v => !v) }}>•••</button>
                   {menuOpen && <div className="session-menu-dropdown" onClick={e => e.stopPropagation()}><button type="button" className="danger" onClick={() => {
@@ -379,20 +425,14 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
             {timeline.length ? <div className="session-timeline">{timeline.map(item => {
               const game = gameById.get(item.gameId)
               const category = game ? categoryMeta[game.category] : undefined
-              const expanded = expandedGameIndex === item.index
-              const detailId = `session-game-detail-${active.id}-${item.index}`
               return (
-                <article className={`session-timeline-item ${expanded ? 'is-expanded' : ''}`} key={`${item.gameId}-${item.index}`}>
-                  <button type="button" className="session-timeline-trigger" aria-expanded={expanded} aria-controls={detailId} onClick={() => setExpandedGameIndex(expanded ? -1 : item.index)}>
+                <article className="session-timeline-item" key={`${item.gameId}-${item.index}`}>
+                  <button type="button" className="session-timeline-trigger" onClick={() => { if (game) onOpenGame(game) }} disabled={!game}>
                     <span className="session-sequence">{String(item.index + 1).padStart(2, '0')}</span>
                     <span className="session-time-range">{item.startMinute}–{item.endMinute} min</span>
                     <span className="session-timeline-copy"><span className="session-category"><span aria-hidden="true">{category?.emoji ?? '◌'}</span>{category?.label ?? 'Game'}</span><strong>{game?.title ?? item.gameId}</strong>{item.notes && <small>{item.notes}</small>}</span>
-                    <span className="session-expand-icon" aria-hidden="true">{expanded ? '−' : '+'}</span>
+                    <span className="session-expand-icon" aria-hidden="true">→</span>
                   </button>
-                  {expanded && <div className="session-game-panel" id={detailId}>
-                    {game ? <><div className="session-start-position"><span className="session-detail-label">Starting position</span><p>{game.startingPosition || 'No starting position added.'}</p></div>
-                      <div className="session-player-grid">{game.players.slice(0, 2).map((player, i) => <PlayerTask key={i} game={game} player={player} index={i} />)}</div></> : <p>Game details are unavailable.</p>}
-                  </div>}
                 </article>
               )
             })}</div> : <div className="session-no-games">This session has no games yet.</div>}
@@ -409,8 +449,9 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
             <h2>{runGame?.title ?? runItem.gameId}</h2>
             {runItem.notes && <p className="session-run-coach-note">Coach cue: {runItem.notes}</p>}
             {runGame ? <>
-              <div className="session-run-start"><span className="session-detail-label">Starting position</span><p>{runGame.startingPosition || 'No starting position added.'}</p></div>
-              <div className="session-player-grid session-run-players">{runGame.players.slice(0, 2).map((player, i) => <PlayerTask key={i} game={runGame} player={player} index={i} />)}</div>
+              <div className="session-run-start"><span className="session-detail-label">Starting position</span><p>{runGame.startingPosition || 'Not provided.'}</p></div>
+              <div className="session-player-grid session-run-players">{runGame.players.map((player, i) => <PlayerTask key={i} game={runGame} player={player} index={i} />)}</div>
+              <GameSupportingDetails game={runGame} gameById={gameById} />
               <div className="session-run-time"><span>{runItem.duration} min game</span><span>{runItem.startMinute} min elapsed · {Math.max(0, active.duration - runItem.endMinute)} min remaining</span></div>
               <section className="session-run-timer" aria-label="Game timer">
                 <div className="session-run-timer-display">
@@ -459,6 +500,17 @@ export default function SessionsPage({ isAdmin, sessions, games, categoryMeta, s
             <button type="button" className="btn btn-primary" onClick={() => runItem.index === timeline.length - 1 ? closeRun() : changeRunGame(runItem.index + 1)}>{runItem.index === timeline.length - 1 ? 'Finish session' : 'Next game →'}</button>
           </footer>
         </div>
+      </div>}
+      {editChoiceOpen && canManageSession(isAdmin, userId, active.ownerId) && <div className="session-edit-choice-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setEditChoiceOpen(false) }}>
+        <section className="session-edit-choice" role="dialog" aria-modal="true" aria-labelledby="session-edit-choice-title">
+          <button type="button" className="session-edit-choice-close" aria-label="Close edit choices" onClick={() => setEditChoiceOpen(false)}>×</button>
+          <p className="sessions-eyebrow">Edit session</p>
+          <h2 id="session-edit-choice-title">How would you like to edit “{active.title}”?</h2>
+          <div className="session-edit-choice-actions">
+            <button type="button" onClick={() => { setEditChoiceOpen(false); onEdit(active) }}><strong>Edit this session</strong><span>Save changes to the existing session.</span></button>
+            <button type="button" onClick={() => { setEditChoiceOpen(false); onCopyEdit(active) }}><strong>Copy &amp; edit</strong><span>Create a new session and leave this one unchanged.</span></button>
+          </div>
+        </section>
       </div>}
     </div>
   )

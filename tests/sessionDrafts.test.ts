@@ -39,5 +39,17 @@ test('copies a published session into a distinct final session id', () => {
 
   assert.notEqual(copy.id, 'source-draft')
   assert.notEqual(copy.session.id, source.id)
+  assert.equal(copy.publishMode, 'create')
+  assert.equal(copy.sourceSessionId, source.id)
   assert.deepEqual(copy.session.games, source.games)
+})
+
+test('opens an existing session for replacement without changing its id', () => {
+  const source = applySessionDraftPatches(createBlankSessionDraft('source-draft'), [{ path: 'games', value: [{ gameId: 'guard-game', duration: 6 }] }]).session
+  const edit = createSessionDraftFromSession('edit-draft', source, 'replace')
+
+  assert.equal(edit.publishMode, 'replace')
+  assert.equal(edit.sourceSessionId, source.id)
+  assert.equal(edit.session.id, source.id)
+  assert.deepEqual(edit.session.games, source.games)
 })

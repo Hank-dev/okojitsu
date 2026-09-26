@@ -1,7 +1,7 @@
 import { SEED_SESSIONS } from '../data/sessions-seed'
 import gamesData from '../data/games.json'
 import { categoryKey, isGameDraft, applyGameDraftPatches, isGameDraftPatch, type GameDraft, type GameDraftPatch } from '../sharedGameDrafts'
-import { isCategoryKey, isCategoryMeta, isCategoryMetaMap, isGame } from '../sharedGames'
+import { getIncompleteGameFields, isCategoryKey, isCategoryMeta, isCategoryMetaMap, isGame } from '../sharedGames'
 import { isSessionPlan } from '../sharedSessions'
 import { applySessionDraftPatches, isSessionDraft, isSessionDraftPatch, type SessionDraft, type SessionDraftPatch } from '../sharedSessionDrafts'
 import { CATEGORY_META, type CategoryMeta, type Game, type SessionPlan } from '../types'
@@ -9,6 +9,10 @@ import { D1CustomCategoryStore, D1CustomGameStore, D1DeletedSeedGameStore, type 
 import { D1GameDraftStore, type GameDraftStore } from './gameDraftStore'
 import { D1SessionStore, type D1Database, type SessionStore } from './sessionStore'
 import { D1SessionDraftStore, type SessionDraftStore } from './sessionDraftStore'
+import type { Account } from '../accounts'
+import { authenticatedIdentity, D1AccountStore } from './accountStore'
+import { PasswordAuth, sessionCookie } from './passwordAuth'
+import { passwordRoutes } from './passwordRoutes'
 
 export type { SessionStore } from './sessionStore'
 export type { CategoryStore, CustomGameStore } from './customGameStore'
@@ -29,6 +33,7 @@ type WorkerDependencies = {
   sessionDraftStore?: SessionDraftStore
   seedSessions: SessionPlan[]
   isAdmin(request: Request): Promise<boolean>
+  getUser?(request: Request): Promise<Account | null>
   fetchAsset(request: Request): Promise<Response>
 }
 
@@ -74,6 +79,12 @@ function gameIdFromPath(pathname: string) {
   } catch {
     return null
   }
+}
+
+function categoryIdFromPath(pathname: string) {
+  const match = /^\/api\/categories\/([^/]+)$/.exec(pathname)
+  if (!match) return null
+  try { return decodeURIComponent(match[1]) } catch { return null }
 }
 
 function gameDraftIdFromPath(pathname: string) {
@@ -253,7 +264,9 @@ async function publishSessionDraft(draftStore: SessionDraftStore, sessionStore: 
   }
   try {
     if (!draft.session.games.length || !isSessionPlan(draft.session)) return release('invalid')
-    const session = await sessionStore.create(draft.session)
+    const session = draft.publishMode === 'replace' && draft.sourceSessionId
+      ? await sessionStore.replace(draft.sourceSessionId, { ...draft.session, id: draft.sourceSessionId })
+      : await sessionStore.create(draft.session)
     if (!session) return release('conflict')
     if (!await draftStore.deleteIfRevision(draft.id, draft.revision)) return { kind: 'conflict' as const }
     return { kind: 'saved' as const, session }
@@ -304,15 +317,19 @@ async function publishDraft(
   if (claim.kind !== 'claimed') return claim
   const draft = claim.draft
 
-  const release = async <Kind extends 'invalid' | 'collision' | 'conflict'>(kind: Kind) => {
+  const release = async <Kind extends 'collision' | 'conflict'>(kind: Kind) => {
     await releasePublishingClaim(draftStore, draft)
     return { kind } as const
+  }
+  const releaseInvalid = async (fields: string[]) => {
+    await releasePublishingClaim(draftStore, draft)
+    return { kind: 'invalid' as const, fields }
   }
   try {
     let category: { key: string; category: CategoryMeta } | null = null
     if (draft.pendingCategory) {
       category = pendingCategoryMeta(draft.pendingCategory)
-      if (!category) return release('invalid')
+      if (!category) return releaseInvalid(['Category name', 'Category emoji'])
 
       if (Object.hasOwn(CATEGORY_META, category.key)) return release('collision')
     }
@@ -322,7 +339,9 @@ async function publishDraft(
       ...(category ? { category: category.key } : {}),
       level: 'beginner',
     }
-    if (!isGame(game)) return release('invalid')
+    const incompleteFields = getIncompleteGameFields(game)
+    if (incompleteFields.length) return releaseInvalid(incompleteFields)
+    if (!isGame(game)) return releaseInvalid(['Game data'])
 
     if (category) {
       const publication = await gameStore.publishWithCategory(game, category, draft.publishMode, draft.id, draft.revision)
@@ -349,6 +368,22 @@ export function createWorker(dependencies: WorkerDependencies) {
   return {
     async fetch(request: Request): Promise<Response> {
       const url = new URL(request.url)
+
+      if (url.pathname.startsWith('/api/') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+        const origin = request.headers.get('origin')
+        if ((origin && origin !== url.origin) || request.headers.get('sec-fetch-site') === 'cross-site') return error('Cross-site writes are not allowed.', 403)
+      }
+      const user = url.pathname.startsWith('/api/') ? await dependencies.getUser?.(request) : null
+      const coach = user?.status === 'active' ? user : null
+      const admin = () => dependencies.isAdmin(request)
+      const canPlan = async () => Boolean(coach) || await admin()
+      const owns = async (ownerId?: string | null) => Boolean(coach && ownerId === coach.id) || await admin()
+      const ownedSession = (session: SessionPlan): SessionPlan => {
+        const clean = { ...session }
+        delete clean.ownerId; delete clean.ownerName
+        return coach ? { ...clean, ownerId: coach.id, ownerName: coach.name } : clean
+      }
+      const findSession = async (id: string) => (await dependencies.store.list()).find(session => session.id === id)
 
       if (isGameDraftRoute(url.pathname)) {
         try {
@@ -384,7 +419,7 @@ export function createWorker(dependencies: WorkerDependencies) {
             try {
               const published = await publishDraft(dependencies.draftStore, dependencies.gameStore, publishId)
               if (published.kind === 'missing') return error('Draft not found.', 404)
-              if (published.kind === 'invalid') return error('A complete game is required.', 400)
+              if (published.kind === 'invalid') return error(`Complete the following: ${published.fields.join(', ')}.`, 400)
               if (published.kind === 'collision') return error('That category already exists.', 409)
               if (published.kind === 'conflict') return error('The final game could not be saved.', 409)
               if (published.kind === 'publishing') return error('The draft is already being published.', 409)
@@ -436,19 +471,35 @@ export function createWorker(dependencies: WorkerDependencies) {
 
       if (isSessionDraftRoute(url.pathname)) {
         try {
-          if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+          if (!await canPlan()) return error('An approved coach account is required.', user ? 403 : 401)
           if (!dependencies.sessionDraftStore) return error('Live session draft storage is unavailable.', 503)
 
           if (url.pathname === '/api/session-drafts' && request.method === 'GET') {
-            return json({ drafts: await dependencies.sessionDraftStore.list() })
+            const drafts = await dependencies.sessionDraftStore.list()
+            return json({ drafts: await admin() ? drafts : drafts.filter(draft => draft.ownerId === coach?.id) })
           }
           if (url.pathname === '/api/session-drafts' && request.method === 'POST') {
             const draft = await readJson(request)
             if (!isSessionDraft(draft) || draft.isPublishing) return error('A valid session draft is required.', 400)
-            const created = await dependencies.sessionDraftStore.create(draft)
+            let session = ownedSession(draft.session)
+            if (draft.publishMode === 'replace' && draft.sourceSessionId) {
+              const source = await findSession(draft.sourceSessionId)
+              if (!source || !await owns(source.ownerId)) return error('You can only edit your own sessions.', 403)
+              session = { ...draft.session, ownerId: source.ownerId ?? null, ownerName: source.ownerName ?? null }
+            }
+            const created = await dependencies.sessionDraftStore.create({ ...draft, ownerId: coach?.id ?? null, session })
             return created ? json({ draft: created }, 201) : error('A draft with that id already exists.', 409)
           }
           const publishId = publishSessionDraftIdFromPath(url.pathname)
+          const draftId = sessionDraftIdFromPath(url.pathname)
+          if (publishId || draftId) {
+            const current = await dependencies.sessionDraftStore.get((publishId || draftId)!)
+            if (!current || !await owns(current.ownerId)) return error('Draft not found.', 404)
+            if (publishId && current.publishMode === 'replace' && current.sourceSessionId) {
+              const source = await findSession(current.sourceSessionId)
+              if (!source || !await owns(source.ownerId)) return error('You can only edit your own sessions.', 403)
+            }
+          }
           if (publishId && request.method === 'POST') {
             const published = await publishSessionDraft(dependencies.sessionDraftStore, dependencies.store, publishId)
             if (published.kind === 'missing') return error('Draft not found.', 404)
@@ -457,7 +508,6 @@ export function createWorker(dependencies: WorkerDependencies) {
             if (published.kind === 'conflict') return error('The final session could not be saved.', 409)
             return json({ session: published.session }, 201)
           }
-          const draftId = sessionDraftIdFromPath(url.pathname)
           if (draftId && request.method === 'GET') {
             const draft = await dependencies.sessionDraftStore.get(draftId)
             return draft ? json({ draft }) : error('Draft not found.', 404)
@@ -502,28 +552,36 @@ export function createWorker(dependencies: WorkerDependencies) {
               seedIds,
             )
             if (!sessions) return error('Sessions must be a valid, unique list.', 400)
-            return json({ imported: await dependencies.store.importMissing(sessions) })
+            return json({ imported: await dependencies.store.importMissing(sessions.map(ownedSession)) })
           }
 
           if (url.pathname === '/api/sessions' && request.method === 'POST') {
-            if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+            if (!await canPlan()) return error('An approved coach account is required.', user ? 403 : 401)
             const session = await readJson(request)
             if (!isSessionPlan(session)) return error('A complete session is required.', 400)
-            const created = await dependencies.store.create(session)
+            const created = await dependencies.store.create(ownedSession(session))
             return created ? json({ session: created }, 201) : error('A session with that id already exists.', 409)
           }
 
           const sessionId = sessionIdFromPath(url.pathname)
           if (sessionId && request.method === 'PUT') {
-            if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+            if (!await canPlan()) return error('An approved coach account is required.', user ? 403 : 401)
             const session = await readJson(request)
             if (!isSessionPlan(session) || session.id !== sessionId) return error('The session id must match the URL.', 400)
-            const replaced = await dependencies.store.replace(sessionId, session)
+            const current = await findSession(sessionId)
+            if (!current) return error('Session not found.', 404)
+            if (!await owns(current.ownerId)) return error('You can only edit your own sessions.', 403)
+            const clean = { ...session }
+            delete clean.ownerId; delete clean.ownerName
+            const replaced = await dependencies.store.replace(sessionId, { ...clean, ...(current.ownerId ? { ownerId: current.ownerId, ownerName: current.ownerName } : {}) })
             return replaced ? json({ session: replaced }) : error('Session not found.', 404)
           }
 
           if (sessionId && request.method === 'DELETE') {
-            if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+            if (!await canPlan()) return error('An approved coach account is required.', user ? 403 : 401)
+            const current = await findSession(sessionId)
+            if (!current) return error('Session not found.', 404)
+            if (!await owns(current.ownerId)) return error('You can only delete your own sessions.', 403)
             return await dependencies.store.delete(sessionId) ? new Response(null, { status: 204 }) : error('Session not found.', 404)
           }
 
@@ -533,7 +591,7 @@ export function createWorker(dependencies: WorkerDependencies) {
         }
       }
 
-      if (url.pathname.startsWith('/api/games') || url.pathname === '/api/categories') {
+      if (url.pathname.startsWith('/api/games') || url.pathname.startsWith('/api/categories')) {
         try {
           if (!dependencies.gameStore || !dependencies.categoryStore) return error('Shared game storage is unavailable.', 503)
 
@@ -542,6 +600,7 @@ export function createWorker(dependencies: WorkerDependencies) {
               games: await dependencies.gameStore.list(),
               categories: await dependencies.categoryStore.list(),
               deletedSeedGameIds: dependencies.deletedSeedGameStore ? await dependencies.deletedSeedGameStore.list() : [],
+              deletedCategoryIds: await dependencies.categoryStore.listDeleted(),
             })
           }
 
@@ -563,6 +622,15 @@ export function createWorker(dependencies: WorkerDependencies) {
             return created ? json({ game: created }, 201) : error('A game with that id already exists.', 409)
           }
 
+          if (url.pathname === '/api/games/bulk' && request.method === 'PUT') {
+            if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+            const body = await readJson(request)
+            const games = typeof body === 'object' && body !== null ? (body as { games?: unknown }).games : undefined
+            if (!Array.isArray(games) || games.length > 500 || !games.every(isGame)) return error('A valid list of up to 500 games is required.', 400)
+            const uniqueGames = Array.from(new Map((games as Game[]).map(game => [game.id, game])).values())
+            return json({ updated: await dependencies.gameStore.upsertMany(uniqueGames) })
+          }
+
           if (url.pathname === '/api/categories' && request.method === 'POST') {
             if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
             const body = await readJson(request)
@@ -570,6 +638,23 @@ export function createWorker(dependencies: WorkerDependencies) {
             const category = typeof body === 'object' && body !== null ? (body as { category?: unknown }).category : undefined
             if (!isCategoryKey(key) || !isCategoryMeta(category)) return error('A valid category is required.', 400)
             return json({ category: await dependencies.categoryStore.upsert(key, category) }, 201)
+          }
+
+
+          const categoryId = categoryIdFromPath(url.pathname)
+          if (categoryId && request.method === 'DELETE') {
+            if (!await dependencies.isAdmin(request)) return error('Admin sign-in required.', 401)
+            if (!isCategoryKey(categoryId)) return error('A valid category is required.', 400)
+            const customGames = await dependencies.gameStore.list()
+            const customById = new Map(customGames.map(game => [game.id, game]))
+            const deletedSeedIds = new Set(dependencies.deletedSeedGameStore ? await dependencies.deletedSeedGameStore.list() : [])
+            const effectiveGames = [
+              ...(gamesData as Game[]).filter(game => !deletedSeedIds.has(game.id)).map(game => customById.get(game.id) ?? game),
+              ...customGames.filter(game => !seedGameIds.has(game.id)),
+            ]
+            if (effectiveGames.some(game => game.category === categoryId)) return error('Move every game out of this category before deleting it.', 409)
+            await dependencies.categoryStore.delete(categoryId)
+            return new Response(null, { status: 204 })
           }
 
           const gameId = gameIdFromPath(url.pathname)
@@ -641,11 +726,60 @@ export default {
   async fetch(request: Request, environment: SiteEnvironment): Promise<Response> {
     const url = new URL(request.url)
 
-    if (url.pathname === '/api/admin/session') return json({ isAdmin: await validAdminSession(request, environment) })
+    if (!url.pathname.startsWith('/api/')) {
+      let response = await environment.ASSETS.fetch(siteAssetRequest(request))
+      if (response.status === 404) response = await environment.ASSETS.fetch(siteAssetRequest(new Request(new URL('/', request.url), request)))
+      return response
+    }
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+      const origin = request.headers.get('origin')
+      if ((origin && origin !== url.origin) || request.headers.get('sec-fetch-site') === 'cross-site') return error('Cross-site writes are not allowed.', 403)
+    }
+    try {
+    const accounts = new D1AccountStore(environment.DB)
+    const auth = new PasswordAuth(environment.DB)
+    const identity = authenticatedIdentity(request)
+    const passwordUser = await auth.user(request)
+    const previousUser = !passwordUser && identity && !await auth.hasPassword(identity.id) ? await accounts.get(identity.id) : null
+    const user = passwordUser || previousUser
+    const legacyEnabled = await accounts.legacyEnabled()
+    const legacyAdmin = legacyEnabled && await validAdminSession(request, environment)
+    const isAdmin = (user?.status === 'active' && user.role === 'admin') || legacyAdmin
+
+    if (url.pathname.startsWith('/api/auth/')) return await passwordRoutes(request, auth, accounts, user, isAdmin, Boolean(previousUser))
+    if (url.pathname === '/api/account/sign-out' && request.method === 'POST') {
+      await auth.signOut(request)
+      const headers = new Headers({ location: previousUser ? '/signout-with-chatgpt?return_to=%2F%3Faccount%3D1' : '/?account=1', 'cache-control': 'no-store' })
+      headers.append('set-cookie', sessionCookie(''))
+      headers.append('set-cookie', `${cookieName}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`)
+      return new Response(null, { status: 303, headers })
+    }
+
+    if (url.pathname === '/api/account' && request.method === 'GET') {
+      return json({ identity: user ? { name: user.name, email: user.email } : null, user, isAdmin, legacyAdmin, legacyEnabled, authMethod: passwordUser ? 'password' : previousUser ? 'previous-account' : null })
+    }
+    if (url.pathname === '/api/account/request' || url.pathname === '/api/account/bootstrap') return error('Ask an admin for an invitation link.', 410)
+    if (url.pathname === '/api/accounts' && request.method === 'GET') {
+      if (!isAdmin) return error('Admin access is required.', 403)
+      return json({ users: await accounts.list() })
+    }
+    if (url.pathname === '/api/accounts' && request.method === 'PATCH') {
+      if (!isAdmin) return error('Admin access is required.', 403)
+      const body = await readJson(request) as { id?: unknown; role?: unknown; status?: unknown } | null
+      if (!body || typeof body.id !== 'string' || !['admin', 'coach'].includes(body.role as string) || !['active', 'disabled'].includes(body.status as string)) return error('Choose a valid role and account status.', 400)
+      const role = body.role as 'admin' | 'coach'
+      const status = body.status as 'active' | 'disabled'
+      if (!await accounts.update(body.id, role, status)) return error('User not found, or this is the last password-enabled admin.', 409)
+      return json({ user: await accounts.get(body.id) })
+    }
+
+    if (url.pathname === '/api/admin/session') return json({ isAdmin })
     if (url.pathname === '/api/admin/sign-out' && request.method === 'POST') {
       return json({ ok: true }, 200, { 'set-cookie': `${cookieName}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0` })
     }
     if (url.pathname === '/api/admin/sign-in' && request.method === 'POST') {
+      if (!legacyEnabled) return error('Use your email and password. Shared admin access has been retired.', 403)
+      if (!await auth.throttle(`legacy-admin:${request.headers.get('cf-connecting-ip') || 'unknown'}`, 10)) return error('Too many attempts. Try again in 15 minutes.', 429)
       const body = await readJson(request)
       const password = typeof body === 'object' && body !== null ? (body as { password?: unknown }).password : undefined
       if (typeof password !== 'string' || !environment.ADMIN_PASSWORD || !environment.ADMIN_SESSION_SECRET || password !== environment.ADMIN_PASSWORD) {
@@ -664,13 +798,18 @@ export default {
       draftStore: new D1GameDraftStore(environment.DB),
       sessionDraftStore: new D1SessionDraftStore(environment.DB),
       seedSessions: SEED_SESSIONS,
-      isAdmin: (sessionRequest) => validAdminSession(sessionRequest, environment),
+      isAdmin: async () => isAdmin,
+      getUser: async () => user,
       fetchAsset: async (assetRequest) => {
         let response = await environment.ASSETS.fetch(siteAssetRequest(assetRequest))
         if (response.status === 404) response = await environment.ASSETS.fetch(siteAssetRequest(new Request(new URL('/', assetRequest.url), assetRequest)))
         return response
       },
     })
-    return worker.fetch(request)
+    return await worker.fetch(request)
+    } catch (cause) {
+      console.error('Account or request storage failed', cause instanceof Error ? cause.message : 'Unknown error')
+      return error('Unable to access your account. Please try again.', 503)
+    }
   },
 }

@@ -4,6 +4,7 @@ import {
   applyGameDraftPatches,
   createBlankGameDraft,
   createGameDraftFromGame,
+  isEmptyGameDraft,
   isGameDraft,
   isGameDraftPatch,
   mergeRemoteDraft,
@@ -31,6 +32,15 @@ function deferred<T>() {
 
 test('uses a 400ms debounce delay and a 1000ms refresh interval', () => {
   assert.deepEqual(LIVE_DRAFT_TIMING, { saveDelayMs: 400, pollIntervalMs: 1000 })
+})
+
+test('identifies only untouched new-game forms as empty', () => {
+  const blank = createBlankGameDraft('draft-empty')
+
+  assert.equal(isEmptyGameDraft(blank), true)
+  assert.equal(isEmptyGameDraft(applyGameDraftPatches(blank, [{ path: 'title', value: 'Leg pummel' }])), false)
+  assert.equal(isEmptyGameDraft(applyGameDraftPatches(blank, [{ path: 'startingPosition', value: 'Double seated SLX' }])), false)
+  assert.equal(isEmptyGameDraft({ ...blank, game: { ...blank.game, category: 'guard' } }), false)
 })
 
 test('reactivates mounted state after StrictMode effect replay and blocks writes after unmount', () => {
@@ -322,6 +332,26 @@ test('persists a free subcategory through draft patches and remote merges', () =
   assert.equal(mergeRemoteDraft(local, remote, 'subcategory').game.subcategory, 'Butterfly guard')
 })
 
+test('persists multiple subcategories through draft patches and remote merges', () => {
+  const blank = createBlankGameDraft('draft-subcategories')
+  const local = applyGameDraftPatches(blank, [{ path: 'subcategories', value: ['Butterfly guard', 'Wrestle-up'] }])
+  const remote = applyGameDraftPatches(blank, [{ path: 'subcategories', value: ['Passing'] }])
+
+  assert.equal(isGameDraftPatch({ path: 'subcategories', value: ['Butterfly guard', 'Wrestle-up'] }), true)
+  assert.deepEqual(local.game.subcategories, ['Butterfly guard', 'Wrestle-up'])
+  assert.deepEqual(mergeRemoteDraft(local, remote, 'subcategories').game.subcategories, ['Butterfly guard', 'Wrestle-up'])
+})
+
+test('persists player task focus through draft patches and remote merges', () => {
+  const blank = createBlankGameDraft('draft-task-focus')
+  const local = applyGameDraftPatches(blank, [{ path: 'players.0.taskFocus', value: ['Stay connected', 'Win inside position'] }])
+  const remote = applyGameDraftPatches(blank, [{ path: 'players.0.taskFocus', value: ['Remote focus'] }])
+
+  assert.equal(isGameDraftPatch({ path: 'players.0.taskFocus', value: ['Stay connected'] }), true)
+  assert.deepEqual(local.game.players[0].taskFocus, ['Stay connected', 'Win inside position'])
+  assert.deepEqual(mergeRemoteDraft(local, remote, 'players.0.taskFocus').game.players[0].taskFocus, ['Stay connected', 'Win inside position'])
+})
+
 test('defaults and validates persisted publishing state across draft copies', () => {
   const blank = createBlankGameDraft('draft-publishing')
   const fromGame = createGameDraftFromGame('draft-from-game', blank.game, 'create', null)
@@ -335,6 +365,22 @@ test('defaults and validates persisted publishing state across draft copies', ()
   assert.equal(copied.isPublishing, true)
   assert.equal(isGameDraft({ ...blank, isPublishing: 'true' }), false)
   assert.equal(isGameDraft(missingPublishingState), false)
+})
+
+test('accepts and edits existing games with one or three player roles', () => {
+  const base = createBlankGameDraft('variable-player-source')
+  const onePlayer = createGameDraftFromGame('one-player', {
+    ...base.game,
+    players: [base.game.players[0]],
+  }, 'replace')
+  const threePlayers = createGameDraftFromGame('three-players', {
+    ...base.game,
+    players: [...base.game.players, { role: 'Observer', objective: 'Track exchanges', winCondition: 'Record three transitions', constraints: [] }],
+  }, 'replace')
+
+  assert.equal(isGameDraft(onePlayer), true)
+  assert.equal(isGameDraft(threePlayers), true)
+  assert.equal(applyGameDraftPatches(threePlayers, [{ path: 'players.2.objective', value: 'Track five exchanges' }]).game.players[2].objective, 'Track five exchanges')
 })
 
 test('rejects unapproved keys at every draft boundary', () => {

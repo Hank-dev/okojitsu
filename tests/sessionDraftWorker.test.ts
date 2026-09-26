@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { applySessionDraftPatches, createBlankSessionDraft, type SessionDraft, type SessionDraftSummary } from '../src/sharedSessionDrafts.ts'
+import { applySessionDraftPatches, createBlankSessionDraft, createSessionDraftFromSession, type SessionDraft, type SessionDraftSummary } from '../src/sharedSessionDrafts.ts'
 import { createWorker, type SessionDraftStore, type SessionStore } from '../src/server/worker.ts'
 import type { SessionPlan } from '../src/types.ts'
 
@@ -99,4 +99,33 @@ test('allows an administrator to discard an unfinished live session draft', asyn
   assert.equal((await worker.fetch(request('/api/session-drafts/discard-session', { method: 'DELETE' }))).status, 204)
   assert.equal((await worker.fetch(request('/api/session-drafts/discard-session'))).status, 404)
   assert.deepEqual(await (await worker.fetch(request('/api/sessions'))).json(), { sessions: [] })
+})
+
+test('publishes an edit draft by replacing the existing session', async () => {
+  const sessionStore = memorySessionStore()
+  const source: SessionPlan = {
+    id: 'existing-session', title: 'Original title', date: '2026-09-12T10:00:00.000Z', duration: 6,
+    level: 'beginner', focus: '', notes: '', games: [{ gameId: 'guard-game', duration: 6 }],
+  }
+  await sessionStore.create(source)
+  const worker = createWorker({
+    store: sessionStore,
+    sessionDraftStore: memoryDraftStore(),
+    seedSessions: [],
+    isAdmin: async () => true,
+    fetchAsset: async () => new Response('asset'),
+  })
+  const draft = applySessionDraftPatches(
+    createSessionDraftFromSession('edit-session', source, 'replace'),
+    [{ path: 'title', value: 'Updated title' }],
+  )
+
+  assert.equal((await worker.fetch(request('/api/session-drafts', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(draft),
+  }))).status, 201)
+  const published = await worker.fetch(request('/api/session-drafts/edit-session/publish', { method: 'POST' }))
+
+  assert.equal(published.status, 201)
+  assert.equal((await published.json()).session.id, source.id)
+  assert.deepEqual((await (await worker.fetch(request('/api/sessions'))).json()).sessions.map((session: SessionPlan) => session.title), ['Updated title'])
 })

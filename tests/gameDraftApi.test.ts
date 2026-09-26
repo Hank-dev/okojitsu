@@ -41,7 +41,7 @@ test('uses same-origin draft endpoints and response envelopes for every operatio
   globalThis.fetch = async (url, init) => {
     calls.push({ url: String(url), init })
     if (String(url) === '/api/game-drafts' && !init?.method) {
-      return new Response(JSON.stringify({ drafts: [{ id: draft.id, sourceGameId: null, title: draft.game.title, updatedAt: draft.updatedAt }] }))
+      return new Response(JSON.stringify({ drafts: [{ id: draft.id, sourceGameId: null, title: draft.game.title, isEmpty: true, updatedAt: draft.updatedAt }] }))
     }
     if (String(url).endsWith('/publish')) return new Response(JSON.stringify({ game }), { status: 201 })
     if (init?.method === 'DELETE') return new Response(null, { status: 204 })
@@ -50,7 +50,7 @@ test('uses same-origin draft endpoints and response envelopes for every operatio
 
   try {
     assert.deepEqual(await createGameDraft(draft), draft)
-    assert.deepEqual(await fetchGameDrafts(), [{ id: draft.id, sourceGameId: null, title: draft.game.title, updatedAt: draft.updatedAt }])
+    assert.deepEqual(await fetchGameDrafts(), [{ id: draft.id, sourceGameId: null, title: draft.game.title, isEmpty: true, updatedAt: draft.updatedAt }])
     assert.deepEqual(await fetchGameDraft('draft 1'), draft)
     assert.deepEqual(await patchGameDraft('draft-1', [{ path: 'source', value: 'Seminar' }]), draft)
     assert.deepEqual(await publishGameDraft('draft-1'), game)

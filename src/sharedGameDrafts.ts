@@ -23,15 +23,16 @@ export interface GameDraftSummary {
   id: string
   sourceGameId: string | null
   title: string
+  isEmpty: boolean
   updatedAt: string
 }
 
 export type GameDraftPatchPath =
-  | 'title' | 'category' | 'subcategory' | 'level' | 'type' | 'source' | 'startingPosition'
-  | 'designRationale' | 'tags' | 'pendingCategory' | 'pendingCategory.label'
-  | 'pendingCategory.emoji' | `players.${0 | 1}.role`
-  | `players.${0 | 1}.objective` | `players.${0 | 1}.winCondition`
-  | `players.${0 | 1}.constraints`
+  | 'title' | 'category' | 'subcategory' | 'subcategories' | 'level' | 'type' | 'source' | 'startingPosition'
+  | 'constraints' | 'designRationale' | 'tags' | 'pendingCategory' | 'pendingCategory.label'
+  | 'pendingCategory.emoji' | `players.${number}.role`
+  | `players.${number}.objective` | `players.${number}.winCondition`
+  | `players.${number}.constraints` | `players.${number}.taskFocus`
 
 export interface GameDraftPatch {
   path: GameDraftPatchPath
@@ -41,17 +42,17 @@ export interface GameDraftPatch {
 const SKILLS: ReadonlySet<Skill> = new Set(['connection', 'distance', 'destabilize', 'segment', 'isolate', 'immobilize'])
 const DRAFT_LEVELS: ReadonlySet<DraftGameLevel> = new Set(['beginner', 'all-levels'])
 const PATCH_PATHS: ReadonlySet<string> = new Set([
-  'title', 'category', 'subcategory', 'level', 'type', 'source', 'startingPosition', 'designRationale', 'tags',
+  'title', 'category', 'subcategory', 'subcategories', 'level', 'type', 'source', 'startingPosition', 'constraints', 'designRationale', 'tags',
   'pendingCategory', 'pendingCategory.label', 'pendingCategory.emoji',
 ])
 const DRAFT_KEYS: ReadonlySet<string> = new Set([
   'id', 'sourceGameId', 'publishMode', 'game', 'pendingCategory', 'revision', 'isPublishing', 'createdAt', 'updatedAt',
 ])
 const GAME_KEYS: ReadonlySet<string> = new Set([
-  'id', 'title', 'category', 'subcategory', 'source', 'level', 'type', 'startingPosition', 'players', 'constraints',
+  'id', 'title', 'category', 'subcategory', 'subcategories', 'source', 'level', 'type', 'startingPosition', 'players', 'constraints',
   'designRationale', 'tags', 'skills', 'progression', 'sourceUrl',
 ])
-const PLAYER_KEYS: ReadonlySet<string> = new Set(['role', 'objective', 'winCondition', 'constraints'])
+const PLAYER_KEYS: ReadonlySet<string> = new Set(['role', 'objective', 'winCondition', 'constraints', 'taskFocus'])
 const PROGRESSION_KEYS: ReadonlySet<string> = new Set(['chain', 'chainLabel', 'step', 'totalSteps', 'prevId', 'nextId'])
 const PENDING_CATEGORY_KEYS: ReadonlySet<string> = new Set(['label', 'emoji'])
 
@@ -86,6 +87,7 @@ function isPlayerRoleDraft(value: unknown): value is PlayerRole {
     && typeof value.objective === 'string'
     && typeof value.winCondition === 'string'
     && isStringArray(value.constraints)
+    && (value.taskFocus === undefined || isStringArray(value.taskFocus))
 }
 
 function isProgression(value: unknown): value is Progression | null {
@@ -110,12 +112,13 @@ function isDraftGame(value: unknown): value is Game {
     && typeof value.title === 'string'
     && typeof value.category === 'string'
     && (value.subcategory === undefined || typeof value.subcategory === 'string')
+    && (value.subcategories === undefined || isStringArray(value.subcategories))
     && typeof value.source === 'string'
     && isDraftLevel(value.level)
     && typeof value.type === 'string'
     && typeof value.startingPosition === 'string'
     && Array.isArray(value.players)
-    && value.players.length === 2
+    && value.players.length > 0
     && value.players.every(isPlayerRoleDraft)
     && isStringArray(value.constraints)
     && (value.designRationale === undefined || typeof value.designRationale === 'string')
@@ -140,7 +143,7 @@ function isTimestamp(value: unknown): value is string {
 function isGameDraftPatchPath(value: unknown): value is GameDraftPatchPath {
   if (typeof value !== 'string') return false
   if (PATCH_PATHS.has(value)) return true
-  return /^players\.[01]\.(role|objective|winCondition|constraints)$/.test(value)
+  return /^players\.\d+\.(role|objective|winCondition|constraints|taskFocus)$/.test(value)
 }
 
 export function categoryKey(label: string): string {
@@ -157,7 +160,7 @@ export function isGameDraftPatch(value: unknown): value is GameDraftPatch {
   if (!isRecord(value) || !isGameDraftPatchPath(value.path)) return false
 
   if (value.path === 'pendingCategory') return value.value === null
-  if (value.path === 'tags' || value.path.endsWith('.constraints')) return isStringArray(value.value)
+  if (value.path === 'constraints' || value.path === 'tags' || value.path === 'subcategories' || value.path.endsWith('.constraints') || value.path.endsWith('.taskFocus')) return isStringArray(value.value)
   if (value.path === 'level') return isDraftLevel(value.value)
   return typeof value.value === 'string'
 }
@@ -168,6 +171,7 @@ function clonePlayer(player: PlayerRole): PlayerRole {
     objective: player.objective,
     winCondition: player.winCondition,
     constraints: [...player.constraints],
+    taskFocus: [...(player.taskFocus ?? [])],
   }
 }
 
@@ -188,6 +192,7 @@ function cloneGame(game: Game): Game {
     title: game.title,
     category: game.category,
     subcategory: game.subcategory ?? '',
+    subcategories: game.subcategories ? [...game.subcategories] : [],
     source: game.source,
     level: game.level,
     type: game.type,
@@ -220,7 +225,7 @@ function cloneDraft(draft: GameDraft): GameDraft {
 }
 
 function blankPlayer(index: number): PlayerRole {
-  return { role: `Player ${index + 1}`, objective: '', winCondition: '', constraints: [] }
+  return { role: `Player ${index + 1}`, objective: '', winCondition: '', constraints: [], taskFocus: [] }
 }
 
 export function createBlankGameDraft(id: string): GameDraft {
@@ -235,6 +240,7 @@ export function createBlankGameDraft(id: string): GameDraft {
       title: '',
       category: 'guard-passing',
       subcategory: '',
+      subcategories: [],
       source: '',
       level: 'beginner',
       type: 'mixed',
@@ -253,6 +259,37 @@ export function createBlankGameDraft(id: string): GameDraft {
     createdAt: timestamp,
     updatedAt: timestamp,
   }
+}
+
+/** True only for an untouched, newly-created game form. */
+export function isEmptyGameDraft(draft: GameDraft): boolean {
+  const { game } = draft
+  return draft.publishMode === 'create'
+    && draft.sourceGameId === null
+    && draft.pendingCategory === null
+    && game.title.trim() === ''
+    && game.category === 'guard-passing'
+    && !(game.subcategory ?? '').trim()
+    && !(game.subcategories ?? []).length
+    && game.source.trim() === ''
+    && game.level === 'beginner'
+    && game.type === 'mixed'
+    && game.startingPosition.trim() === ''
+    && game.players.length === 2
+    && game.players.every((player, index) =>
+      player.role === `Player ${index + 1}`
+      && player.objective.trim() === ''
+      && player.winCondition.trim() === ''
+      && !player.constraints.length
+      && !(player.taskFocus ?? []).length,
+    )
+    && !game.constraints.length
+    && !(game.designRationale ?? '').trim()
+    && !game.tags.length
+    && game.skills.length === 1
+    && game.skills[0] === 'connection'
+    && game.progression === null
+    && !(game.sourceUrl ?? '').trim()
 }
 
 export function createGameDraftFromGame(
@@ -286,18 +323,19 @@ function applyOnePatch(draft: GameDraft, patch: GameDraftPatch): GameDraft {
     return draft
   }
 
-  if (patch.path === 'tags') {
-    draft.game.tags = [...patch.value as string[]]
+  if (patch.path === 'constraints' || patch.path === 'tags' || patch.path === 'subcategories') {
+    draft.game[patch.path] = [...patch.value as string[]]
     return draft
   }
 
-  if (patch.path.endsWith('.constraints')) {
-    const playerMatch = patch.path.match(/^players\.([01])\.constraints$/)
+  if (patch.path.endsWith('.constraints') || patch.path.endsWith('.taskFocus')) {
+    const playerMatch = patch.path.match(/^players\.(\d+)\.(constraints|taskFocus)$/)
     if (playerMatch) {
       const playerIndex = Number(playerMatch[1])
+      if (!draft.game.players[playerIndex]) throw new Error('Invalid player patch path.')
       draft.game.players[playerIndex] = {
         ...draft.game.players[playerIndex],
-        constraints: [...patch.value as string[]],
+        [playerMatch[2]]: [...patch.value as string[]],
       }
       return draft
     }
@@ -309,9 +347,10 @@ function applyOnePatch(draft: GameDraft, patch: GameDraftPatch): GameDraft {
     return draft
   }
 
-  const playerMatch = patch.path.match(/^players\.([01])\.(role|objective|winCondition)$/)
+  const playerMatch = patch.path.match(/^players\.(\d+)\.(role|objective|winCondition)$/)
   if (playerMatch) {
     const playerIndex = Number(playerMatch[1])
+    if (!draft.game.players[playerIndex]) throw new Error('Invalid player patch path.')
     const field = playerMatch[2] as 'role' | 'objective' | 'winCondition'
     draft.game.players[playerIndex] = { ...draft.game.players[playerIndex], [field]: patch.value as string }
     return draft
@@ -352,18 +391,23 @@ function readPatchAtPath(draft: GameDraft, path: GameDraftPatchPath): GameDraftP
   }
 
   if (path === 'tags') return { path, value: [...draft.game.tags] }
-  if (path.endsWith('.constraints')) {
-    const playerIndex = Number(path.match(/^players\.([01])/)?.[1])
-    return { path, value: [...draft.game.players[playerIndex].constraints] }
+  if (path === 'constraints') return { path, value: [...draft.game.constraints] }
+  if (path === 'subcategories') return { path, value: [...(draft.game.subcategories ?? [])] }
+  if (path.endsWith('.constraints') || path.endsWith('.taskFocus')) {
+    const playerIndex = Number(path.match(/^players\.(\d+)/)?.[1])
+    if (!draft.game.players[playerIndex]) throw new Error('Invalid player patch path.')
+    const field = path.endsWith('.constraints') ? 'constraints' : 'taskFocus'
+    return { path, value: [...(draft.game.players[playerIndex][field] ?? [])] }
   }
   if (path === 'pendingCategory.label' || path === 'pendingCategory.emoji') {
     const field = path.endsWith('.label') ? 'label' : 'emoji'
     return { path, value: draft.pendingCategory?.[field] || '' }
   }
 
-  const playerMatch = path.match(/^players\.([01])\.(role|objective|winCondition)$/)
+  const playerMatch = path.match(/^players\.(\d+)\.(role|objective|winCondition)$/)
   if (playerMatch) {
     const playerIndex = Number(playerMatch[1])
+    if (!draft.game.players[playerIndex]) throw new Error('Invalid player patch path.')
     const field = playerMatch[2] as 'role' | 'objective' | 'winCondition'
     return { path, value: draft.game.players[playerIndex][field] }
   }

@@ -23,6 +23,7 @@ export type ManualArticle = {
 export type PresentationKind =
   | 'image'
   | 'heading'
+  | 'table'
   | 'paragraph'
   | 'list'
   | 'field-note'
@@ -113,6 +114,14 @@ export function presentBlock(block: ManualBlock, mode: ManualMode, context: Pres
     if (match) return { kind: 'step', block, stepNumber: Number(match[1]), title: match[2] }
     if (checklistHeading.test(text)) return { kind: 'checklist', block, title: text }
     return { kind: 'heading', block }
+  }
+
+  if (type === 'table') {
+    const headers = Array.isArray(block.headers) ? block.headers : []
+    const rows = Array.isArray(block.rows) ? block.rows : []
+    const hasHeaders = headers.length > 1 && headers.every(cell => typeof cell === 'string' && cell.trim())
+    const hasRows = rows.length > 0 && rows.every(row => Array.isArray(row) && row.length === headers.length && row.every(cell => typeof cell === 'string'))
+    return hasHeaders && hasRows ? { kind: 'table', block } : { kind: 'fallback', block }
   }
 
   if (type === 'quote') {

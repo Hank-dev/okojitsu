@@ -152,6 +152,14 @@ test('rejects a stale revision without overwriting a newer field patch', async (
   assert.equal((await store.get(draft!.id))?.game.source, '')
 })
 
+test('applies shared constraints independently of player constraints', () => {
+  const draft = createGameDraftFromGame('shared-constraints', customGame, 'replace')
+  const updated = applyGameDraftPatches(draft, [{ path: 'constraints', value: ['Stay in bounds.', 'Reset after a score.'] }])
+
+  assert.deepEqual(updated.game.constraints, ['Stay in bounds.', 'Reset after a score.'])
+  assert.deepEqual(updated.game.players.map(player => player.constraints), [[], []])
+})
+
 test('persists a publishing claim at its new revision', async () => {
   const store = new D1GameDraftStore(new MemoryD1())
   const draft = await store.create(createBlankGameDraft('draft-claim'))
@@ -202,6 +210,7 @@ test('summarizes and retrieves valid active drafts using stored timestamps', asy
     id: 'draft-1',
     sourceGameId: 'custom-turtle',
     title: 'Turtle Circle',
+    isEmpty: false,
     updatedAt: draft.updatedAt,
   }])
   assert.deepEqual(await store.get('draft-1'), draft)

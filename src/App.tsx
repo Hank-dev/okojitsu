@@ -7,17 +7,18 @@ import coachingFullData from './data/coaching-full.json'
 import { SEED_SESSIONS } from './data/sessions-seed'
 import gamesData from './data/games.json'
 import { generateSession } from './sessionGenerator'
-import type { GenerateOptions, GeneratedSession } from './sessionGenerator'
+import type { GeneratedSession } from './sessionGenerator'
 import { getSuggestions } from './suggestionEngine'
-import type { Suggestion } from './suggestionEngine'
-import { getAdminSession, signInAdmin, signOutAdmin } from './adminAuth'
-import { reorderSessionGames } from './sessions'
+import { signInAdmin, signOutAdmin } from './adminAuth'
+import AccountPage from './AccountPage'
+import { accountRequest, type AccountSession } from './accounts'
+import { reorderSessionGames, sortSessionsByDateDescending } from './sessions'
 import { deleteSharedSession, fetchSharedSessions, importSharedSessions } from './sessionApi'
 import { createSessionDraft, fetchSessionDraft, fetchSessionDrafts } from './sessionDraftApi'
-import { deleteSharedGame, fetchSharedGames, importSharedGames } from './gameApi'
-import { createGameDraft, fetchGameDraft, fetchGameDrafts } from './gameDraftApi'
+import { bulkUpdateSharedGames, createSharedCategory, deleteSharedCategory, deleteSharedGame, fetchSharedGames, importSharedGames } from './gameApi'
+import { createGameDraft, deleteGameDraft, fetchGameDraft, fetchGameDrafts } from './gameDraftApi'
 import { parseLegacySessions, type LegacySessionParse } from './sharedSessions'
-import { countGamesByCategory, filterGames, gameMatchesSearch, getPlayerGoalType, sortGames } from './library'
+import { countGameUsage, countGamesByCategory, filterGames, gameMatchesSearch, mergeGamesWithOverrides, sortGames } from './library'
 import type { LibrarySort } from './library'
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -26,16 +27,32 @@ import SessionsPage from './SessionsPage'
 import FieldManualPage from './FieldManualPage'
 import type { ManualArticle } from './fieldManual'
 import { BEGINNER_SEMESTER } from './data/beginner-curriculum'
-import { createBlankGameDraft, createGameDraftFromGame, type GameDraft, type GameDraftPatch, type GameDraftPatchPath, type GameDraftSummary } from './sharedGameDrafts'
+import { createBlankGameDraft, createGameDraftFromGame, isEmptyGameDraft, type GameDraft, type GameDraftPatch, type GameDraftPatchPath, type GameDraftSummary } from './sharedGameDrafts'
 import { useLiveGameDraft } from './useLiveGameDraft'
-import { createBlankSessionDraft, createSessionDraftFromSession, type SessionDraft, type SessionDraftSummary } from './sharedSessionDrafts'
+import { createBlankSessionDraft, createSessionDraftFromSession, type SessionDraft, type SessionDraftPublishMode, type SessionDraftSummary } from './sharedSessionDrafts'
 import { useLiveSessionDraft } from './useLiveSessionDraft'
+import { CONSOLIDATED_CATEGORY_KEYS, gameHasSubcategory, getGameSubcategories, getManualGameSubcategories, inferGameSubcategory, normalizeGameTaxonomy } from './gameSubcategories'
+import { getPresentedSharedConstraints, getPresentedTaskFocus, getPresentedTaskObjective, getSourceDocumentGameTaskFocus, getSourceDocumentRationale, getSourceDocumentTaskFocus } from './sourceDocumentPresentation'
+import { getIncompleteGameFields } from './sharedGames'
 
-const GAMES: Game[] = gamesData as Game[]
+function normalizeVisibleGame(game: Game): Game {
+  const normalized = normalizeGameTaxonomy(game)
+  return {
+    ...normalized,
+    // An explicit empty value means an administrator removed the membership.
+    // Only infer taxonomy for legacy records that never had the field at all.
+    subcategory: normalized.subcategory === undefined
+      ? inferGameSubcategory(normalized)
+      : normalized.subcategory.trim(),
+  }
+}
+
+const GAMES: Game[] = (gamesData as Game[]).map(normalizeVisibleGame)
 const CATEGORY_CREATE_VALUE = '__create-category__'
 const CUSTOM_CATEGORIES_KEY = 'okojitsu_custom_categories'
+const UNCATEGORIZED_SUBCATEGORY = '__uncategorized__'
 
-type Page = 'home' | 'theory' | 'library' | 'builder' | 'sessions' | 'curriculum' | 'coaching' | 'memes' | 'resources'
+type Page = 'home' | 'theory' | 'library' | 'builder' | 'sessions' | 'curriculum' | 'coaching' | 'memes' | 'resources' | 'account'
 
 const SESSIONS_KEY = 'okojitsu_sessions'
 const DELETED_SEEDS_KEY = 'okojitsu_deleted_seeds'
@@ -78,7 +95,7 @@ function readLegacyCustomGames(): Game[] {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(CUSTOM_GAMES_KEY) || '[]')
     return Array.isArray(parsed)
-      ? parsed.filter((game): game is Game => Boolean(game && typeof game === 'object' && typeof (game as Game).id === 'string')).map(game => ({ ...game, level: 'beginner' }))
+      ? parsed.filter((game): game is Game => Boolean(game && typeof game === 'object' && typeof (game as Game).id === 'string')).map(game => normalizeVisibleGame({ ...game, level: 'beginner' }))
       : []
   } catch {
     return []
@@ -86,7 +103,8 @@ function readLegacyCustomGames(): Game[] {
 }
 
 export default function App() {
-  const [page, setPage] = useState<Page>('home')
+  const [page, setPage] = useState<Page>(() => new URLSearchParams(window.location.search).has('account') ? 'account' : 'home')
+  const [coachingArticleId, setCoachingArticleId] = useState<string | undefined>()
   const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [sessions, setSessions] = useState<SessionPlan[]>([])
   const [sessionSyncStatus, setSessionSyncStatus] = useState<SessionSyncStatus>('loading')
@@ -98,32 +116,58 @@ export default function App() {
   const gameRefreshInFlightRef = useRef(false)
   const [customGames, setCustomGames] = useState<Game[]>([])
   const [customCategories, setCustomCategories] = useState<CategoryMetaMap>({})
+  const [deletedCategoryIds, setDeletedCategoryIds] = useState<string[]>([])
   const [deletedSeedGameIds, setDeletedSeedGameIds] = useState<string[]>([])
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [account, setAccount] = useState<AccountSession | null>(null)
+  const [accountError, setAccountError] = useState('')
+  const isAdmin = account?.isAdmin ?? false
+  const canPlan = isAdmin || account?.user?.status === 'active'
+  const refreshAccount = useCallback(async () => {
+    try { setAccount(await accountRequest<AccountSession>('/api/account')); setAccountError('') }
+    catch (cause) { setAccountError(cause instanceof Error ? cause.message : 'Unable to load your account.') }
+  }, [])
   const [liveSessionDrafts, setLiveSessionDrafts] = useState<SessionDraftSummary[]>([])
   const [activeSessionDraft, setActiveSessionDraft] = useState<SessionDraft | null>(null)
   const [sessionDraftError, setSessionDraftError] = useState('')
   const [loginOpen, setLoginOpen] = useState(false)
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
-  const gameCount = GAMES.length - deletedSeedGameIds.length + customGames.length
-  const categoryMeta = useMemo(() => ({ ...CATEGORY_META, ...customCategories }), [customCategories])
+  const ALL_GAMES = useMemo(() => mergeGamesWithOverrides(GAMES, customGames, deletedSeedGameIds), [customGames, deletedSeedGameIds])
+  const gameCount = ALL_GAMES.length
+  const categoryMeta = useMemo(() => Object.fromEntries(Object.entries({ ...CATEGORY_META, ...customCategories }).filter(([key]) => !deletedCategoryIds.includes(key) && !CONSOLIDATED_CATEGORY_KEYS.has(key))), [customCategories, deletedCategoryIds])
   const categoryCount = Object.keys(categoryMeta).length
 
-  useEffect(() => { void getAdminSession().then(setIsAdmin) }, [])
+  useEffect(() => {
+    if (!selectedGame) return
+    const previousOverflow = document.body.style.overflow
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelectedGame(null) }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', closeOnEscape)
+    return () => { document.body.style.overflow = previousOverflow; window.removeEventListener('keydown', closeOnEscape) }
+  }, [selectedGame])
+
+  useEffect(() => {
+    void refreshAccount()
+    const refresh = () => { void refreshAccount() }
+    window.addEventListener('focus', refresh)
+    const interval = window.setInterval(refresh, 30000)
+    return () => { window.removeEventListener('focus', refresh); window.clearInterval(interval) }
+  }, [refreshAccount])
+  useEffect(() => { if (!canPlan) { setActiveSessionDraft(null); setLiveSessionDrafts([]) } }, [canPlan])
 
   const refreshLiveSessionDrafts = useCallback(async () => {
-    if (!isAdmin) { setLiveSessionDrafts([]); return }
-    try { setLiveSessionDrafts(await fetchSessionDrafts()) } catch { /* Drafts remain retryable from the workbench. */ }
-  }, [isAdmin])
+    if (!canPlan) { setLiveSessionDrafts([]); return }
+    try { setLiveSessionDrafts(await fetchSessionDrafts()); setSessionDraftError('') }
+    catch (cause) { setSessionDraftError(cause instanceof Error ? cause.message : 'Unable to load drafts.') }
+  }, [canPlan])
 
   useEffect(() => {
     void refreshLiveSessionDrafts()
-    if (!isAdmin) return
+    if (!canPlan) return
     const interval = window.setInterval(() => void refreshLiveSessionDrafts(), 1000)
     return () => window.clearInterval(interval)
-  }, [isAdmin, refreshLiveSessionDrafts])
+  }, [canPlan, refreshLiveSessionDrafts])
 
   const refreshSharedSessions = useCallback(async () => {
     const requestId = ++sessionRequestIdRef.current
@@ -132,7 +176,7 @@ export default function App() {
     try {
       const loaded = await fetchSharedSessions()
       if (requestId !== sessionRequestIdRef.current) return
-      setSessions(loaded)
+      setSessions(sortSessionsByDateDescending(loaded))
       setSessionSyncStatus('ready')
     } catch (error) {
       if (requestId !== sessionRequestIdRef.current) return
@@ -150,9 +194,10 @@ export default function App() {
     const requestId = ++gameRequestIdRef.current
     try {
       const loaded = await fetchSharedGames()
-      let nextGames = loaded.games.map(game => ({ ...game, level: 'beginner' }))
+      let nextGames = loaded.games.map(game => normalizeVisibleGame({ ...game, level: 'beginner' }))
       let nextCategories = loaded.categories
       const nextDeletedSeedGameIds = loaded.deletedSeedGameIds
+      const nextDeletedCategoryIds = loaded.deletedCategoryIds ?? []
 
       if (isAdmin) {
         const legacyGames = readLegacyCustomGames()
@@ -162,7 +207,7 @@ export default function App() {
         const categoriesToImport = Object.fromEntries(Object.entries(legacyCategories).filter(([key]) => !nextCategories[key])) as CategoryMetaMap
         if (gamesToImport.length > 0 || Object.keys(categoriesToImport).length > 0) {
           await importSharedGames(gamesToImport, categoriesToImport)
-          nextGames = [...nextGames, ...gamesToImport]
+          nextGames = [...nextGames, ...gamesToImport.map(normalizeVisibleGame)]
           nextCategories = { ...nextCategories, ...categoriesToImport }
           localStorage.removeItem(CUSTOM_GAMES_KEY)
           localStorage.removeItem(CUSTOM_CATEGORIES_KEY)
@@ -173,11 +218,13 @@ export default function App() {
       setCustomGames(nextGames)
       setCustomCategories(nextCategories)
       setDeletedSeedGameIds(nextDeletedSeedGameIds)
+      setDeletedCategoryIds(nextDeletedCategoryIds)
     } catch {
       if (requestId !== gameRequestIdRef.current) return
       setCustomGames(readLegacyCustomGames())
       setCustomCategories(readCustomCategories())
       setDeletedSeedGameIds([])
+      setDeletedCategoryIds([])
     } finally {
       gameRefreshInFlightRef.current = false
     }
@@ -240,13 +287,11 @@ export default function App() {
     }
   }, [legacySessionImport.sessions, refreshSharedSessions])
 
-  const ALL_GAMES = useMemo(() => [...GAMES.filter(game => !deletedSeedGameIds.includes(game.id)), ...customGames], [customGames, deletedSeedGameIds])
-
-  const startLiveSessionDraft = async (copy?: SessionPlan) => {
+  const startLiveSessionDraft = async (source?: SessionPlan, publishMode: SessionDraftPublishMode = 'create') => {
     setSessionDraftError('')
     try {
-      const draft = copy
-        ? createSessionDraftFromSession(`session-draft-${crypto.randomUUID()}`, copy)
+      const draft = source
+        ? createSessionDraftFromSession(`session-draft-${crypto.randomUUID()}`, source, publishMode)
         : createBlankSessionDraft(`session-draft-${crypto.randomUUID()}`)
       const opened = await createSessionDraft(draft)
       setActiveSessionDraft(opened)
@@ -266,7 +311,7 @@ export default function App() {
     }
   }
   const finishLiveSessionDraft = async (session?: SessionPlan) => {
-    if (session) setSessions(current => [session, ...current.filter(existing => existing.id !== session.id)])
+    if (session) { setSessions(current => sortSessionsByDateDescending([session, ...current.filter(existing => existing.id !== session.id)])); setPage('sessions') }
     else await refreshSharedSessions()
     setActiveSessionDraft(null)
     await refreshLiveSessionDrafts()
@@ -275,18 +320,15 @@ export default function App() {
   const navTo = (p: Page) => { setPage(p); setMobileMenuOpen(false) }
   const signIn = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!await signInAdmin(password)) {
-      setLoginError('Incorrect password')
-      return
-    }
-    setIsAdmin(true)
-    setPassword('')
-    setLoginError('')
-    setLoginOpen(false)
+    try {
+      if (!await signInAdmin(password)) { setLoginError('Incorrect password, or shared admin access is no longer enabled.'); return }
+      await refreshAccount()
+      setPassword(''); setLoginError(''); setLoginOpen(false)
+    } catch { setLoginError('Unable to sign in. Please try again.') }
   }
   const signOut = async () => {
     await signOutAdmin()
-    setIsAdmin(false)
+    await refreshAccount()
   }
 
   return (
@@ -301,16 +343,12 @@ export default function App() {
           <button className={`nav-item ${page === 'theory' ? 'active' : ''}`} onClick={() => navTo('theory')}>Theory</button>
           <button className={`nav-item ${page === 'library' ? 'active' : ''}`} onClick={() => navTo('library')}>Game Library</button>
           <button className={`nav-item ${page === 'builder' ? 'active' : ''}`} onClick={() => navTo('builder')}>Class Builder</button>
-          <button className={`nav-item ${page === 'sessions' ? 'active' : ''}`} onClick={() => navTo('sessions')}>My Sessions</button>
+          <button className={`nav-item ${page === 'sessions' ? 'active' : ''}`} onClick={() => navTo('sessions')}>Sessions</button>
           <button className={`nav-item ${page === 'coaching' ? 'active' : ''}`} onClick={() => navTo('coaching')}>Coaching</button>
           <button className={`nav-item ${page === 'memes' ? 'active' : ''}`} onClick={() => navTo('memes')}>Memes</button>
           <button className={`nav-item ${page === 'resources' ? 'active' : ''}`} onClick={() => navTo('resources')}>Resources</button>
         </nav>
-        {isAdmin ? (
-          <button className="admin-control admin-active" onClick={signOut}>Admin · Sign out</button>
-        ) : (
-          <button className="admin-control" onClick={() => { setLoginError(''); setLoginOpen(true) }}>Admin sign in</button>
-        )}
+        <button className={`admin-control ${canPlan ? 'admin-active' : ''}`} onClick={() => navTo('account')}>{isAdmin ? 'Admin account' : account?.identity ? 'My account' : 'Sign in'}</button>
         <button className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
           <span />
           <span />
@@ -319,15 +357,17 @@ export default function App() {
       </header>
       {mobileMenuOpen && <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)} />}
       <main className="main">
+        {page === 'account' && <AccountPage session={account} error={accountError} onRefresh={refreshAccount} onLegacySignIn={() => { setLoginError(''); setLoginOpen(true) }} onLegacySignOut={signOut} />}
         {page === 'home' && <HomePage setPage={setPage} />}
         {page === 'theory' && <TheoryPage />}
-        {page === 'library' && <LibraryPage isAdmin={isAdmin} onSelect={setSelectedGame} customGames={customGames} deletedSeedGameIds={deletedSeedGameIds} categoryMeta={categoryMeta} refreshSharedGames={refreshSharedGames} onDeleteGame={removeSharedGame} />}
-        {page === 'builder' && !isAdmin && <div className="admin-required"><h2>Admin access required</h2><p>Sign in from the upper-right corner to start or join a shared session draft.</p></div>}
-        {page === 'builder' && isAdmin && (activeSessionDraft ? (
+        {page === 'library' && <LibraryPage isAdmin={isAdmin} onSelect={setSelectedGame} customGames={customGames} deletedSeedGameIds={deletedSeedGameIds} sessions={sessions} categoryMeta={categoryMeta} refreshSharedGames={refreshSharedGames} onDeleteGame={removeSharedGame} onGamePublished={() => setPage('sessions')} />}
+        {page === 'builder' && !canPlan && <div className="admin-required"><h2>Coach access required</h2><p>Sign in with your ØkoJitsu account, or ask an admin for a private setup link.</p><button className="btn btn-primary" onClick={() => navTo('account')}>Open account</button></div>}
+        {page === 'builder' && canPlan && (activeSessionDraft ? (
           <BuilderPage
             key={activeSessionDraft.id}
             draft={activeSessionDraft}
             games={ALL_GAMES}
+            sessions={sessions}
             categoryMeta={categoryMeta}
             isAdmin={isAdmin}
             onPublished={session => { void finishLiveSessionDraft(session) }}
@@ -335,10 +375,14 @@ export default function App() {
             onClose={() => setActiveSessionDraft(null)}
             onRefreshGames={refreshSharedGames}
             onSelect={setSelectedGame}
+            onGamePublished={() => setPage('sessions')}
+            onOpenClassSetupGuide={() => { setCoachingArticleId('session-structure'); setPage('coaching') }}
           />
         ) : <SessionDraftStartPanel drafts={liveSessionDrafts} error={sessionDraftError} onStart={() => { void startLiveSessionDraft() }} onOpen={id => { void openLiveSessionDraft(id) }} />)}
         {page === 'sessions' && <SessionsPage
           isAdmin={isAdmin}
+          canPlan={canPlan}
+          userId={account?.user?.status === 'active' ? account.user.id : undefined}
           sessions={sessions}
           games={ALL_GAMES}
           categoryMeta={categoryMeta}
@@ -353,14 +397,20 @@ export default function App() {
           sessionDraftError={sessionDraftError}
           onStartLiveSessionDraft={() => { void startLiveSessionDraft() }}
           onOpenLiveSessionDraft={id => { void openLiveSessionDraft(id) }}
-          onCopyEdit={session => { void startLiveSessionDraft(session) }}
+          onEdit={session => { void startLiveSessionDraft(session, 'replace') }}
+          onCopyEdit={session => { void startLiveSessionDraft(session, 'create') }}
+          onOpenGame={setSelectedGame}
         />}
         {page === 'curriculum' && <CurriculumPage />}
-        {page === 'coaching' && <CoachingPage />}
+        {page === 'coaching' && <CoachingPage initialArticleId={coachingArticleId} />}
         {page === 'memes' && <MemesPage />}
         {page === 'resources' && <ResourcesPage />}
       </main>
-      {selectedGame && <GameModal game={selectedGame} categoryMeta={categoryMeta} onClose={() => setSelectedGame(null)} onNavigate={(g) => setSelectedGame(g)} />}
+      {selectedGame && <div className="atlas-detail-overlay" role="dialog" aria-modal="true" aria-label={selectedGame.title}>
+        <div className="atlas-detail-shell" tabIndex={-1}>
+          <GameDetailInline game={selectedGame} categoryMeta={categoryMeta} onClose={() => setSelectedGame(null)} onNavigate={setSelectedGame} />
+        </div>
+      </div>}
       {loginOpen && <div className="modal-overlay" onClick={() => setLoginOpen(false)}>
         <div className="modal admin-login-modal" onClick={event => event.stopPropagation()}>
           <button className="modal-close" onClick={() => setLoginOpen(false)} aria-label="Close admin sign in">✕</button>
@@ -384,9 +434,9 @@ function SessionDraftStartPanel({ drafts, error, onStart, onOpen }: { drafts: Se
       <div className="builder-main">
         <div className="card session-header-card" style={{ maxWidth: 760 }}>
           <p className="sessions-eyebrow">Collaborative planning</p>
-          <h1 id="shared-session-drafts-heading" style={{ marginTop: 4 }}>Start a shared session</h1>
-          <p style={{ color: 'var(--text-muted)', maxWidth: 580 }}>Create a live draft when you are ready to plan. Open the same draft from another signed-in browser and changes appear automatically.</p>
-          <button type="button" className="btn btn-primary" onClick={onStart} style={{ marginTop: 12 }}>+ Start shared session</button>
+          <h1 id="shared-session-drafts-heading" style={{ marginTop: 4 }}>Plan a session</h1>
+          <p style={{ color: 'var(--text-muted)', maxWidth: 580 }}>Your draft saves automatically across devices. Only you and the admins can open it until you publish the session.</p>
+          <button type="button" className="btn btn-primary" onClick={onStart} style={{ marginTop: 12 }}>Start a shared session</button>
           {error && <p className="builder-session-error" role="alert">{error}</p>}
         </div>
         <div className="card" style={{ maxWidth: 760, marginTop: 16 }}>
@@ -398,7 +448,7 @@ function SessionDraftStartPanel({ drafts, error, onStart, onOpen }: { drafts: Se
             <button key={draft.id} type="button" className="sessions-browser-item" onClick={() => onOpen(draft.id)} style={{ textAlign: 'left' }}>
               <strong>{draft.title || 'Untitled session'}</strong><span>Updated {new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(draft.updatedAt))}</span>
             </button>
-          ))}</div> : <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>No live drafts yet. Start one when you want to collaborate.</p>}
+          ))}</div> : <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>No drafts yet. Start planning your next session.</p>}
         </div>
       </div>
     </section>
@@ -440,8 +490,8 @@ function TheoryPage() {
   return <FieldManualPage articles={THEORY_FULL} mode="theory" />
 }
 
-function CoachingPage() {
-  return <FieldManualPage articles={COACHING_FULL} mode="coaching" />
+function CoachingPage({ initialArticleId }: { initialArticleId?: string }) {
+  return <FieldManualPage articles={COACHING_FULL} mode="coaching" initialArticleId={initialArticleId} />
 }
 
 function CurriculumPage() {
@@ -660,6 +710,10 @@ function ResourcesPage() {
 
 function AtlasGameCard({ game, custom, categoryMeta, onOpen }: { game: Game; custom: boolean; categoryMeta: CategoryMetaMap; onOpen: (event: React.MouseEvent<HTMLButtonElement>) => void }) {
   const category = categoryMeta[game.category] ?? categoryMeta.submissions
+  const subcategories = getGameSubcategories(game)
+  const sourceRationale = getSourceDocumentRationale(game)
+  const sharedConstraints = getPresentedSharedConstraints(game)
+  const gameTaskFocus = getSourceDocumentGameTaskFocus(game.id)
   return (
     <button
       type="button"
@@ -668,86 +722,53 @@ function AtlasGameCard({ game, custom, categoryMeta, onOpen }: { game: Game; cus
       onClick={onOpen}
       data-game-id={game.id}
     >
-      <span className="atlas-card-kicker">{category.label}{game.subcategory ? ` · ${game.subcategory}` : ''}{custom ? ' · Custom' : ''}</span>
+      <span className="atlas-card-kicker">{[category.label, ...subcategories, ...(custom ? ['Custom'] : [])].join(' · ')}</span>
       <strong className="atlas-card-title">{game.title}</strong>
-      <span className="atlas-card-summary">{game.designRationale || game.startingPosition}</span>
+      <span className="atlas-card-start">
+        <small>Starting position</small>
+        <b>{game.startingPosition || 'Not provided.'}</b>
+      </span>
       <span className="atlas-card-duel">
-        {game.players.slice(0, 2).map((player, index) => (
-          <span key={index}>
-            <small>{player.role} · {getPlayerGoalType(game, index)}</small>
-            {player.objective && <b>{player.objective}</b>}
-          </span>
-        ))}
+        {game.players.map((player, index) => {
+          const taskFocus = getPresentedTaskFocus(game, index)
+          return (
+            <span key={index} className="atlas-card-player">
+              <small className="atlas-card-role">{player.role || `Player ${index + 1}`}</small>
+              <span className="atlas-card-objective"><i>Task objective</i><b>{getPresentedTaskObjective(game, index) || 'Not provided.'}</b></span>
+              {player.constraints.length > 0 && (
+                <span className="atlas-card-constraints"><i>Constraints</i><em>{player.constraints.join(' · ')}</em></span>
+              )}
+              {taskFocus.length > 0 && (
+                <span className="atlas-card-focus"><i>Task focus</i><em>{taskFocus.join(' · ')}</em></span>
+              )}
+            </span>
+          )
+        })}
       </span>
-      <span className="atlas-card-tags">
-        <i>{LEVEL_META[game.level]?.label}</i>
-        {game.skills.slice(0, 2).map(skill => <i key={skill}>{SKILL_META[skill]?.label}</i>)}
-      </span>
+      {sharedConstraints.length > 0 && <span className="atlas-card-shared"><i>Shared constraints</i><em>{sharedConstraints.join(' · ')}</em></span>}
+      {gameTaskFocus.length > 0 && <span className="atlas-card-focus atlas-card-game-focus"><i>Task focus</i><em>{gameTaskFocus.join(' · ')}</em></span>}
+      {sourceRationale && <span className="atlas-card-rationale"><i>Game rationale</i>{sourceRationale}</span>}
       <span className="atlas-card-open">Open game <b aria-hidden="true">→</b></span>
     </button>
-  )
-}
-
-function AtlasFeaturedGame({ game, categoryMeta, onOpen }: { game: Game; categoryMeta: CategoryMetaMap; onOpen: (event: React.MouseEvent<HTMLButtonElement>) => void }) {
-  const category = categoryMeta[game.category] ?? categoryMeta.submissions
-  return (
-    <section
-      className="atlas-featured"
-      style={{ '--atlas-accent': category.color } as React.CSSProperties}
-      aria-labelledby={`atlas-featured-title-${game.id}`}
-    >
-      <div className="atlas-featured-header">
-        <span className="atlas-featured-kicker">Featured game · {category.label}{game.subcategory ? ` · ${game.subcategory}` : ''}</span>
-        <span className="atlas-featured-type">{TYPE_META[game.type]?.label}</span>
-      </div>
-      <div className="atlas-featured-body">
-        <div className="atlas-featured-copy">
-          <h2 id={`atlas-featured-title-${game.id}`}>{game.title}</h2>
-          <p>{game.designRationale || game.startingPosition}</p>
-          <div className="atlas-featured-meta">
-            <span>{LEVEL_META[game.level]?.label}</span>
-            {game.skills.slice(0, 2).map(skill => <span key={skill}>{SKILL_META[skill]?.label}</span>)}
-          </div>
-          <button type="button" className="atlas-featured-open" onClick={onOpen} data-game-id={game.id}>
-            Open game <b aria-hidden="true">→</b>
-          </button>
-        </div>
-        <div className="atlas-featured-duel" aria-label="Player task focus">
-          {game.players.slice(0, 2).map((player, index) => (
-            <div key={index} className="atlas-featured-player">
-              <small>{player.role} · {getPlayerGoalType(game, index)}</small>
-              <strong>{player.objective}</strong>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
   )
 }
 
 // ============ GAME DETAIL INLINE ============
 function GameDetailInline({ game, categoryMeta, onClose, onEdit, onDelete, onNavigate }: { game: Game; categoryMeta: CategoryMetaMap; onClose: () => void; onEdit?: () => void; onDelete?: () => void; onNavigate?: (g: Game) => void }) {
   const cat = categoryMeta[game.category] || categoryMeta['submissions']
+  const subcategories = getGameSubcategories(game)
+  const sourceRationale = getSourceDocumentRationale(game)
+  const sharedConstraints = getPresentedSharedConstraints(game)
+  const gameTaskFocus = getSourceDocumentGameTaskFocus(game.id)
   return (
     <div className="detail-panel">
       <div className="detail-header" style={{ borderLeftColor: cat.color }}>
         <div className="detail-header-text">
           <div className="detail-title">{game.title}</div>
           <div className="detail-badges">
-            <span className={`mini-badge mini-level-${game.level}`}>{LEVEL_META[game.level]?.label}</span>
-            <span className={`mini-badge mini-type-${game.type}`}>{TYPE_META[game.type]?.label}</span>
             <span className="detail-cat-label" style={{ color: cat.color }}>{cat.label}</span>
-            {game.subcategory && <span className="detail-subcategory-label">{game.subcategory}</span>}
+            {subcategories.map(value => <span key={value} className="detail-subcategory-label">{value}</span>)}
           </div>
-          {game.skills?.length > 0 && (
-            <div className="detail-skills">
-              {game.skills.map(s => (
-                <span key={s} className="skill-tag" style={{ '--skill-color': SKILL_META[s]?.color } as React.CSSProperties}>
-                  {SKILL_META[s]?.label}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
         <div className="detail-header-actions">
           {onEdit && <button className="detail-edit-btn" onClick={onEdit}>Edit</button>}
@@ -756,42 +777,59 @@ function GameDetailInline({ game, categoryMeta, onClose, onEdit, onDelete, onNav
         </div>
       </div>
       <div className="detail-body">
-        <div className="detail-section">
+        <div className="detail-section detail-starting-position">
           <div className="detail-label">Starting Position</div>
-          <div className="detail-text">{game.startingPosition}</div>
+          <div className="detail-text">{game.startingPosition || 'Not provided.'}</div>
         </div>
         <div className="detail-section">
           <div className="detail-label">Players</div>
           <div className="detail-players">
-            {game.players.map((p: any, i: number) => (
-              <div key={i} className={`detail-player ${i === 0 ? 'detail-attacker' : 'detail-defender'}`}>
-                <div className="detail-player-role">{p.role}</div>
-                <span className={`detail-goal-type detail-goal-${getPlayerGoalType(game, i)}`}>
-                  {getPlayerGoalType(game, i) === 'continuous' ? 'Continuous success condition' : 'Terminal win condition'}
-                </span>
-                {p.objective && <div className="detail-player-row"><span className="detail-field-key">Task focus</span><span className="detail-field-val">{p.objective}</span></div>}
-                {p.winCondition && <div className="detail-player-row"><span className="detail-field-key">Condition</span><span className="detail-field-val detail-win">{p.winCondition}</span></div>}
-                {p.constraints?.length > 0 && (
-                  <div className="detail-player-row"><span className="detail-field-key">Constraints</span>
-                    <ul className="detail-constraints">{p.constraints.map((c: string, ci: number) => <li key={ci}>{c}</li>)}</ul>
+            {game.players.map((p, i) => {
+              const taskFocus = getPresentedTaskFocus(game, i)
+              return (
+                <div key={i} className={`detail-player ${i === 0 ? 'detail-attacker' : 'detail-defender'}`}>
+                  <div className="detail-player-role">{p.role}</div>
+                  <div className="detail-objective">
+                    <span className="detail-field-key">Task objective</span>
+                    <span className="detail-field-val">{getPresentedTaskObjective(game, i) || 'Not provided.'}</span>
                   </div>
-                )}
-              </div>
-            ))}
+                  {p.constraints.length > 0 && (
+                    <div className="detail-player-constraints">
+                      <span className="detail-field-key">Constraints</span>
+                      <ul className="detail-constraints">{p.constraints.map((constraint, constraintIndex) => <li key={constraintIndex}>{constraint}</li>)}</ul>
+                    </div>
+                  )}
+                  {taskFocus.length > 0 && (
+                    <div className="detail-task-focus">
+                      <span className="detail-field-key">Task focus</span>
+                      {taskFocus.length === 1
+                        ? <span className="detail-field-val">{taskFocus[0]}</span>
+                        : <ul>{taskFocus.map((focus, focusIndex) => <li key={focusIndex}>{focus}</li>)}</ul>}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
-        {game.constraints?.length > 0 && (
+        {sharedConstraints.length > 0 && (
           <div className="detail-section">
-            <div className="detail-label">Global rules</div>
+            <div className="detail-label">Shared constraints</div>
             <ul className="detail-constraints detail-global-constraints">
-              {game.constraints.map((constraint, index) => <li key={index}>{constraint}</li>)}
+              {sharedConstraints.map((constraint, index) => <li key={index}>{constraint}</li>)}
             </ul>
           </div>
         )}
-        {game.designRationale && (
-          <div className="detail-section">
-            <div className="detail-label">Rationale</div>
-            <div className="detail-rationale">{game.designRationale}</div>
+        {gameTaskFocus.length > 0 && (
+          <div className="detail-section detail-game-task-focus">
+            <div className="detail-label">Task focus</div>
+            {gameTaskFocus.length === 1 ? <div className="detail-rationale">{gameTaskFocus[0]}</div> : <ul className="detail-constraints">{gameTaskFocus.map((focus, index) => <li key={index}>{focus}</li>)}</ul>}
+          </div>
+        )}
+        {sourceRationale && (
+          <div className="detail-section detail-rationale-section">
+            <div className="detail-label">Game rationale</div>
+            <div className="detail-rationale">{sourceRationale}</div>
           </div>
         )}
         {game.progression && (
@@ -829,44 +867,43 @@ function GameDetailInline({ game, categoryMeta, onClose, onEdit, onDelete, onNav
 // ============ GAME MODAL ============
 function GameModal({ game, categoryMeta, onClose, onNavigate }: { game: Game; categoryMeta: CategoryMetaMap; onClose: () => void; onNavigate?: (g: Game) => void }) {
   const cat = categoryMeta[game.category] || categoryMeta['submissions']
+  const subcategories = getGameSubcategories(game)
+  const sourceRationale = getSourceDocumentRationale(game)
+  const sharedConstraints = getPresentedSharedConstraints(game)
+  const gameTaskFocus = getSourceDocumentGameTaskFocus(game.id)
   useEffect(() => { document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = '' } }, [])
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()} style={{ '--cat-color': cat.color } as React.CSSProperties}>
         <button className="modal-close" onClick={onClose}>✕</button>
         <div className="gm-title-bar">
-          <span style={{ fontSize: 36 }}>{cat.emoji || '🎲'}</span>
           <div>
             <h2 className="gm-title">{game.title}</h2>
-            <div className="gm-title-meta"><span>{cat.label}</span><span className="gm-dot">·</span><span>{LEVEL_META[game.level]?.label}</span><span className="gm-dot">·</span><span>{TYPE_META[game.type]?.label}</span></div>
-            {game.skills?.length > 0 && (
-              <div className="detail-skills" style={{ marginTop: 6 }}>
-                {game.skills.map(s => (
-                  <span key={s} className="skill-tag" style={{ '--skill-color': SKILL_META[s]?.color } as React.CSSProperties}>
-                    {SKILL_META[s]?.icon} {SKILL_META[s]?.label}
-                  </span>
-                ))}
-              </div>
-            )}
+            <div className="gm-title-meta"><span>{cat.label}</span>{subcategories.map(value => <React.Fragment key={value}><span className="gm-dot">·</span><span>{value}</span></React.Fragment>)}</div>
           </div>
         </div>
         <div className="gm-body">
-          <div className="gm-section"><div className="gm-section-label">📍 Starting Position</div><div className="gm-start">{game.startingPosition}</div></div>
-          <div className="gm-section"><div className="gm-section-label">⚔️ Players</div>
+          <div className="gm-section gm-start-section"><div className="gm-section-label">Starting Position</div><div className="gm-start">{game.startingPosition || 'Not provided.'}</div></div>
+          <div className="gm-section"><div className="gm-section-label">Players</div>
             <div className="gm-players-grid">
-              {game.players.map((p: any, i: number) => (
-                <div key={i} className={`gm-player-panel ${i === 0 ? 'gm-player-attacker' : 'gm-player-defender'}`}>
-                  <div className="gm-player-role">{p.role}</div>
-                  {p.objective && <div className="gm-player-field"><div className="gm-field-label">Task focus</div><div className="gm-field-text">{p.objective}</div></div>}
-                  {p.winCondition && <div className="gm-player-field"><div className="gm-field-label gm-field-win">🏆 Win</div><div className="gm-field-text gm-field-win-text">{p.winCondition}</div></div>}
-                  {p.constraints?.length > 0 && <div className="gm-player-field"><div className="gm-field-label">⚠️ Constraints</div><ul className="gm-field-list">{p.constraints.map((c: string, ci: number) => <li key={ci}>{c}</li>)}</ul></div>}
-                </div>
-              ))}
+              {game.players.map((p, i) => {
+                const taskFocus = getPresentedTaskFocus(game, i)
+                return (
+                  <div key={i} className={`gm-player-panel ${i === 0 ? 'gm-player-attacker' : 'gm-player-defender'}`}>
+                    <div className="gm-player-role">{p.role || `Player ${i + 1}`}</div>
+                    <div className="gm-player-field gm-objective-field"><div className="gm-field-label">Task objective</div><div className="gm-field-text">{getPresentedTaskObjective(game, i) || 'Not provided.'}</div></div>
+                    {p.constraints.length > 0 && <div className="gm-player-field gm-constraints-field"><div className="gm-field-label">Constraints</div><ul className="gm-field-list">{p.constraints.map((constraint, constraintIndex) => <li key={constraintIndex}>{constraint}</li>)}</ul></div>}
+                    {taskFocus.length > 0 && <div className="gm-player-field gm-focus-field"><div className="gm-field-label">Task focus</div>{taskFocus.length === 1 ? <div className="gm-field-text">{taskFocus[0]}</div> : <ul className="gm-focus-list">{taskFocus.map((focus, focusIndex) => <li key={focusIndex}>{focus}</li>)}</ul>}</div>}
+                  </div>
+                )
+              })}
             </div>
           </div>
-          {game.designRationale && <div className="gm-section"><div className="gm-section-label">💡 Rationale</div><div className="gm-rationale-box">{game.designRationale}</div></div>}
+          {sharedConstraints.length > 0 && <div className="gm-section gm-shared-constraints"><div className="gm-section-label">Shared constraints</div><ul className="gm-field-list">{sharedConstraints.map((constraint, index) => <li key={index}>{constraint}</li>)}</ul></div>}
+          {gameTaskFocus.length > 0 && <div className="gm-section gm-game-focus"><div className="gm-section-label">Task focus</div><div className="gm-rationale-box">{gameTaskFocus.join(' · ')}</div></div>}
+          {sourceRationale && <div className="gm-section gm-rationale-section"><div className="gm-section-label">Game rationale</div><div className="gm-rationale-box">{sourceRationale}</div></div>}
           {game.progression && (
-            <div className="gm-section"><div className="gm-section-label">🔗 Progression — Step {game.progression.step} of {game.progression.totalSteps}</div>
+            <div className="gm-section"><div className="gm-section-label">Progression — Step {game.progression.step} of {game.progression.totalSteps}</div>
               <div className="detail-progression">
                 <div className="prog-dots">
                   {Array.from({ length: game.progression.totalSteps }, (_, i) => (
@@ -897,8 +934,109 @@ function GameModal({ game, categoryMeta, onClose, onNavigate }: { game: Game; ca
   )
 }
 
+function taxonomyKey(label: string) {
+  return label.trim().toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+
+function TaxonomyManager({ games, categoryMeta, onClose, onChanged }: { games: Game[]; categoryMeta: CategoryMetaMap; onClose: () => void; onChanged: () => Promise<void> }) {
+  const categories = useMemo(() => Object.entries(categoryMeta).sort((a, b) => a[1].label.localeCompare(b[1].label)), [categoryMeta])
+  const [categoryKey, setCategoryKey] = useState(categories[0]?.[0] ?? '')
+  const [subcategory, setSubcategory] = useState('')
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [query, setQuery] = useState('')
+  const [gameScope, setGameScope] = useState<'selected' | 'all'>('selected')
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [newCategoryEmoji, setNewCategoryEmoji] = useState('')
+  const [newSubcategory, setNewSubcategory] = useState('')
+  const [moveTarget, setMoveTarget] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [message, setMessage] = useState('')
+  const selectedCategory = categoryMeta[categoryKey]
+  const selected = useMemo(() => new Set(selectedIds), [selectedIds])
+  const categoryGames = useMemo(() => games.filter(game => game.category === categoryKey), [games, categoryKey])
+  const subcategories = useMemo(() => Array.from(new Set([...(selectedCategory?.subcategories ?? []), ...categoryGames.flatMap(getGameSubcategories)])).sort((a, b) => a.localeCompare(b)), [selectedCategory, categoryGames])
+  const gamesInSelectedScope = useMemo(() => categoryGames.filter(game => !subcategory || gameHasSubcategory(game, subcategory)), [categoryGames, subcategory])
+  const visibleGames = useMemo(() => {
+    const matchesQuery = (game: Game) => !query.trim() || gameMatchesSearch(game, query, categoryMeta[game.category]?.label)
+    if (gameScope === 'selected') return gamesInSelectedScope.filter(matchesQuery)
+    const selectedScopeIds = new Set(gamesInSelectedScope.map(game => game.id))
+    return games.filter(matchesQuery).sort((a, b) => Number(selectedScopeIds.has(b.id)) - Number(selectedScopeIds.has(a.id)) || a.title.localeCompare(b.title))
+  }, [games, gameScope, gamesInSelectedScope, query, categoryMeta])
+
+  useEffect(() => {
+    if (!categoryMeta[categoryKey]) setCategoryKey(categories[0]?.[0] ?? '')
+  }, [categories, categoryKey, categoryMeta])
+  useEffect(() => {
+    setSubcategory('')
+    setMoveTarget(categories.find(([key]) => key !== categoryKey)?.[0] ?? '')
+    // Category metadata refreshes in the background; only a deliberate category
+    // change should reset the selected subcategory.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryKey])
+
+  const run = async (work: () => Promise<void>, success: string) => {
+    setBusy(true); setMessage('')
+    try { await work(); await onChanged(); setMessage(success) }
+    catch (error) { setMessage(error instanceof Error ? error.message : 'Unable to update the game library.') }
+    finally { setBusy(false) }
+  }
+  const saveSubcategories = (values: string[]) => selectedCategory
+    ? createSharedCategory(categoryKey, { ...selectedCategory, subcategories: values })
+    : Promise.resolve(undefined)
+  const updateSelected = (transform: (game: Game) => Game, success: string) => {
+    const updates = games.filter(game => selected.has(game.id)).map(transform)
+    if (updates.length) void run(() => bulkUpdateSharedGames(updates).then(() => undefined), success)
+  }
+  const toggleVisible = () => {
+    const clear = visibleGames.length > 0 && visibleGames.every(game => selected.has(game.id))
+    setSelectedIds(current => clear ? current.filter(id => !visibleGames.some(game => game.id === id)) : Array.from(new Set([...current, ...visibleGames.map(game => game.id)])))
+  }
+  const createCategory = () => {
+    const key = taxonomyKey(newCategoryName)
+    if (!key || !newCategoryEmoji.trim()) { setMessage('Add a category name and emoji.'); return }
+    if (categoryMeta[key]) { setMessage('A category with that name already exists.'); return }
+    void run(async () => {
+      await createSharedCategory(key, { label: newCategoryName.trim(), emoji: newCategoryEmoji.trim(), color: '#00ff88', description: `${newCategoryName.trim()} games`, subcategories: [] })
+      setCategoryKey(key); setNewCategoryName(''); setNewCategoryEmoji('')
+    }, 'Category created.')
+  }
+  const createSubcategory = () => {
+    const value = newSubcategory.trim()
+    if (!value || !selectedCategory) return
+    if (subcategories.some(existing => existing.toLowerCase() === value.toLowerCase())) { setMessage('That subcategory already exists.'); return }
+    void run(async () => { await saveSubcategories([...subcategories, value]); setNewSubcategory(''); setSubcategory(value) }, 'Subcategory created.')
+  }
+  const removeSubcategory = () => {
+    if (!subcategory || !window.confirm(`Delete “${subcategory}” and remove it from every game?`)) return
+    const affected = categoryGames.filter(game => gameHasSubcategory(game, subcategory)).map(game => ({ ...game, subcategory: '', subcategories: getManualGameSubcategories(game).filter(value => value !== subcategory) }))
+    void run(async () => { if (affected.length) await bulkUpdateSharedGames(affected); await saveSubcategories(subcategories.filter(value => value !== subcategory)); setSubcategory('') }, 'Subcategory deleted.')
+  }
+  const removeCategory = () => {
+    if (!selectedCategory || categoryGames.length || !window.confirm(`Delete the empty category “${selectedCategory.label}”?`)) return
+    void run(() => deleteSharedCategory(categoryKey), 'Category deleted.')
+  }
+
+  return <div className="modal-overlay taxonomy-overlay" onPointerDown={event => { if (event.target === event.currentTarget && !busy) onClose() }}>
+    <section className="taxonomy-manager" role="dialog" aria-modal="true" aria-labelledby="taxonomy-title">
+      <header className="taxonomy-header"><div><span className="atlas-eyebrow">Library organization</span><h2 id="taxonomy-title">Categories &amp; subcategories</h2></div><button type="button" className="detail-close-btn" onClick={onClose} disabled={busy}>Close</button></header>
+      <div className="taxonomy-layout">
+        <aside className="taxonomy-categories"><h3>Categories</h3><div className="taxonomy-category-list">{categories.map(([key, meta]) => <button key={key} type="button" aria-pressed={categoryKey === key} onClick={() => setCategoryKey(key)}><span>{meta.emoji}</span><strong>{meta.label}</strong><b>{games.filter(game => game.category === key).length}</b></button>)}</div>
+          <div className="taxonomy-create"><h4>New category</h4><div className="taxonomy-inline-fields"><input aria-label="Category emoji" value={newCategoryEmoji} onChange={event => setNewCategoryEmoji(event.target.value)} placeholder="Emoji" /><input aria-label="Category name" value={newCategoryName} onChange={event => setNewCategoryName(event.target.value)} placeholder="Category name" /></div><button type="button" onClick={createCategory} disabled={busy}>Create category</button></div>
+          <button type="button" className="taxonomy-danger" onClick={removeCategory} disabled={busy || categoryGames.length > 0}>Delete category</button>{categoryGames.length > 0 && <small>Move all {categoryGames.length} games out before deleting.</small>}
+        </aside>
+        <div className="taxonomy-workspace">
+          <div className="taxonomy-subcategories"><div><h3>{selectedCategory?.emoji} {selectedCategory?.label}</h3><p>Choose a subcategory, or work with the whole category.</p></div><div className="taxonomy-subcategory-list"><button type="button" aria-pressed={!subcategory} onClick={() => setSubcategory('')}>Whole category</button>{subcategories.map(value => <button key={value} type="button" aria-pressed={subcategory === value} onClick={() => setSubcategory(value)}>{value} <b>{categoryGames.filter(game => gameHasSubcategory(game, value)).length}</b></button>)}</div><div className="taxonomy-add-subcategory"><input value={newSubcategory} onChange={event => setNewSubcategory(event.target.value)} placeholder="New subcategory" /><button type="button" onClick={createSubcategory} disabled={busy || !newSubcategory.trim()}>Add</button>{subcategory && <button type="button" className="taxonomy-danger" onClick={removeSubcategory} disabled={busy}>Delete “{subcategory}”</button>}</div></div>
+          <div className="taxonomy-game-tools"><label><span>Find games</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search the library" /></label><div className="taxonomy-scope-switch" role="group" aria-label="Games to show"><button type="button" aria-pressed={gameScope === 'selected'} onClick={() => setGameScope('selected')}>Selected category{subcategory ? ' + subcategory' : ''}</button><button type="button" aria-pressed={gameScope === 'all'} onClick={() => setGameScope('all')}>All games</button></div><button type="button" onClick={toggleVisible}>{visibleGames.length > 0 && visibleGames.every(game => selected.has(game.id)) ? 'Clear shown' : 'Select all shown'}</button><span>{selected.size} selected</span></div>
+          <div className="taxonomy-game-list">{visibleGames.map(game => <label key={game.id} className={selected.has(game.id) ? 'is-selected' : ''}><input type="checkbox" checked={selected.has(game.id)} onChange={() => setSelectedIds(current => selected.has(game.id) ? current.filter(id => id !== game.id) : [...current, game.id])} /><span><strong>{game.title}</strong><small>{categoryMeta[game.category]?.label ?? game.category}{getGameSubcategories(game).length ? ` · ${getGameSubcategories(game).join(', ')}` : ''}</small></span></label>)}</div>
+          <footer className="taxonomy-actions">{subcategory ? <><button type="button" className="btn btn-primary" disabled={busy || !selected.size} onClick={() => updateSelected(game => ({ ...game, category: categoryKey, subcategory: '', subcategories: Array.from(new Set([...(game.category === categoryKey ? getManualGameSubcategories(game) : []), subcategory])) }), `Added ${selected.size} games to ${subcategory}.`)}>Add to “{subcategory}”</button><button type="button" className="btn btn-secondary" disabled={busy || !selected.size} onClick={() => updateSelected(game => game.category !== categoryKey ? game : ({ ...game, subcategory: '', subcategories: getManualGameSubcategories(game).filter(value => value !== subcategory) }), `Removed ${subcategory} from selected games.`)}>Remove “{subcategory}”</button></> : <><button type="button" className="btn btn-primary" disabled={busy || !selected.size} onClick={() => updateSelected(game => ({ ...game, category: categoryKey, subcategory: '', subcategories: game.category === categoryKey ? getManualGameSubcategories(game) : [] }), `Moved ${selected.size} games to ${selectedCategory?.label}.`)}>Move to {selectedCategory?.label}</button><select value={moveTarget} onChange={event => setMoveTarget(event.target.value)} aria-label="Destination category">{categories.filter(([key]) => key !== categoryKey).map(([key, meta]) => <option key={key} value={key}>Move out to {meta.label}</option>)}</select><button type="button" className="btn btn-secondary" disabled={busy || !selected.size || !moveTarget} onClick={() => updateSelected(game => game.category !== categoryKey ? game : ({ ...game, category: moveTarget, subcategory: '', subcategories: [] }), `Moved selected games out of ${selectedCategory?.label}.`)}>Move out</button></>}{message && <p role="status">{message}</p>}</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+}
+
 // ============ LIBRARY ============
-function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categoryMeta, refreshSharedGames, onDeleteGame }: { isAdmin: boolean; onSelect: (g: Game) => void; customGames: Game[]; deletedSeedGameIds: string[]; categoryMeta: CategoryMetaMap; refreshSharedGames: () => Promise<void>; onDeleteGame: (id: string) => Promise<void> }) {
+function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, sessions, categoryMeta, refreshSharedGames, onDeleteGame, onGamePublished }: { isAdmin: boolean; onSelect: (g: Game) => void; customGames: Game[]; deletedSeedGameIds: string[]; sessions: SessionPlan[]; categoryMeta: CategoryMetaMap; refreshSharedGames: () => Promise<void>; onDeleteGame: (id: string) => Promise<void>; onGamePublished: () => void }) {
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState('all')
   const [subcategory, setSubcategory] = useState('all')
@@ -908,6 +1046,7 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
   const [sort, setSort] = useState<LibrarySort>('recommended')
   const [focused, setFocused] = useState<string | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [taxonomyOpen, setTaxonomyOpen] = useState(false)
   const [liveDrafts, setLiveDrafts] = useState<GameDraftSummary[]>([])
   const [activeDraft, setActiveDraft] = useState<GameDraft | null>(null)
   const [liveDraftError, setLiveDraftError] = useState('')
@@ -919,21 +1058,24 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
   const categoryLabels = useMemo(() => Object.fromEntries(Object.entries(categoryMeta).map(([key, meta]) => [key, meta.label])), [categoryMeta])
 
   const detailShellRef = useRef<HTMLDivElement>(null)
-  const allGames = useMemo(() => [...GAMES.filter(game => !deletedSeedGameIds.includes(game.id)), ...customGames], [customGames, deletedSeedGameIds])
+  const allGames = useMemo(() => mergeGamesWithOverrides(GAMES, customGames, deletedSeedGameIds), [customGames, deletedSeedGameIds])
   const categoryCounts = useMemo(() => countGamesByCategory(allGames), [allGames])
+  const gameUsageCounts = useMemo(() => countGameUsage(sessions), [sessions])
 
   const categoriesPresent = useMemo(() => {
     const s = new Set(allGames.map(g => g.category))
     return Object.entries(categoryMeta).filter(([k]) => s.has(k))
   }, [allGames, categoryMeta])
 
-  const subcategories = useMemo(() => Array.from(new Set(
-    allGames
+  const subcategories = useMemo(() => Array.from(new Set([
+    ...(activeTab !== 'all' ? categoryMeta[activeTab]?.subcategories ?? [] : []),
+    ...allGames
       .filter(game => activeTab === 'all' || game.category === activeTab)
-      .map(game => game.subcategory?.trim())
-      .filter((value): value is string => Boolean(value)),
-  )).sort((a, b) => a.localeCompare(b)), [allGames, activeTab])
-
+      .flatMap(getGameSubcategories),
+  ])).sort((a, b) => a.localeCompare(b)), [allGames, activeTab, categoryMeta])
+  const uncategorizedCount = useMemo(() => allGames.filter(game =>
+    (activeTab === 'all' || game.category === activeTab) && getGameSubcategories(game).length === 0,
+  ).length, [allGames, activeTab])
   const filtered = useMemo(() => filterGames(allGames, {
     category: activeTab,
     level,
@@ -941,8 +1083,12 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
     skill: skillFilter,
     query: search,
     categoryLabels,
-  }).filter(game => subcategory === 'all' || game.subcategory?.trim() === subcategory), [allGames, activeTab, subcategory, level, type, skillFilter, search, categoryLabels])
-  const sortedGames = useMemo(() => sortGames(filtered, sort, categoryLabels), [filtered, sort, categoryLabels])
+  }).filter(game => {
+    if (subcategory === 'all') return true
+    if (subcategory === UNCATEGORIZED_SUBCATEGORY) return getGameSubcategories(game).length === 0
+    return gameHasSubcategory(game, subcategory)
+  }), [allGames, activeTab, subcategory, level, type, skillFilter, search, categoryLabels])
+  const sortedGames = useMemo(() => sortGames(filtered, sort, categoryLabels, gameUsageCounts), [filtered, sort, categoryLabels, gameUsageCounts])
 
   const focusedGame = useMemo(() => {
     if (!focused) return null
@@ -987,6 +1133,19 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
     }
   }, [isAdmin])
 
+  const discardEmptyLiveDrafts = async () => {
+    const emptyDrafts = liveDrafts.filter(draft => draft.isEmpty)
+    if (!emptyDrafts.length || !window.confirm(`Discard ${emptyDrafts.length} empty ${emptyDrafts.length === 1 ? 'draft' : 'drafts'}?`)) return
+
+    setLiveDraftError('')
+    try {
+      await Promise.all(emptyDrafts.map(draft => deleteGameDraft(draft.id)))
+      await refreshLiveDrafts()
+    } catch (error) {
+      setLiveDraftError(error instanceof Error ? error.message : 'Unable to discard the empty drafts.')
+    }
+  }
+
   useEffect(() => {
     if (!isAdmin) {
       liveDraftRefreshMountedRef.current = false
@@ -1024,7 +1183,13 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
     setLiveDraftError('')
     try {
       const isCustom = customIds.has(game.id)
-      const draftGame = isCustom ? game : { ...game, id: `custom-${crypto.randomUUID()}` }
+      const draftGame = isCustom ? game : {
+        ...game,
+        players: game.players.map((player, index) => ({
+          ...player,
+          taskFocus: [...getSourceDocumentTaskFocus(game.id, index)],
+        })),
+      }
       const draft = await createGameDraft(createGameDraftFromGame(
         `draft-${crypto.randomUUID()}`,
         draftGame,
@@ -1077,9 +1242,10 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
     closeActiveDraft()
     if (state === 'published') {
       await refreshSharedGames()
+      onGamePublished()
     }
     await refreshLiveDrafts()
-    if (game) setFocused(game.id)
+    if (game && state !== 'published') setFocused(game.id)
   }
 
   useEffect(() => {
@@ -1151,10 +1317,11 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
       <div className="atlas-toolbar">
         <label className="atlas-search">
           <span>Search games</span>
-          <input value={search} onChange={event => setSearch(event.target.value)} placeholder="Position, task focus, skill, or game name" />
+          <input value={search} onChange={event => setSearch(event.target.value)} placeholder="Title, rationale, or starting position" />
         </label>
         <button className="atlas-filter-toggle" type="button" aria-expanded={filtersOpen} aria-controls="atlas-filter-panel" onClick={() => setFiltersOpen(open => !open)}>Filters</button>
         {isAdmin && <button className="atlas-create" type="button" onClick={() => void openNewDraft()}>Create game</button>}
+        {isAdmin && <button className="atlas-organize" type="button" onClick={() => setTaxonomyOpen(true)}>Organize categories</button>}
       </div>
       <div className="atlas-categories">
         <button type="button" aria-pressed={activeTab === 'all'} onClick={() => chooseCategory('all')}>All <b>{categoryCounts.all}</b></button>
@@ -1178,16 +1345,17 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
             <option value="all">All skills</option>
             {SKILL_ORDER.map(skill => <option key={skill} value={skill}>{SKILL_META[skill].label}</option>)}
           </select></label>
-          <label>Subcategory <select value={subcategory} onChange={event => setSubcategory(event.target.value)} disabled={subcategories.length === 0}>
+          <label>Subcategory <select value={subcategory} onChange={event => setSubcategory(event.target.value)} disabled={subcategories.length === 0 && uncategorizedCount === 0}>
             <option value="all">All subcategories</option>
             {subcategories.map(value => <option key={value} value={value}>{value}</option>)}
+            {uncategorizedCount > 0 && <option value={UNCATEGORIZED_SUBCATEGORY}>Other games</option>}
           </select></label>
         </div>
       )}
       <div className="atlas-active-filters">
         {search !== '' && <button type="button" aria-label={`Clear search: ${search}`} onClick={() => setSearch('')}>Search: “{search}” <span aria-hidden="true">×</span></button>}
         {activeTab !== 'all' && <button type="button" aria-label={`Clear category: ${categoryMeta[activeTab]?.label}`} onClick={() => chooseCategory('all')}>{categoryMeta[activeTab]?.label} <span aria-hidden="true">×</span></button>}
-        {subcategory !== 'all' && <button type="button" aria-label={`Clear subcategory: ${subcategory}`} onClick={() => setSubcategory('all')}>{subcategory} <span aria-hidden="true">×</span></button>}
+        {subcategory !== 'all' && <button type="button" aria-label={`Clear subcategory: ${subcategory === UNCATEGORIZED_SUBCATEGORY ? 'Other games' : subcategory}`} onClick={() => setSubcategory('all')}>{subcategory === UNCATEGORIZED_SUBCATEGORY ? 'Other games' : subcategory} <span aria-hidden="true">×</span></button>}
         {level !== 'all' && <button type="button" aria-label={`Clear level: ${LEVEL_META[level]?.label}`} onClick={() => setLevel('all')}>{LEVEL_META[level]?.label} <span aria-hidden="true">×</span></button>}
         {type !== 'all' && <button type="button" aria-label={`Clear game type: ${TYPE_META[type]?.label}`} onClick={() => setType('all')}>{TYPE_META[type]?.label} <span aria-hidden="true">×</span></button>}
         {skillFilter !== 'all' && <button type="button" aria-label={`Clear skill: ${SKILL_META[skillFilter as Skill]?.label}`} onClick={() => setSkillFilter('all')}>{SKILL_META[skillFilter as Skill]?.label} <span aria-hidden="true">×</span></button>}
@@ -1200,7 +1368,10 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
               <span className="live-drafts-kicker">Collaborative workbench</span>
               <h2 id="live-drafts-title">Live drafts</h2>
             </div>
-            <span className="live-draft-status"><span className="live-draft-status-dot" aria-hidden="true" />Live updates</span>
+            <div className="live-drafts-actions">
+              <span className="live-draft-status"><span className="live-draft-status-dot" aria-hidden="true" />Live updates</span>
+              {liveDrafts.some(draft => draft.isEmpty) && <button className="live-draft-action live-draft-discard-empty" type="button" onClick={() => void discardEmptyLiveDrafts()}>Discard empty drafts</button>}
+            </div>
           </div>
           {liveDraftError && (
             <div className="live-drafts-error" role="alert">
@@ -1214,7 +1385,7 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
                 <div className="live-draft-row" key={draft.id}>
                   <div className="live-draft-copy">
                     <strong>{draft.title.trim() || 'Untitled game'}</strong>
-                    <span>Active draft</span>
+                    <span>{draft.isEmpty ? 'Empty draft' : 'Active draft'}</span>
                   </div>
                   <button className="live-draft-action" type="button" onClick={() => void openExistingDraft(draft.id)}>Open draft</button>
                 </div>
@@ -1225,7 +1396,13 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
           )}
         </section>
       )}
-      {sortedGames[0] && <AtlasFeaturedGame game={sortedGames[0]} categoryMeta={categoryMeta} onOpen={event => openFocusedGame(sortedGames[0].id, event.currentTarget)} />}
+      {activeTab !== 'all' && (subcategories.length > 0 || uncategorizedCount > 0) && <section className="atlas-subcategory-picker" aria-label={`${categoryMeta[activeTab]?.label} subcategories`}>
+        <div className="atlas-subcategory-options">
+          <button type="button" aria-pressed={subcategory === 'all'} onClick={() => setSubcategory('all')}>All <b>{categoryCounts[activeTab]}</b></button>
+          {subcategories.map(value => <button key={value} type="button" aria-pressed={subcategory === value} onClick={() => setSubcategory(value)}>{value} <b>{allGames.filter(game => game.category === activeTab && gameHasSubcategory(game, value)).length}</b></button>)}
+          {uncategorizedCount > 0 && <button type="button" aria-pressed={subcategory === UNCATEGORIZED_SUBCATEGORY} onClick={() => setSubcategory(UNCATEGORIZED_SUBCATEGORY)}>Other games <b>{uncategorizedCount}</b></button>}
+        </div>
+      </section>}
       <div className="atlas-results-head">
         <div className="atlas-results-copy">
           <strong>Browse the library</strong>
@@ -1234,7 +1411,7 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
         <label className="atlas-sort">
           <span>Sort games</span>
           <select value={sort} onChange={event => setSort(event.target.value as LibrarySort)}>
-            <option value="recommended">Recommended</option>
+            <option value="recommended">Most used</option>
             <option value="title">Title A–Z</option>
             <option value="category">Category</option>
           </select>
@@ -1273,12 +1450,13 @@ function LibraryPage({ isAdmin, onSelect, customGames, deletedSeedGameIds, categ
         </div>
       </div>
     )}
-    {activeDraft && <GameForm key={activeDraft.id} draft={activeDraft} categoryMeta={categoryMeta} onTerminal={handleDraftTerminal} onClose={closeActiveDraft} />}
+    {activeDraft && <GameForm key={activeDraft.id} draft={activeDraft} games={allGames} categoryMeta={categoryMeta} onTerminal={handleDraftTerminal} onClose={closeActiveDraft} />}
+    {isAdmin && taxonomyOpen && <TaxonomyManager games={allGames} categoryMeta={categoryMeta} onClose={() => setTaxonomyOpen(false)} onChanged={refreshSharedGames} />}
   </>)
 }
 
 // ============ BUILDER ============
-function SortableSessionSlot({ slot, index, game, categoryMeta, onDurationChange, onRemove }: { slot: SessionGame; index: number; game: Game; categoryMeta: CategoryMetaMap; onDurationChange: (duration: number) => void; onRemove: () => void }) {
+function SortableSessionSlot({ slot, index, game, categoryMeta, onOpen, onDurationChange, onRemove }: { slot: SessionGame; index: number; game: Game; categoryMeta: CategoryMetaMap; onOpen: () => void; onDurationChange: (duration: number) => void; onRemove: () => void }) {
   const { attributes, listeners, setActivatorNodeRef, setNodeRef, transform, transition, isDragging } = useSortable({ id: slot.gameId })
 
   return (
@@ -1288,9 +1466,10 @@ function SortableSessionSlot({ slot, index, game, categoryMeta, onDurationChange
       </button>
       <div className="session-slot-num">{index + 1}</div>
       <div className="session-slot-info">
-        <div className="session-slot-title">{game.title}</div>
+        <button type="button" className="session-slot-title" onClick={onOpen}>{game.title}</button>
         <div className="session-slot-cat">{categoryMeta[game.category]?.label}</div>
       </div>
+      <button type="button" className="session-slot-view" onClick={onOpen} aria-label={`View details for ${game.title}`}>View game</button>
       <div className="session-slot-duration">
         <input type="number" value={slot.duration} onChange={event => onDurationChange(parseInt(event.target.value) || 0)} min={1} max={30} /><span style={{ fontSize: 12, color: 'var(--text-muted)' }}>min</span>
       </div>
@@ -1299,10 +1478,10 @@ function SortableSessionSlot({ slot, index, game, categoryMeta, onDurationChange
   )
 }
 
-function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDiscarded, onClose, onRefreshGames, onSelect }: { draft: SessionDraft; games: Game[]; categoryMeta: CategoryMetaMap; isAdmin: boolean; onPublished: (session: SessionPlan) => void; onDiscarded: () => void; onClose: () => void; onRefreshGames: () => Promise<void>; onSelect: (g: Game) => void }) {
+function BuilderPage({ draft, games, sessions, categoryMeta, isAdmin, onPublished, onDiscarded, onClose, onRefreshGames, onSelect, onGamePublished, onOpenClassSetupGuide }: { draft: SessionDraft; games: Game[]; sessions: SessionPlan[]; categoryMeta: CategoryMetaMap; isAdmin: boolean; onPublished: (session: SessionPlan) => void; onDiscarded: () => void; onClose: () => void; onRefreshGames: () => Promise<void>; onSelect: (g: Game) => void; onGamePublished: () => void; onOpenClassSetupGuide: () => void }) {
   const liveDraft = useLiveSessionDraft(draft, onPublished)
   const { session } = liveDraft.draft
-  const { title, focus, notes, games: slots } = session
+  const { title, date, focus, notes, games: slots } = session
   const levelB = session.level === 'all-levels' ? 'all-levels' : 'beginner'
   const terminalHandledRef = useRef(false)
   const slotsRef = useRef(slots)
@@ -1311,6 +1490,7 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
   const [sidebarSubcategory, setSidebarSubcategory] = useState('all')
   const [sidebarLevel, setSidebarLevel] = useState('all')
   const [sidebarType, setSidebarType] = useState('all')
+  const [automaticToolsOpen, setAutomaticToolsOpen] = useState(false)
   const [hoveredGame, setHoveredGame] = useState<Game | null>(null)
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 })
   const [isSavingSession, setIsSavingSession] = useState(false)
@@ -1318,6 +1498,7 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
   const [activeDraft, setActiveDraft] = useState<GameDraft | null>(null)
   const [draftError, setDraftError] = useState('')
   const categoryLabels = useMemo(() => Object.fromEntries(Object.entries(categoryMeta).map(([key, meta]) => [key, meta.label])), [categoryMeta])
+  const gameUsageCounts = useMemo(() => countGameUsage(sessions), [sessions])
 
   useEffect(() => {
     const availableIds = new Set(games.map(game => game.id))
@@ -1357,6 +1538,7 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
     try {
       await onRefreshGames()
       updateSlots(current => current.some(slot => slot.gameId === game.id) ? current : [...current, { gameId: game.id, duration: 6 }])
+      onGamePublished()
     } catch (error) {
       setDraftError(error instanceof Error ? error.message : 'The game was published, but the class builder could not refresh yet.')
     }
@@ -1378,6 +1560,15 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
 
   const saveSession = async () => {
     if (slots.length === 0) return
+    if (!title.trim()) {
+      setSaveSessionError('Add a session title before publishing.')
+      return
+    }
+    const parsedDate = new Date(`${date}T00:00:00Z`)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) {
+      setSaveSessionError('Choose a valid session date before publishing.')
+      return
+    }
     setIsSavingSession(true)
     setSaveSessionError('')
     try {
@@ -1398,18 +1589,21 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
   const sidebarSubcategories = useMemo(() => Array.from(new Set(
     games
       .filter(game => sidebarCategory === 'all' || game.category === sidebarCategory)
-      .map(game => game.subcategory?.trim())
-      .filter((value): value is string => Boolean(value)),
+      .flatMap(getGameSubcategories),
   )).sort((a, b) => a.localeCompare(b)), [games, sidebarCategory])
-
+  const sidebarUncategorizedCount = useMemo(() => games.filter(game =>
+    (sidebarCategory === 'all' || game.category === sidebarCategory) && getGameSubcategories(game).length === 0,
+  ).length, [games, sidebarCategory])
   const filteredSidebar = useMemo(() => games.filter(g => {
     if (sidebarCategory !== 'all' && g.category !== sidebarCategory) return false
-    if (sidebarSubcategory !== 'all' && g.subcategory?.trim() !== sidebarSubcategory) return false
+    if (sidebarSubcategory === UNCATEGORIZED_SUBCATEGORY && getGameSubcategories(g).length > 0) return false
+    if (sidebarSubcategory !== 'all' && sidebarSubcategory !== UNCATEGORIZED_SUBCATEGORY && !gameHasSubcategory(g, sidebarSubcategory)) return false
     if (sidebarLevel !== 'all' && g.level !== sidebarLevel) return false
     if (sidebarType !== 'all' && g.type !== sidebarType) return false
     if (!gameMatchesSearch(g, sidebarSearch, categoryLabels[g.category])) return false
     return true
   }), [games, sidebarSearch, sidebarCategory, sidebarSubcategory, sidebarLevel, sidebarType, categoryLabels])
+  const sortedSidebarGames = useMemo(() => sortGames(filteredSidebar, 'recommended', categoryLabels, gameUsageCounts), [filteredSidebar, categoryLabels, gameUsageCounts])
 
   // Multi-suggestion engine: progression + balance + skill match + role flip
   const suggestions = useMemo(() => {
@@ -1457,8 +1651,6 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
     setGenResult({ ...genResult, games: newGames })
   }
 
-  if (!isAdmin) return <div className="admin-required"><h2>Admin access required</h2><p>Sign in from the upper-right corner to build or change sessions.</p></div>
-
   return (
     <div className="builder-layout">
       <div className="builder-main">
@@ -1473,6 +1665,7 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
           {liveDraft.error && <p className="builder-session-error" role="alert">{liveDraft.error.message}</p>}
           <div className="session-form">
             <div className="session-form-field"><label>Title</label><input value={title} onFocus={() => liveDraft.beginField('title')} onBlur={() => liveDraft.endField('title')} onChange={e => liveDraft.update({ path: 'title', value: e.target.value })} placeholder="Session title" /></div>
+            <div className="session-form-field"><label htmlFor="session-date">Date</label><input id="session-date" type="date" required value={date.slice(0, 10)} onFocus={() => liveDraft.beginField('date')} onBlur={() => liveDraft.endField('date')} onChange={e => liveDraft.update({ path: 'date', value: e.target.value })} /></div>
             <div className="session-form-field"><label>Level</label><select value={levelB} onFocus={() => liveDraft.beginField('level')} onBlur={() => liveDraft.endField('level')} onChange={e => liveDraft.update({ path: 'level', value: e.target.value })}>
               <option value="beginner">Beginner</option><option value="all-levels">All Levels</option>
             </select></div>
@@ -1481,8 +1674,19 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
             <div className="session-form-field session-form-field-full"><label>Notes</label><textarea value={notes} onFocus={() => liveDraft.beginField('notes')} onBlur={() => liveDraft.endField('notes')} onChange={e => liveDraft.update({ path: 'notes', value: e.target.value })} placeholder="Session notes" /></div>
           </div>
         </div>
-        {/* Smart Session Generator */}
-        <div className="generator-panel">
+        <section className="builder-setup-guide" aria-labelledby="builder-setup-guide-title">
+          <div>
+            <p className="sessions-eyebrow">Need help planning?</p>
+            <h3 id="builder-setup-guide-title">Set up a class around a clear problem.</h3>
+            <p>Choose a starting condition, give each player a goal, then order a few games that let the class revisit the problem with increasing freedom.</p>
+          </div>
+          <a href="#coaching/session-structure" onClick={event => { event.preventDefault(); onOpenClassSetupGuide() }}>Read the Session Plan guide <span aria-hidden="true">→</span></a>
+        </section>
+        <button type="button" className="builder-automatic-tools-toggle" aria-expanded={automaticToolsOpen} aria-controls="builder-session-generator builder-game-suggestions" onClick={() => setAutomaticToolsOpen(open => !open)}>
+          <span><strong>Automatic planning tools</strong><small>Session generator and game suggestions</small></span>
+          <b aria-hidden="true">{automaticToolsOpen ? '−' : '+'}</b>
+        </button>
+        {automaticToolsOpen && <div className="generator-panel" id="builder-session-generator">
           <div className="generator-header">
             <span className="generator-header-icon">✨</span>
             <span className="generator-header-title">Smart Session Generator</span>
@@ -1560,16 +1764,20 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
           {!genResult && (
             <div className="gen-empty">Pick duration, level, and focus — then generate a CLA-structured session.</div>
           )}
-        </div>
+        </div>}
         <DndContext sensors={dragSensors} collisionDetection={closestCenter} onDragEnd={reorderSlot}>
           <SortableContext items={slots.map(slot => slot.gameId)} strategy={verticalListSortingStrategy}>
             <div className="session-slots" aria-label="Session game order">
+              <div className="session-slots-heading">
+                <div><p className="sessions-eyebrow">Class content</p><h3>Selected games</h3></div>
+                <span>{slots.length} {slots.length === 1 ? 'game' : 'games'} · {totalDuration} min</span>
+              </div>
               {slots.length === 0 ? (
                 <div className="empty-state"><div className="empty-state-icon">·</div><h3>No games selected</h3><p>Pick games from the sidebar.</p></div>
               ) : slots.map((slot, idx) => {
                 const game = games.find(g => g.id === slot.gameId)
                 if (!game) return null
-                return <SortableSessionSlot key={slot.gameId} slot={slot} index={idx} game={game} categoryMeta={categoryMeta} onDurationChange={duration => updateSlot(idx, 'duration', duration)} onRemove={() => removeSlot(idx)} />
+                return <SortableSessionSlot key={slot.gameId} slot={slot} index={idx} game={game} categoryMeta={categoryMeta} onOpen={() => onSelect(game)} onDurationChange={duration => updateSlot(idx, 'duration', duration)} onRemove={() => removeSlot(idx)} />
               })}
             </div>
           </SortableContext>
@@ -1579,8 +1787,8 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
           <div className="summary-row"><span>Duration</span><span>{totalDuration} min</span></div>
           <div className="summary-row"><span>Categories</span><span>{new Set(slots.map(s => games.find(g => g.id === s.gameId)?.category)).size}</span></div>
         </div>)}
-        {suggestions.length > 0 && (
-          <div className="suggest-panel">
+        {automaticToolsOpen && suggestions.length > 0 && (
+          <div className="suggest-panel" id="builder-game-suggestions">
             <div className="suggest-header">
               <span style={{ fontSize: 16 }}>💡</span>
               <span style={{ fontSize: 14, fontWeight: 700 }}>Suggested Games</span>
@@ -1611,16 +1819,16 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
             </div>
           </div>
         )}
-        {slots.length > 0 && <button className="btn btn-primary" onClick={() => { void saveSession() }} disabled={isSavingSession} style={{ width: '100%', justifyContent: 'center', marginTop: 16, padding: '12px 20px' }}>{isSavingSession ? 'Publishing shared session…' : `Publish session — ${slots.length} games, ${totalDuration} min`}</button>}
+        {slots.length > 0 && <button className="btn btn-primary builder-publish-session" onClick={() => { void saveSession() }} disabled={isSavingSession} style={{ width: '100%', justifyContent: 'center', marginTop: 16, padding: '12px 20px' }}>{isSavingSession ? 'Publishing shared session…' : `Publish session — ${slots.length} games, ${totalDuration} min`}</button>}
         {saveSessionError && <p className="builder-session-error" role="alert">{saveSessionError}</p>}
       </div>
       <aside className="builder-sidebar">
         <div className="builder-sidebar-heading">
           <h3>Add Games</h3>
-          <button type="button" className="btn btn-secondary builder-create-game" onClick={() => void openNewGameDraft()}>Create game</button>
+          {isAdmin && <button type="button" className="btn btn-secondary builder-create-game" onClick={() => void openNewGameDraft()}>Create game</button>}
         </div>
         {draftError && <p className="builder-draft-error" role="alert">{draftError}</p>}
-        <input className="search-input" style={{ marginBottom: 8 }} placeholder="Search all fields…" value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} />
+        <input className="search-input" style={{ marginBottom: 8 }} placeholder="Title, rationale, or starting position…" value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} />
         <label className="builder-category-filter">
           <span>Category</span>
           <select className="builder-category-select" value={sidebarCategory} onChange={e => { setSidebarCategory(e.target.value); setSidebarSubcategory('all') }}>
@@ -1632,9 +1840,10 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
         </label>
         <label className="builder-category-filter">
           <span>Subcategory</span>
-          <select className="builder-category-select" value={sidebarSubcategory} onChange={e => setSidebarSubcategory(e.target.value)} disabled={sidebarSubcategories.length === 0}>
+          <select className="builder-category-select" value={sidebarSubcategory} onChange={e => setSidebarSubcategory(e.target.value)} disabled={sidebarSubcategories.length === 0 && sidebarUncategorizedCount === 0}>
             <option value="all">All subcategories</option>
             {sidebarSubcategories.map(value => <option key={value} value={value}>{value}</option>)}
+            {sidebarUncategorizedCount > 0 && <option value={UNCATEGORIZED_SUBCATEGORY}>Other games</option>}
           </select>
         </label>
         <div className="builder-filters">
@@ -1650,18 +1859,22 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
             <option value="mixed">Mixed</option>
           </select>
         </div>
-        <div className="builder-count">{filteredSidebar.length} games</div>
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          {filteredSidebar.map(game => {
+        <div className="builder-count">{sortedSidebarGames.length} games · most used first</div>
+        {sidebarCategory !== 'all' && (sidebarSubcategories.length > 0 || sidebarUncategorizedCount > 0) && <div className="builder-subcategory-picker" aria-label="Filter by subcategory">
+          <span>Subcategories</span>
+          <button type="button" aria-pressed={sidebarSubcategory === 'all'} onClick={() => setSidebarSubcategory('all')}>All <b>{games.filter(game => game.category === sidebarCategory).length}</b></button>
+          {sidebarSubcategories.map(value => <button key={value} type="button" aria-pressed={sidebarSubcategory === value} onClick={() => setSidebarSubcategory(value)}>{value} <b>{games.filter(game => game.category === sidebarCategory && gameHasSubcategory(game, value)).length}</b></button>)}
+          {sidebarUncategorizedCount > 0 && <button type="button" aria-pressed={sidebarSubcategory === UNCATEGORIZED_SUBCATEGORY} onClick={() => setSidebarSubcategory(UNCATEGORIZED_SUBCATEGORY)}>Other games <b>{sidebarUncategorizedCount}</b></button>}
+        </div>}
+        <div className="builder-games-list">
+          {sortedSidebarGames.map(game => {
             const cat = categoryMeta[game.category] || categoryMeta['submissions']
             return (
               <div key={game.id} className="builder-game-item" style={{ '--cat-color': cat.color } as React.CSSProperties}>
                 <div className="builder-game-item-info" onClick={() => onSelect(game)} style={{ cursor: 'pointer', flex: 1, minWidth: 0 }}>
                   <div className="builder-game-title">{game.title}</div>
                   <div className="builder-game-meta">
-                    <span className={`mini-badge mini-level-${game.level}`}>{LEVEL_META[game.level]?.label}</span>
-                    <span className={`mini-badge mini-type-${game.type}`}>{TYPE_META[game.type]?.label}</span>
-                    {game.subcategory && <span className="mini-badge mini-subcategory">{game.subcategory}</span>}
+                    {getGameSubcategories(game).map(value => <span key={value} className="mini-badge mini-subcategory">{value}</span>)}
                     {game.progression && <span className="mini-badge mini-prog">🔗 {game.progression.step}/{game.progression.totalSteps}</span>}
                   </div>
                 </div>
@@ -1678,10 +1891,13 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
         {hoveredGame && (
           <div className="builder-hover-preview" style={{ position: 'fixed', left: Math.min(hoverPos.x, window.innerWidth - 340), top: Math.min(hoverPos.y, window.innerHeight - 300), zIndex: 500 }}>
             <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 14 }}>{hoveredGame.title}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>{hoveredGame.startingPosition}</div>
-            {hoveredGame.players?.slice(0, 2).map((p: any, i: number) => (
-              <div key={i} style={{ fontSize: 11, marginBottom: 4, color: i === 0 ? 'var(--accent)' : 'var(--orange)' }}>
-                <strong>{p.role}</strong>: {p.objective} {p.winCondition && `🎯 ${p.winCondition}`}
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Starting position</div>
+            <div style={{ fontSize: 12, color: 'var(--text-primary)', margin: '3px 0 10px' }}>{hoveredGame.startingPosition || 'Not provided.'}</div>
+            {hoveredGame.players.map((player, index) => (
+              <div key={index} style={{ fontSize: 11, marginBottom: 8, color: 'var(--text-primary)' }}>
+                <strong style={{ color: index === 0 ? 'var(--accent)' : 'var(--orange)' }}>{player.role || `Player ${index + 1}`}</strong>
+                <div><span style={{ color: 'var(--text-muted)' }}>Task objective: </span>{getPresentedTaskObjective(hoveredGame, index) || 'Not provided.'}</div>
+                {player.constraints.length > 0 && <div style={{ color: '#fb923c' }}>Constraints: {player.constraints.join(' · ')}</div>}
               </div>
             ))}
           </div>
@@ -1690,6 +1906,7 @@ function BuilderPage({ draft, games, categoryMeta, isAdmin, onPublished, onDisca
       {activeDraft && <GameForm
         key={activeDraft.id}
         draft={activeDraft}
+        games={games}
         categoryMeta={categoryMeta}
         onTerminal={handleDraftTerminal}
         onClose={() => setActiveDraft(null)}
@@ -1781,17 +1998,21 @@ function LegacySessionsPage({ isAdmin, sessions, setSessions, onCopyEdit }: { is
             return (
               <div key={i} className="session-game-detail">
                 <div className="sgd-title">{g.title}</div>
-                <div className="sgd-start">{g.startingPosition}</div>
-                {g.players?.map((p: any, pi: number) => (
-                  <div key={pi} className={`sgd-player ${pi === 0 ? 'sgd-p1' : 'sgd-p2'}`}>
-                    <div className="sgd-role">{p.role}</div>
-                    <div className="sgd-obj">{p.objective}</div>
-                    {p.winCondition && <div className="sgd-win">Win: {p.winCondition}</div>}
-                    {p.constraints?.length > 0 && (
-                      <div className="sgd-constraints">{p.constraints.map((c: string, ci: number) => <span key={ci} className="sgd-constraint">{c}</span>)}</div>
-                    )}
-                  </div>
-                ))}
+                <div className="sgd-start"><strong>Starting position</strong>{g.startingPosition || 'Not provided.'}</div>
+                {g.players.map((player, playerIndex) => {
+                  const taskFocus = getPresentedTaskFocus(g, playerIndex)
+                  return (
+                    <div key={playerIndex} className={`sgd-player ${playerIndex === 0 ? 'sgd-p1' : 'sgd-p2'}`}>
+                      <div className="sgd-role">{player.role || `Player ${playerIndex + 1}`}</div>
+                      <div className="sgd-obj"><strong>Task objective</strong>{getPresentedTaskObjective(g, playerIndex) || 'Not provided.'}</div>
+                      {player.constraints.length > 0 && <div className="sgd-constraints"><strong>Constraints</strong>{player.constraints.map((constraint, constraintIndex) => <span key={constraintIndex} className="sgd-constraint">{constraint}</span>)}</div>}
+                      {taskFocus.length > 0 && <div className="sgd-focus"><strong>Task focus</strong>{taskFocus.join(' · ')}</div>}
+                    </div>
+                  )
+                })}
+                {getPresentedSharedConstraints(g).length > 0 && <div className="sgd-shared"><strong>Shared constraints</strong>{getPresentedSharedConstraints(g).join(' · ')}</div>}
+                {getSourceDocumentGameTaskFocus(g.id).length > 0 && <div className="sgd-focus"><strong>Task focus</strong>{getSourceDocumentGameTaskFocus(g.id).join(' · ')}</div>}
+                {getSourceDocumentRationale(g) && <div className="sgd-rat"><strong>Game rationale</strong>{getSourceDocumentRationale(g)}</div>}
               </div>
             )
           })}
@@ -1803,8 +2024,9 @@ function LegacySessionsPage({ isAdmin, sessions, setSessions, onCopyEdit }: { is
 }
 
 // ============ GAME FORM ============
-function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDraft; onClose: () => void; onTerminal: (state: 'published' | 'discarded', game: Game | null) => void | Promise<void>; categoryMeta: CategoryMetaMap }) {
+function GameForm({ draft, games, onClose, onTerminal, categoryMeta }: { draft: GameDraft; games: Game[]; onClose: () => void; onTerminal: (state: 'published' | 'discarded', game: Game | null) => void | Promise<void>; categoryMeta: CategoryMetaMap }) {
   const [isCreatingCategory, setIsCreatingCategory] = useState(draft.pendingCategory !== null)
+  const [subcategoryInput, setSubcategoryInput] = useState('')
   const [categoryError, setCategoryError] = useState('')
   const [formError, setFormError] = useState('')
   const publishedGameRef = useRef<Game | null>(null)
@@ -1812,12 +2034,6 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
   const isEditingPendingCategoryRef = useRef(false)
   const closeInFlightRef = useRef(false)
   const liveDraft = useLiveGameDraft(draft, game => { publishedGameRef.current = game })
-  const requiresWinCondition = liveDraft.draft.game.type === 'terminal'
-  const winConditionGuidance = liveDraft.draft.game.type === 'mixed'
-    ? 'For Mixed games, enter a Win condition for the terminal player and leave it blank for the player with the continuous goal.'
-    : liveDraft.draft.game.type === 'terminal'
-      ? 'Terminal games should have a specific Win condition for both players.'
-      : 'Continuous games can leave Win condition blank when both players have ongoing goals.'
 
   useEffect(() => {
     if (!liveDraft.terminalState || terminalHandledRef.current) return
@@ -1835,7 +2051,43 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
     liveDraft.update({ path, value })
   }
 
-  const playerPath = (index: number, field: 'objective' | 'winCondition' | 'constraints'): GameDraftPatchPath => {
+  const manualSubcategories = getManualGameSubcategories(liveDraft.draft.game)
+  const existingSubcategories = useMemo(() => {
+    if (isCreatingCategory) return []
+    const selected = new Set(manualSubcategories)
+    return Array.from(new Set([
+      ...(categoryMeta[liveDraft.draft.game.category]?.subcategories ?? []),
+      ...games
+      .filter(game => game.category === liveDraft.draft.game.category)
+      .flatMap(getManualGameSubcategories),
+    ]))
+      .filter(value => !selected.has(value))
+      .sort((left, right) => left.localeCompare(right))
+  }, [games, isCreatingCategory, liveDraft.draft.game.category, manualSubcategories, categoryMeta])
+  const addExistingSubcategory = (value: string) => {
+    if (!value) return
+    updateField('subcategories', Array.from(new Set([...manualSubcategories, value])))
+    if (liveDraft.draft.game.subcategory) updateField('subcategory', '')
+  }
+  const addSubcategory = () => {
+    const value = subcategoryInput.trim()
+    if (!value) return
+    const next = Array.from(new Set([...manualSubcategories, value]))
+    updateField('subcategories', next)
+    if (liveDraft.draft.game.subcategory) updateField('subcategory', '')
+    setSubcategoryInput('')
+  }
+  const removeSubcategory = (value: string) => {
+    updateField('subcategories', manualSubcategories.filter(subcategory => subcategory !== value))
+    if (liveDraft.draft.game.subcategory) updateField('subcategory', '')
+  }
+
+  const updatePlayerObjective = (index: number, value: string) => {
+    updateField(playerPath(index, 'objective'), value)
+    updateField(playerPath(index, 'winCondition'), value)
+  }
+
+  const playerPath = (index: number, field: 'role' | 'objective' | 'winCondition' | 'constraints' | 'taskFocus'): GameDraftPatchPath => {
     return ('players.' + index + '.' + field) as GameDraftPatchPath
   }
 
@@ -1854,6 +2106,10 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
     if (closeInFlightRef.current) return
     closeInFlightRef.current = true
     try {
+      if (isEmptyGameDraft(liveDraft.draft)) {
+        await liveDraft.discard()
+        return
+      }
       const drained = await liveDraft.close()
       if (drained) {
         onClose()
@@ -1882,6 +2138,11 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
         }
       }
       setCategoryError('')
+      const incompleteFields = getIncompleteGameFields(liveDraft.draft.game)
+      if (incompleteFields.length) {
+        setFormError(`Complete the following: ${incompleteFields.join(', ')}.`)
+        return
+      }
       await liveDraft.publish()
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'Unable to publish this game. Try again.')
@@ -1936,7 +2197,21 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
               <option value={CATEGORY_CREATE_VALUE}>＋ Create new category…</option>
             </select></div>
           </div>
-          <div className="gf-field"><label htmlFor="game-subcategory">Subcategory (optional)</label><input id="game-subcategory" value={liveDraft.draft.game.subcategory || ''} onFocus={() => liveDraft.beginField('subcategory')} onBlur={() => liveDraft.endField('subcategory')} onChange={e => updateField('subcategory', e.target.value)} placeholder="e.g. Butterfly guard" /></div>
+          <div className="gf-field gf-subcategories">
+            <label htmlFor="game-existing-subcategory">Subcategories (optional)</label>
+            {manualSubcategories.length > 0 && <div className="gf-subcategory-tags" aria-label="Selected subcategories">{manualSubcategories.map(value => <span key={value}>{value}<button type="button" aria-label={`Remove subcategory ${value}`} onClick={() => removeSubcategory(value)}>Remove</button></span>)}</div>}
+            <select id="game-existing-subcategory" className="gf-existing-subcategory" value="" disabled={existingSubcategories.length === 0} onChange={event => addExistingSubcategory(event.target.value)}>
+              <option value="">{existingSubcategories.length > 0 ? 'Choose an existing subcategory…' : 'No other subcategories in this category'}</option>
+              {existingSubcategories.map(value => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <div className="gf-subcategory-entry"><input id="game-subcategory" aria-label="New subcategory" value={subcategoryInput} onChange={e => setSubcategoryInput(e.target.value)} onKeyDown={event => {
+              if (event.key !== 'Enter' && event.key !== ',') return
+              event.preventDefault()
+              addSubcategory()
+            }} placeholder="Create a new subcategory" /><button type="button" onClick={addSubcategory} disabled={!subcategoryInput.trim()}>Add new</button></div>
+            <p className="gf-help">Choose an existing subcategory or create a new one. Remove deletes a selected subcategory from this game when you publish.</p>
+            {liveDraft.draft.game.progression && <p className="gf-series-membership">Series membership is added automatically: <strong>Series: {liveDraft.draft.game.progression.chainLabel}</strong></p>}
+          </div>
           {isCreatingCategory && <div className="gf-new-category">
             <div className="gf-section-heading">Create new category</div>
             <div className="gf-row-2">
@@ -1954,22 +2229,33 @@ function GameForm({ draft, onClose, onTerminal, categoryMeta }: { draft: GameDra
             </select></div>
             <div className="gf-field"><label htmlFor="game-source">Source</label><input id="game-source" value={liveDraft.draft.game.source} onFocus={() => liveDraft.beginField('source')} onBlur={() => liveDraft.endField('source')} onChange={e => updateField('source', e.target.value)} placeholder="e.g. Seminar" /></div>
           </div>
-          <div className="gf-field"><label htmlFor="game-starting-position">Starting Position</label><textarea id="game-starting-position" value={liveDraft.draft.game.startingPosition} onFocus={() => liveDraft.beginField('startingPosition')} onBlur={() => liveDraft.endField('startingPosition')} onChange={e => updateField('startingPosition', e.target.value)} rows={2} /></div>
-          <div className="gf-section-heading">Two-player game content</div>
-          <p className="gf-help">Every game has two players. Task focus and Constraints are optional for each player. {winConditionGuidance}</p>
+          <div className="gf-field"><label htmlFor="game-starting-position">Starting Position</label><textarea id="game-starting-position" value={liveDraft.draft.game.startingPosition} onFocus={() => liveDraft.beginField('startingPosition')} onBlur={() => liveDraft.endField('startingPosition')} onChange={e => updateField('startingPosition', e.target.value)} rows={2} required /></div>
+          <div className="gf-field"><label htmlFor="game-shared-constraints">Shared constraints (one sentence per line)</label><textarea id="game-shared-constraints" value={liveDraft.draft.game.constraints.join('\n')} onFocus={() => liveDraft.beginField('constraints')} onBlur={e => {
+            updateField('constraints', e.currentTarget.value.split('\n').map(constraint => constraint.trim()).filter(Boolean))
+            liveDraft.endField('constraints')
+          }} onChange={e => updateField('constraints', e.target.value.split('\n'))} placeholder="Rules or limits that apply to every player …" rows={3} /></div>
+          <div className="gf-section-heading">Player tasks</div>
+          <p className="gf-help">Every player needs one Task objective. Constraints and Task focus are optional.</p>
           <div className="gf-players">
             {liveDraft.draft.game.players.map((_player, index) => (
               <div className="gf-player-card" key={index}>
                 <div className="gf-player-heading">
                   <h3>{liveDraft.draft.game.players[index].role || 'Player ' + (index + 1)}</h3>
                 </div>
-                <div className="gf-field"><label htmlFor={`gf-task-focus-${index}`}>Task focus</label><textarea id={`gf-task-focus-${index}`} value={liveDraft.draft.game.players[index].objective} onFocus={() => liveDraft.beginField(playerPath(index, 'objective'))} onBlur={() => liveDraft.endField(playerPath(index, 'objective'))} onChange={e => updateField(playerPath(index, 'objective'), e.target.value)} placeholder="What should this player focus on?" rows={3} /></div>
-                <div className="gf-field"><label htmlFor={`gf-win-${index}`}>Win condition {requiresWinCondition ? '' : '(optional for continuous goals)'}</label><textarea id={`gf-win-${index}`} value={liveDraft.draft.game.players[index].winCondition} onFocus={() => liveDraft.beginField(playerPath(index, 'winCondition'))} onBlur={() => liveDraft.endField(playerPath(index, 'winCondition'))} onChange={e => updateField(playerPath(index, 'winCondition'), e.target.value)} placeholder={requiresWinCondition ? 'This player wins when …' : 'Leave blank if this player has a continuous goal …'} rows={3} required={requiresWinCondition} /></div>
-                <div className="gf-field"><label htmlFor={`gf-player-constraints-${index}`}>Constraints (one per line)</label><textarea id={`gf-player-constraints-${index}`} value={liveDraft.draft.game.players[index].constraints.join('\n')} onFocus={() => liveDraft.beginField(playerPath(index, 'constraints'))} onBlur={() => liveDraft.endField(playerPath(index, 'constraints'))} onChange={e => updateField(playerPath(index, 'constraints'), e.target.value.split('\n').map(constraint => constraint.trim()).filter(Boolean))} placeholder="Rules or limits for this player …" rows={3} /></div>
+                <div className="gf-field"><label htmlFor={`gf-player-role-${index}`}>Player label</label><input id={`gf-player-role-${index}`} value={liveDraft.draft.game.players[index].role} onFocus={() => liveDraft.beginField(playerPath(index, 'role'))} onBlur={() => liveDraft.endField(playerPath(index, 'role'))} onChange={e => updateField(playerPath(index, 'role'), e.target.value)} placeholder={`Player ${index + 1}`} required /></div>
+                <div className="gf-field"><label htmlFor={`gf-task-objective-${index}`}>Task objective</label><textarea id={`gf-task-objective-${index}`} value={liveDraft.draft.game.players[index].objective} onFocus={() => liveDraft.beginField(playerPath(index, 'objective'))} onBlur={() => liveDraft.endField(playerPath(index, 'objective'))} onChange={e => updatePlayerObjective(index, e.target.value)} placeholder="What must this player accomplish?" rows={3} required /></div>
+                <div className="gf-field"><label htmlFor={`gf-player-constraints-${index}`}>Constraints (one sentence per line)</label><textarea id={`gf-player-constraints-${index}`} value={liveDraft.draft.game.players[index].constraints.join('\n')} onFocus={() => liveDraft.beginField(playerPath(index, 'constraints'))} onBlur={e => {
+                  updateField(playerPath(index, 'constraints'), e.currentTarget.value.split('\n').map(constraint => constraint.trim()).filter(Boolean))
+                  liveDraft.endField(playerPath(index, 'constraints'))
+                }} onChange={e => updateField(playerPath(index, 'constraints'), e.target.value.split('\n'))} placeholder="Write a complete rule or limit on each line …" rows={3} /></div>
+                <div className="gf-field"><label htmlFor={`gf-task-focus-${index}`}>Task focus (one option per line)</label><textarea id={`gf-task-focus-${index}`} value={(liveDraft.draft.game.players[index].taskFocus ?? []).join('\n')} onFocus={() => liveDraft.beginField(playerPath(index, 'taskFocus'))} onBlur={e => {
+                  updateField(playerPath(index, 'taskFocus'), e.currentTarget.value.split('\n').map(focus => focus.trim()).filter(Boolean))
+                  liveDraft.endField(playerPath(index, 'taskFocus'))
+                }} onChange={e => updateField(playerPath(index, 'taskFocus'), e.target.value.split('\n'))} placeholder="Add optional cues or areas to emphasize …" rows={3} /></div>
               </div>
             ))}
           </div>
-          <div className="gf-field"><label htmlFor="game-rationale">Design Rationale</label><textarea id="game-rationale" value={liveDraft.draft.game.designRationale || ''} onFocus={() => liveDraft.beginField('designRationale')} onBlur={() => liveDraft.endField('designRationale')} onChange={e => updateField('designRationale', e.target.value)} rows={2} /></div>
+          <div className="gf-field"><label htmlFor="game-rationale">Game rationale (optional)</label><textarea id="game-rationale" value={liveDraft.draft.game.designRationale || ''} onFocus={() => liveDraft.beginField('designRationale')} onBlur={() => liveDraft.endField('designRationale')} onChange={e => updateField('designRationale', e.target.value)} rows={2} /></div>
           <div className="gf-field"><label htmlFor="game-tags">Tags (comma separated)</label><input id="game-tags" value={liveDraft.draft.game.tags.join(', ')} onFocus={() => liveDraft.beginField('tags')} onBlur={() => liveDraft.endField('tags')} onChange={e => updateField('tags', e.target.value.split(',').map(tag => tag.trim()).filter(Boolean))} /></div>
           {formError && <p className="gf-error" role="alert">{formError}</p>}
           <div className="gf-actions">

@@ -22,10 +22,11 @@ class MemoryStatement implements D1Statement {
 
   async all<T>() {
     if (this.query.startsWith('SELECT key FROM session_bootstrap')) {
-      return { results: (this.database.bootstrapped ? [{ key: 'seed-sessions-v1' }] : []) as T[] }
+      const [key] = this.values as [string]
+      return { results: (this.database.bootstrapKeys.has(key) ? [{ key }] : []) as T[] }
     }
-    if (this.query.startsWith('SELECT payload_json FROM sessions')) {
-      return { results: [...this.database.sessions.values()].map(row => ({ payload_json: row.payloadJson })) as T[] }
+    if (this.query.startsWith('SELECT id, payload_json FROM sessions')) {
+      return { results: [...this.database.sessions.entries()].map(([id, row]) => ({ id, payload_json: row.payloadJson })) as T[] }
     }
     throw new Error(`Unexpected query: ${this.query}`)
   }
@@ -38,8 +39,16 @@ class MemoryStatement implements D1Statement {
       return { meta: { changes: 1 } }
     }
     if (this.query.startsWith('INSERT OR IGNORE INTO session_bootstrap')) {
-      if (this.database.bootstrapped) return { meta: { changes: 0 } }
-      this.database.bootstrapped = true
+      const [key] = this.values as [string]
+      if (this.database.bootstrapKeys.has(key)) return { meta: { changes: 0 } }
+      this.database.bootstrapKeys.add(key)
+      return { meta: { changes: 1 } }
+    }
+    if (this.query.startsWith('UPDATE sessions SET payload_json')) {
+      const [payloadJson, , id] = this.values as [string, string, string]
+      const current = this.database.sessions.get(id)
+      if (!current) return { meta: { changes: 0 } }
+      this.database.sessions.set(id, { ...current, payloadJson })
       return { meta: { changes: 1 } }
     }
     if (this.query.startsWith('DELETE FROM sessions')) {
@@ -51,7 +60,7 @@ class MemoryStatement implements D1Statement {
 }
 
 class MemoryD1 implements D1Database {
-  bootstrapped = false
+  bootstrapKeys = new Set<string>()
   sessions = new Map<string, StoredSession>()
 
   prepare(query: string) {
@@ -67,7 +76,7 @@ test('does not recreate a globally deleted seed after bootstrap completes', asyn
   const store = new D1SessionStore(new MemoryD1())
 
   await store.ensureSeedSessions([seedSession])
-  assert.deepEqual((await store.list()).map(session => session.id), ['seed-fundamentals'])
+  assert.deepEqual((await store.list()).map(session => [session.id, session.date]), [['seed-fundamentals', '2026-09-14']])
 
   assert.equal(await store.delete(seedSession.id), true)
   await store.ensureSeedSessions([seedSession])

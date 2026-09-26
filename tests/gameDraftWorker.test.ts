@@ -4,6 +4,7 @@ import {
   applyGameDraftPatches,
   createBlankGameDraft,
   createGameDraftFromGame,
+  isEmptyGameDraft,
   type GameDraft,
   type GameDraftPatch,
 } from '../src/sharedGameDrafts.ts'
@@ -33,6 +34,19 @@ const customGame: Game = {
   skills: ['connection'],
   progression: null,
   sourceUrl: null,
+}
+
+const onePlayerGame: Game = {
+  ...customGame,
+  id: 'custom-get-behind',
+  title: 'Get Behind',
+  players: [{
+    role: 'Both players',
+    objective: 'Get behind and connect your hands.',
+    winCondition: 'Get behind and connect your hands.',
+    constraints: [],
+    taskFocus: ['Move behind an elbow.'],
+  }],
 }
 
 const existingCategory: CategoryMeta = {
@@ -71,6 +85,7 @@ class MemoryDraftStore implements GameDraftStore {
         id: draft.id,
         sourceGameId: draft.sourceGameId,
         title: draft.game.title,
+        isEmpty: isEmptyGameDraft(draft),
         updatedAt: draft.updatedAt,
       }))
   }
@@ -350,6 +365,7 @@ test('creates new drafts and joins the existing draft for a source game', async 
     id: first.id,
     sourceGameId: customGame.id,
     title: customGame.title,
+    isEmpty: false,
     updatedAt: first.updatedAt,
   }])
 })
@@ -440,6 +456,17 @@ test('publishes a complete draft with a pending category, forces beginner level,
   assert.equal(gameStore.createCalls, 1)
   assert.equal(await draftStore.get(draft.id), null)
   assert.deepEqual(await listDrafts(worker), [])
+})
+
+test('publishes a complete game with one shared player task and preserves task focus', async () => {
+  const { worker, draftStore, gameStore } = makeWorker()
+  const draft = await createDraft(worker, createGameDraftFromGame('draft-one-player', onePlayerGame, 'create'))
+
+  const response = await worker.fetch(request(`/api/game-drafts/${draft.id}/publish`, { method: 'POST' }))
+
+  assert.equal(response.status, 201)
+  assert.deepEqual(gameStore.games.get(onePlayerGame.id)?.players[0].taskFocus, ['Move behind an elbow.'])
+  assert.equal(await draftStore.get(draft.id), null)
 })
 
 test('rolls back a pending category after game creation fails so the same draft can retry', async () => {
@@ -695,7 +722,7 @@ test('surfaces an unknown publication batch failure as 500 rather than a conflic
   const draft = await createDraft(worker, applyGameDraftPatches(
     createGameDraftFromGame('draft-unknown-batch-error', customGame, 'create'),
     [
-      { path: 'pendingCategory.label', value: 'Turtle' },
+      { path: 'pendingCategory.label', value: 'Draft-only category' },
       { path: 'pendingCategory.emoji', value: '🐢' },
     ],
   ))
@@ -705,7 +732,7 @@ test('surfaces an unknown publication batch failure as 500 rather than a conflic
 
   assert.equal(response.status, 500)
   assert.equal(gameStore.games.has(customGame.id), false)
-  assert.equal(Object.hasOwn(categoryStore.categories, 'turtle'), false)
+  assert.equal(Object.hasOwn(categoryStore.categories, 'draft-only-category'), false)
   assert.equal((await draftStore.get(draft.id))?.isPublishing, false)
 })
 
@@ -716,6 +743,9 @@ test('rejects an incomplete draft publication and keeps it available for editing
   const response = await worker.fetch(request(`/api/game-drafts/${draft.id}/publish`, { method: 'POST' }))
 
   assert.equal(response.status, 400)
+  assert.deepEqual(await response.json(), {
+    error: 'Complete the following: Title, Starting position, Player 1 task objective, Player 2 task objective.',
+  })
   assert.equal(gameStore.createCalls, 0)
   assert.ok(await draftStore.get(draft.id))
   assert.equal((await draftStore.get(draft.id))?.isPublishing, false)
@@ -752,7 +782,7 @@ test('does not overwrite a concurrent custom category winner during publication'
   const draft = await createDraft(worker, applyGameDraftPatches(
     createGameDraftFromGame('draft-category-race', customGame, 'create'),
     [
-      { path: 'pendingCategory.label', value: 'Turtle' },
+      { path: 'pendingCategory.label', value: 'Scramble' },
       { path: 'pendingCategory.emoji', value: '🐢' },
     ],
   ))
@@ -760,7 +790,7 @@ test('does not overwrite a concurrent custom category winner during publication'
   const response = await worker.fetch(request(`/api/game-drafts/${draft.id}/publish`, { method: 'POST' }))
 
   assert.equal(response.status, 409)
-  assert.deepEqual(categoryStore.categories.turtle, winner)
+  assert.deepEqual(categoryStore.categories.scramble, winner)
   assert.equal(gameStore.publishWithCategoryCalls, 1)
   assert.equal(categoryStore.upsertCalls, 0)
   assert.equal(gameStore.createCalls, 0)

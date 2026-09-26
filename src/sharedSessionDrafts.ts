@@ -1,7 +1,12 @@
 import type { SessionGame, SessionPlan } from './types'
 
+export type SessionDraftPublishMode = 'create' | 'replace'
+
 export interface SessionDraft {
+  ownerId?: string | null
   id: string
+  sourceSessionId?: string | null
+  publishMode?: SessionDraftPublishMode
   session: SessionPlan
   revision: number
   isPublishing: boolean
@@ -10,19 +15,20 @@ export interface SessionDraft {
 }
 
 export interface SessionDraftSummary {
+  ownerId?: string | null
   id: string
   title: string
   updatedAt: string
 }
 
-export type SessionDraftPatchPath = 'title' | 'level' | 'focus' | 'notes' | 'games'
+export type SessionDraftPatchPath = 'title' | 'date' | 'level' | 'focus' | 'notes' | 'games'
 
 export type SessionDraftPatch =
   | { path: Exclude<SessionDraftPatchPath, 'games'>; value: string }
   | { path: 'games'; value: SessionGame[] }
 
-const DRAFT_KEYS = new Set(['id', 'session', 'revision', 'isPublishing', 'createdAt', 'updatedAt'])
-const SESSION_KEYS = new Set(['id', 'title', 'date', 'duration', 'level', 'focus', 'games', 'notes'])
+const DRAFT_KEYS = new Set(['id', 'ownerId', 'sourceSessionId', 'publishMode', 'session', 'revision', 'isPublishing', 'createdAt', 'updatedAt'])
+const SESSION_KEYS = new Set(['id', 'ownerId', 'ownerName', 'title', 'date', 'duration', 'level', 'focus', 'games', 'notes'])
 const GAME_KEYS = new Set(['gameId', 'duration', 'notes'])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -31,6 +37,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isTimestamp(value: unknown): value is string {
   return typeof value === 'string' && Number.isFinite(Date.parse(value))
+}
+
+function isDateOnly(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const parsed = new Date(`${value}T00:00:00Z`)
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+}
+
+function currentLocalDate() {
+  const today = new Date()
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 }
 
 function hasOnlyKeys(value: Record<string, unknown>, keys: ReadonlySet<string>) {
@@ -82,7 +99,9 @@ export function createBlankSessionDraft(id: string): SessionDraft {
   const timestamp = new Date().toISOString()
   return {
     id,
-    session: { id: `session-${crypto.randomUUID()}`, title: 'New Session', date: timestamp, duration: 0, level: 'beginner', focus: '', notes: '', games: [] },
+    sourceSessionId: null,
+    publishMode: 'create',
+    session: { id: `session-${crypto.randomUUID()}`, title: 'New Session', date: currentLocalDate(), duration: 0, level: 'beginner', focus: '', notes: '', games: [] },
     revision: 0,
     isPublishing: false,
     createdAt: timestamp,
@@ -90,15 +109,24 @@ export function createBlankSessionDraft(id: string): SessionDraft {
   }
 }
 
-export function createSessionDraftFromSession(id: string, session: SessionPlan): SessionDraft {
+export function createSessionDraftFromSession(id: string, session: SessionPlan, publishMode: SessionDraftPublishMode = 'create'): SessionDraft {
+  if (publishMode !== 'create' && publishMode !== 'replace') throw new Error('Invalid session draft publish mode.')
   const draft = createBlankSessionDraft(id)
-  return { ...draft, session: { ...cloneSession(session), id: `session-${crypto.randomUUID()}`, date: new Date().toISOString() } }
+  return {
+    ...draft,
+    sourceSessionId: session.id,
+    publishMode,
+    session: publishMode === 'replace'
+      ? cloneSession(session)
+      : { ...cloneSession(session), id: `session-${crypto.randomUUID()}`, date: currentLocalDate() },
+  }
 }
 
 export function isSessionDraftPatch(value: unknown): value is SessionDraftPatch {
   if (!isRecord(value) || typeof value.path !== 'string') return false
   if (value.path === 'games') return Array.isArray(value.value) && validGames(value.value as SessionGame[])
-  return ['title', 'level', 'focus', 'notes'].includes(value.path) && typeof value.value === 'string'
+  if (value.path === 'date') return isDateOnly(value.value)
+  return ['title', 'date', 'level', 'focus', 'notes'].includes(value.path) && typeof value.value === 'string'
 }
 
 export function applySessionDraftPatches(draft: SessionDraft, patches: SessionDraftPatch[]): SessionDraft {
@@ -116,7 +144,10 @@ export function isSessionDraft(value: unknown): value is SessionDraft {
   return isRecord(value)
     && hasOnlyKeys(value, DRAFT_KEYS)
     && typeof value.id === 'string' && value.id.trim().length > 0
+    && (value.sourceSessionId === undefined || value.sourceSessionId === null || (typeof value.sourceSessionId === 'string' && value.sourceSessionId.trim().length > 0))
+    && (value.publishMode === undefined || value.publishMode === 'create' || value.publishMode === 'replace')
     && isSession(value.session)
+    && (value.publishMode !== 'replace' || (typeof value.sourceSessionId === 'string' && value.sourceSessionId === value.session.id))
     && validGames(value.session.games)
     && value.session.duration === value.session.games.reduce((total, game) => total + game.duration, 0)
     && typeof value.revision === 'number' && Number.isInteger(value.revision) && value.revision >= 0

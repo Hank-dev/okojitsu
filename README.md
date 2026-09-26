@@ -25,6 +25,43 @@ Ecological jiu-jitsu coaching app — browse a library of [CLA (Constraints-Led 
 
 ## Getting Started
 
+### Coach accounts
+
+Visitors can browse the public library and published sessions. Personal accounts use
+an ØkoJitsu email and password, so no ChatGPT account is required. There is no open
+registration: an admin creates a private, expiring setup link under **Coach access**
+and sends it to the coach. Opening the link lets the invited coach choose a password
+and activates the account. Admins can also issue a fresh setup link as a password
+reset. Coaches create private drafts, publish sessions, copy other sessions, and
+edit/delete their own sessions. Admins also manage the shared game library,
+categories, all sessions and drafts, and user access.
+
+To activate the first two admins: open **Existing admin setup**, enter the existing
+admin password, then create an invitation for yourself with the Admin role. Open
+the generated link and choose a personal password. Shared-password access is
+permanently retired once two password-enabled admins are active. The last active
+password-enabled admin cannot be disabled or demoted. No admin emails or passwords
+are embedded in source.
+
+Existing ownerless sessions and drafts remain admin managed. A copied session gets
+the copying coach as its owner. Drafts remain visible only to their owner and admins.
+Role changes and deactivation are checked from D1 on every API request. Published
+session author names are public; account email addresses are only returned to the
+account holder and admins. Passwords are stored as salted scrypt hashes. Session
+and invitation tokens are random, stored only as hashes, expire automatically, and
+are revoked when an account is disabled or its password changes.
+
+Accounts created with the previous ChatGPT sign-in can use the temporary migration
+section on **Your account** once to set an ØkoJitsu password and preserve ownership.
+That compatibility path relies on Sites dispatch sanitizing
+`oai-authenticated-user-*` headers; do not expose this Worker directly or trust
+those headers from a public proxy. Database changes are additive Drizzle migrations.
+Run `npm run test:accounts` for invitation, password, ownership, access revocation,
+and permission regression tests. Game suggestions/approval and archiving are not
+part of this initial account release.
+
+### Local development
+
 ```bash
 npm install
 npm run dev      # dev server at http://localhost:3099

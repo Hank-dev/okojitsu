@@ -23,6 +23,7 @@ test('serves custom games and categories publicly while protecting writes', asyn
   const storedGames = new Map<string, Game>()
   const storedCategories: Record<string, CategoryMeta> = {}
   const deletedSeedGameIds = new Set<string>()
+  const deletedCategoryIds = new Set<string>()
   const worker = createWorker({
     store: { ensureSeedSessions: async () => {}, list: async () => [], create: async () => null, replace: async () => null, delete: async () => false, importMissing: async () => 0 },
     gameStore: {
@@ -45,15 +46,18 @@ test('serves custom games and categories publicly while protecting writes', asyn
       },
       async delete(id) { return storedGames.delete(id) },
       async importMissing(values) { let count = 0; for (const value of values) if (!storedGames.has(value.id)) { storedGames.set(value.id, value); count += 1 }; return count },
+      async upsertMany(values) { for (const value of values) storedGames.set(value.id, value); return values.length },
     } satisfies CustomGameStore,
     categoryStore: {
       async list() { return storedCategories },
-      async upsert(key, value) { storedCategories[key] = value; return value },
+      async listDeleted() { return [...deletedCategoryIds] },
+      async upsert(key, value) { storedCategories[key] = value; deletedCategoryIds.delete(key); return value },
       async createIfAbsent(key, value) {
         if (Object.hasOwn(storedCategories, key)) return null
         storedCategories[key] = value
         return value
       },
+      async delete(key) { delete storedCategories[key]; deletedCategoryIds.add(key) },
     } satisfies CategoryStore,
     deletedSeedGameStore: {
       async list() { return [...deletedSeedGameIds] },
@@ -66,12 +70,18 @@ test('serves custom games and categories publicly while protecting writes', asyn
 
   const initial = await worker.fetch(request('/api/games'))
   assert.equal(initial.status, 200)
-  assert.deepEqual(await initial.json(), { games: [], categories: {}, deletedSeedGameIds: [] })
+  assert.deepEqual(await initial.json(), { games: [], categories: {}, deletedSeedGameIds: [], deletedCategoryIds: [] })
 
   const forbidden = await worker.fetch(request('/api/games', {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(game),
   }))
   assert.equal(forbidden.status, 401)
+  const forbiddenBulk = await worker.fetch(request('/api/games/bulk', {
+    method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ games: [game] }),
+  }))
+  assert.equal(forbiddenBulk.status, 401)
+  const forbiddenCategoryDelete = await worker.fetch(request('/api/categories/turtle', { method: 'DELETE' }))
+  assert.equal(forbiddenCategoryDelete.status, 401)
 
   isAdmin = true
   const created = await worker.fetch(request('/api/games', {
@@ -83,11 +93,11 @@ test('serves custom games and categories publicly while protecting writes', asyn
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: 'turtle', category }),
   }))
   assert.equal(categoryResponse.status, 201)
-  assert.deepEqual(await (await worker.fetch(request('/api/games'))).json(), { games: [game], categories: { turtle: category }, deletedSeedGameIds: [] })
+  assert.deepEqual(await (await worker.fetch(request('/api/games'))).json(), { games: [game], categories: { turtle: category }, deletedSeedGameIds: [], deletedCategoryIds: [] })
 
   const deletedSeed = await worker.fetch(request('/api/games/beginner-feet-off', { method: 'DELETE' }))
   assert.equal(deletedSeed.status, 204)
   assert.deepEqual(await (await worker.fetch(request('/api/games'))).json(), {
-    games: [game], categories: { turtle: category }, deletedSeedGameIds: ['beginner-feet-off'],
+    games: [game], categories: { turtle: category }, deletedSeedGameIds: ['beginner-feet-off'], deletedCategoryIds: [],
   })
 })

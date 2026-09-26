@@ -685,7 +685,7 @@
   {
     "id": "pj-takedown-to-back-control",
     "title": "Takedown to Back Control",
-    "category": "standing",
+    "category": "turtle",
     "source": "PJ Barch Session",
     "level": "beginner",
     "type": "terminal",
@@ -707,7 +707,7 @@
     "constraints": [],
     "designRationale": "Punishing people for bad back takes when they turtle — win conditions force getting on top or to feet.",
     "tags": [
-      "standing",
+      "turtle",
       "takedown",
       "back-control",
       "knees"
@@ -1484,7 +1484,7 @@
   {
     "id": "wrist-pin-clearing-frames",
     "title": "Clearing Frames (Wrist Pin Passing)",
-    "category": "half-guard",
+    "category": "guard-passing",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
     "level": "beginner",
     "type": "terminal",
@@ -1537,7 +1537,7 @@
   {
     "id": "wrist-pin-under-elbows",
     "title": "Getting Under Elbows (Wrist Pin Passing)",
-    "category": "half-guard",
+    "category": "guard-passing",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
     "level": "beginner",
     "type": "terminal",
@@ -1585,7 +1585,7 @@
   {
     "id": "wrist-pin-clearing-knee",
     "title": "Clearing the Knee (Wrist Pin Passing)",
-    "category": "half-guard",
+    "category": "guard-passing",
     "source": "CLA Wrist Pin Guard Passing @ Enso Jiu-Jitsu Seminar",
     "level": "beginner",
     "type": "terminal",
@@ -1785,9 +1785,9 @@
   },
   {
     "id": "double-under-behind-knees",
-    "title": "Staying Behind the Knees (Double Under)",
+    "title": "Staying Behind the Knees (Under the Legs)",
     "category": "guard-passing",
-    "source": "CLA Double Under Passing @ Next Level MMA",
+    "source": "CLA Under the Legs Passing @ Next Level MMA",
     "level": "beginner",
     "type": "mixed",
     "startingPosition": "Top player with both arms under partner's knees, hands open. Bottom player in guard.",
@@ -1808,7 +1808,7 @@
       }
     ],
     "constraints": [],
-    "designRationale": "Double unders chosen over single because the margin between staying engaged and losing the position is wider — you can transition between double and single while remaining in the task.",
+    "designRationale": "Working under both legs gives a wider margin between staying engaged and losing the position — you can transition between two-leg and single-leg connections while remaining in the task.",
     "tags": [
       "guard-passing",
       "double-under",
@@ -1822,7 +1822,7 @@
     ],
     "progression": {
       "chain": "double-under",
-      "chainLabel": "Double Under",
+      "chainLabel": "Under the Legs",
       "step": 1,
       "totalSteps": 3,
       "prevId": null,
@@ -1832,9 +1832,9 @@
   },
   {
     "id": "double-under-connecting-hands",
-    "title": "Connecting Hands Past the Hips or Shoulders (Double Under)",
+    "title": "Connecting Hands Past the Hips or Shoulders (Under the Legs)",
     "category": "guard-passing",
-    "source": "CLA Double Under Passing @ Next Level MMA",
+    "source": "CLA Under the Legs Passing @ Next Level MMA",
     "level": "beginner",
     "type": "terminal",
     "startingPosition": "Same as Staying Behind the Knees — top player with both arms under partner's knees, hands open.",
@@ -1869,7 +1869,7 @@
     ],
     "progression": {
       "chain": "double-under",
-      "chainLabel": "Double Under",
+      "chainLabel": "Under the Legs",
       "step": 2,
       "totalSteps": 3,
       "prevId": "double-under-behind-knees",
@@ -1879,9 +1879,9 @@
   },
   {
     "id": "double-under-knees-from-standing",
-    "title": "Getting to the Knees from Standing (Double Under)",
+    "title": "Getting to the Knees from Standing (Under the Legs)",
     "category": "guard-passing",
-    "source": "CLA Double Under Passing @ Next Level MMA",
+    "source": "CLA Under the Legs Passing @ Next Level MMA",
     "level": "beginner",
     "type": "terminal",
     "startingPosition": "Top player standing behind partner's feet. Bottom player on back.",
@@ -1917,7 +1917,7 @@
     ],
     "progression": {
       "chain": "double-under",
-      "chainLabel": "Double Under",
+      "chainLabel": "Under the Legs",
       "step": 3,
       "totalSteps": 3,
       "prevId": "double-under-connecting-hands",
@@ -2937,7 +2937,8 @@
   {
     "id": "crab-ride-hips-shoulders",
     "title": "Hips to Shoulders (Crab Ride Progression)",
-    "category": "pinning",
+    "category": "guard",
+    "subcategory": "Inside Position",
     "source": "Philippines Seminar",
     "level": "beginner",
     "type": "terminal",
@@ -2964,7 +2965,8 @@
     "designRationale": "You must make the hands touch or hips touch before you go to the hips. Then once at hips, must destabilize again before shoulders.",
     "tags": [
       "crab-ride",
-      "pinning",
+      "guard",
+      "inside-position",
       "destabilize",
       "progression",
       "hips-to-shoulders"
@@ -2980,7 +2982,7 @@
   {
     "id": "turtle-stay-behind",
     "title": "Stay Behind / Back Control Entry (Turtle)",
-    "category": "back-control",
+    "category": "turtle",
     "source": "Turtle Games",
     "level": "beginner",
     "type": "mixed",
@@ -6004,7 +6006,7 @@
   {
     "id": "just-stand-up-turtle-breakdown",
     "title": "Referee Position / Turtle — Hip Breakdown",
-    "category": "stand-up",
+    "category": "turtle",
     "source": "Just Stand Up (Rob Cole - Ecopalooza Spring 2024)",
     "level": "beginner",
     "type": "continuous",
@@ -7161,5 +7163,354 @@
     ],
     "progression": null,
     "sourceUrl": null
+  },
+  {
+    "id": "okojitsu-get-behind-stay-behind",
+    "title": "Get Behind, Stay Behind",
+    "category": "standing",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 1",
+    "level": "all-levels",
+    "type": "continuous",
+    "startingPosition": "Both players start standing in neutral and hand fight to get behind each other.",
+    "players": [
+      {
+        "role": "Both players / Attacker",
+        "objective": "Hand fight to get behind the partner, then remain behind continuously through standing exchanges and takedowns. Change grips and use any gripping tactic needed to stay behind.",
+        "winCondition": "Continuous objective: get behind and stay behind for as long as possible; there is no terminal win condition.",
+        "constraints": [
+          "No chest-to-chest contact when the partner puts their back on the mat.",
+          "Do not commit the legs as hooks or a body triangle; keep the legs available as a base."
+        ]
+      },
+      {
+        "role": "Both players / Defender",
+        "objective": "Use any mechanic, tactic, or strategy to remove the partner from behind. Once free, return to the feet and try to get behind them.",
+        "winCondition": "Continuous objective: escape rear control, stand up, and reverse the roles by getting behind.",
+        "constraints": [
+          "Do not remain passive on the ground after escaping."
+        ]
+      }
+    ],
+    "constraints": [
+      "The game is continuous for both players with no terminal winner.",
+      "Takedowns are allowed, but the controlling player must stay behind through the transition.",
+      "If the partner lies on their back, stay above them and allow a path to rise; no chest-to-chest pinning.",
+      "No hooks or body triangle; the legs remain a mobile base."
+    ],
+    "designRationale": "The game develops the ability to create and preserve a path to the back from neutral, during takedowns, and as a grounded partner stands up. Look to move behind an elbow or outside a knee; avoiding chest-to-chest pressure keeps those paths available.",
+    "tags": [
+      "okojitsu",
+      "transcript",
+      "standing",
+      "hand-fighting",
+      "back-take",
+      "rear-control",
+      "takedown"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "immobilize"
+    ],
+    "progression": null,
+    "sourceUrl": "https://youtu.be/BaSFza6i3eo?si=9EKQvowf4JAzLpmI"
+  },
+  {
+    "id": "okojitsu-submit-from-behind",
+    "title": "Submit from Behind",
+    "category": "back-control",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 1",
+    "level": "all-levels",
+    "type": "terminal",
+    "startingPosition": "Start connected in one of three positions and alternate each repetition: front headlock, rear body connection, or single-leg connection. Players may vary the angle and height.",
+    "players": [
+      {
+        "role": "Attacker",
+        "objective": "Stay connected, remain behind, and submit from any chest-to-back position. Chain connections together as the partner moves; hooks and attacks to the whole body are allowed.",
+        "winCondition": "Submit the defender while maintaining chest-to-back contact.",
+        "constraints": [
+          "While standing, maintain at least a closed-hands connection to the body; a loose single hand or static underhook is not enough.",
+          "If the defender turns to face while standing or gets on top facing you, the game is lost.",
+          "If the defender is belly-up, do not settle chest-to-chest as the top player."
+        ]
+      },
+      {
+        "role": "Defender",
+        "objective": "Turn to face the attacker and either get on top or return to the feet. Guard may be used only as a defensive structure toward one of those outcomes.",
+        "winCondition": "Turn to face and get on top, turn to face and return to the feet, or get behind the attacker. A submission during the defensive action also wins.",
+        "constraints": [
+          "Do not settle into guard as the objective; use it to stand up or become the top player."
+        ]
+      }
+    ],
+    "constraints": [
+      "Alternate the start among front headlock, rear body connection, and single-leg connection.",
+      "Attacks are valid only while the attacker has chest-to-back contact; front-headlock contact counts.",
+      "Hooks and leg entanglements are allowed in this game.",
+      "No chest-to-chest top control when the defender becomes belly-up.",
+      "Reset after a submission, defensive turn-and-top, turn-and-stand, loss of meaningful standing connection, or defensive back take."
+    ],
+    "designRationale": "Starting from connected positions under fatigue trains connection where it commonly fails. The attacker learns to link front headlock, rear body, and leg connections into chest-to-back submissions, while the defender learns to face, rise, reverse, or submit during the escape.",
+    "tags": [
+      "okojitsu",
+      "transcript",
+      "back-control",
+      "front-headlock",
+      "single-leg",
+      "submission",
+      "connection-chain"
+    ],
+    "skills": [
+      "connection",
+      "segment",
+      "isolate",
+      "immobilize"
+    ],
+    "progression": null,
+    "sourceUrl": "https://youtu.be/BaSFza6i3eo?si=9EKQvowf4JAzLpmI"
+  },
+  {
+    "id": "okojitsu-finding-closed-connections",
+    "title": "Finding Closed Connections",
+    "category": "half-guard",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 1",
+    "level": "all-levels",
+    "type": "terminal",
+    "startingPosition": "Knee-shield half guard, with one player on bottom and one player on top.",
+    "players": [
+      {
+        "role": "Bottom player",
+        "objective": "Reach and stabilize seated open guard with both feet in front, make closed guard or any closed leg connection around the opponent's hips or shoulders, reverse to top, or stand up.",
+        "winCondition": "Stabilized seated open guard with connections removed, a closed leg connection around the hips or shoulders, a reversal, or standing up.",
+        "constraints": [
+          "A seated position does not count while the top player still controls a foot or another connection; remove the connection and stabilize first.",
+          "Any mechanic, tactic, or strategy may be used to reach the listed outcomes."
+        ]
+      },
+      {
+        "role": "Top player",
+        "objective": "Find a stable closed-hands connection around the bottom player's body while staying close.",
+        "winCondition": "Locked hands with chest-to-chest or chest-to-back contact around the body at any angle, including from front headlock, turtle, or half guard.",
+        "constraints": [
+          "The connection may be around the hips or shoulders.",
+          "The top player does not have to pass the feet before the closed-hands connection counts."
+        ]
+      }
+    ],
+    "constraints": [
+      "Start every repetition in knee-shield half guard.",
+      "Reset after either player reaches one of their stated win conditions.",
+      "Outcomes must be stable before they count."
+    ],
+    "designRationale": "The game focuses attention on the first stable closed connection that often drives positional progress. The bottom player explores several ways to recover, reverse, connect with the legs, or rise; the top player learns to stay close and lock the hands before the exchange gets away.",
+    "tags": [
+      "okojitsu",
+      "transcript",
+      "half-guard",
+      "knee-shield",
+      "closed-connection",
+      "locked-hands",
+      "stabilization",
+      "reversal"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "immobilize"
+    ],
+    "progression": null,
+    "sourceUrl": "https://youtu.be/BaSFza6i3eo?si=9EKQvowf4JAzLpmI"
+  },
+  {
+    "id": "okojitsu-submit-from-chest-to-back",
+    "title": "Submit from Chest to Back",
+    "category": "leg-locks",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 1",
+    "level": "all-levels",
+    "type": "terminal",
+    "startingPosition": "Start standing and entangled in one of two positions, alternating each repetition: feet on the outside with the controlled leg on the straight side, or feet on the outside with the controlled leg on the cross side.",
+    "players": [
+      {
+        "role": "Top player",
+        "objective": "Clear the standing leg entanglement, keep the bottom player down, and establish a closed-hands connection around the hips or shoulders.",
+        "winCondition": "Be completely clear of the leg-entanglement threat and establish a closed-hands connection at the hips or shoulders.",
+        "constraints": [
+          "Locked hands do not count while the top player remains entangled or threatened.",
+          "Do not attack the leg; focus on escaping the entanglement, holding the partner down, and connecting around the body.",
+          "If the entanglement is cleared without a standing connection, continue playing."
+        ]
+      },
+      {
+        "role": "Bottom player",
+        "objective": "Use the entanglement to reverse, submit, or disengage and stand up.",
+        "winCondition": "A reversal from bottom to top, including getting behind; a submission; or breaking apart and getting to the feet.",
+        "constraints": [
+          "Unlike the previous game, merely disconnecting is not a win.",
+          "Continue until the reversal, submission, or stand-up is completed."
+        ]
+      }
+    ],
+    "constraints": [
+      "Alternate between the straight-side and cross-side outside-feet entanglements.",
+      "The top player wins only after both clearing the threat and making the closed-hands hip or shoulder connection.",
+      "The bottom player wins only by reversal, submission, or standing up."
+    ],
+    "designRationale": "This progression begins in two standing leg entanglements and preserves the connection problem from the previous game. The top player must disentangle before a body connection can score, while the bottom player must turn the entanglement into a meaningful reversal, submission, or stand-up rather than merely creating space.",
+    "tags": [
+      "okojitsu",
+      "transcript",
+      "standing-entanglement",
+      "outside-feet",
+      "closed-connection",
+      "reversal",
+      "submission",
+      "stand-up"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "isolate"
+    ],
+    "progression": null,
+    "sourceUrl": "https://youtu.be/BaSFza6i3eo?si=9EKQvowf4JAzLpmI"
+  },
+  {
+    "id": "okojitsu-part-2-get-behind",
+    "title": "Get Behind",
+    "category": "standing",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 2 - Full Session",
+    "level": "all-levels",
+    "type": "terminal",
+    "startingPosition": "Both players start standing in neutral and hand fight using closed-hand connections.",
+    "players": [
+      {
+        "role": "Both players",
+        "objective": "Use closed-hand connections to get behind the partner and lock the hands around them. Moving behind an elbow or carrying a leg across the center line may be used to open the path to the back.",
+        "winCondition": "Get behind the partner and establish a locked-hands connection.",
+        "constraints": [
+          "Continue hand fighting until one player gets behind and connects.",
+          "After the win, release and restart from neutral."
+        ]
+      }
+    ],
+    "constraints": [
+      "Only a rear locked-hands connection ends the exchange.",
+      "Players may briefly explore the winning position before releasing and restarting."
+    ],
+    "designRationale": "This warm-up directs hand fighting toward back access. Moving behind an elbow or taking a leg across the partner's center line removes a barrier and opens a path to the rear connection.",
+    "tags": [
+      "okojitsu",
+      "hand-fighting",
+      "closed-hands",
+      "back-access",
+      "center-line"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "segment"
+    ],
+    "progression": null,
+    "sourceUrl": "https://www.youtube.com/watch?v=CToduYRgjcs&t=445s"
+  },
+  {
+    "id": "okojitsu-part-2-stay-behind",
+    "title": "Stay Behind",
+    "category": "standing",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 2 - Full Session",
+    "level": "all-levels",
+    "type": "continuous",
+    "startingPosition": "Both players start standing in neutral, create a connection, and work to get behind each other.",
+    "players": [
+      {
+        "role": "Both players / Attacker",
+        "objective": "Get behind and remain behind for as long as possible. Use any body connection to put the partner's hands or hips on the mat and follow them as they change position.",
+        "winCondition": "Continuous objective: stay behind for as long as possible.",
+        "constraints": [
+          "No chest-to-chest contact when the partner becomes belly-up.",
+          "No hooks at any point, including after grounding the partner."
+        ]
+      },
+      {
+        "role": "Both players / Defender",
+        "objective": "Fight back to the feet or change position to remove the attacker from behind, then create your own path to the back.",
+        "winCondition": "Continuous objective: escape the rear position and reverse the task by getting behind.",
+        "constraints": []
+      }
+    ],
+    "constraints": [
+      "The game is continuous; there is no terminal score.",
+      "The attacker may hold a belly-up partner down from above but may not use chest-to-chest contact.",
+      "Hands, knees, head, and other body connections are allowed, but hooks are not.",
+      "All chosen tasks should create or preserve a path to the back."
+    ],
+    "designRationale": "This progression extends a momentary back connection into adaptive rear control across standing and grounded transitions. Removing chest-to-chest pressure and hooks keeps both players moving and exposes new paths to the back as the defender rises or turns.",
+    "tags": [
+      "okojitsu",
+      "stay-behind",
+      "rear-control",
+      "continuous",
+      "no-hooks",
+      "no-chest-to-chest"
+    ],
+    "skills": [
+      "connection",
+      "distance",
+      "destabilize",
+      "immobilize"
+    ],
+    "progression": null,
+    "sourceUrl": "https://www.youtube.com/watch?v=CToduYRgjcs&t=445s"
+  },
+  {
+    "id": "okojitsu-part-2-hips-to-shoulders",
+    "title": "Hips to Shoulders",
+    "category": "back-control",
+    "source": "ADCC Camp @ 10p South Bay with Greg Souders Part 2 - Full Session",
+    "level": "all-levels",
+    "type": "terminal",
+    "startingPosition": "Alternate between two rear hip connections: the defender belly-down or on all fours, and the defender belly-up. The attacker begins connected at the hips while the defender controls the attacker's hands.",
+    "players": [
+      {
+        "role": "Attacker",
+        "objective": "Climb the defender's arms from hands to elbows, transfer the locked connection from hips to shoulders, create chest-to-back contact, and submit.",
+        "winCondition": "Submit with an attack initiated from chest-to-back contact; submissions using the arms or legs are allowed.",
+        "constraints": [
+          "Follow the connection sequence hips, hands, elbows, then shoulders.",
+          "A submission must be initiated from chest-to-back contact.",
+          "Do not initiate or finish from chest-to-chest contact."
+        ]
+      },
+      {
+        "role": "Defender",
+        "objective": "Use control of the attacker's hands to prevent the connection from climbing from hips to shoulders, then face, rise, reverse, or counterattack.",
+        "winCondition": "Get to the feet and break the connection, turn to face including getting on top, or finish a counter-submission.",
+        "constraints": []
+      }
+    ],
+    "constraints": [
+      "Use only the two specified starts: belly-down or all fours, and belly-up.",
+      "If the defender shows their chest, continue working to recreate a path to the back.",
+      "The attacker must re-establish chest-to-back contact before initiating a submission."
+    ],
+    "designRationale": "The difficult transition from hip control to shoulder control is isolated by giving the defender immediate access to the attacker's hands. Climbing from hands to elbows temporarily removes the defender's frames and creates a safer path to the shoulders and a chest-to-back submission.",
+    "tags": [
+      "okojitsu",
+      "hips-to-shoulders",
+      "hand-control",
+      "elbow-control",
+      "chest-to-back",
+      "submission"
+    ],
+    "skills": [
+      "connection",
+      "segment",
+      "isolate",
+      "immobilize"
+    ],
+    "progression": null,
+    "sourceUrl": "https://www.youtube.com/watch?v=CToduYRgjcs&t=445s"
   }
 ]
